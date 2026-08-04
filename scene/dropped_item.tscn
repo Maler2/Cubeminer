@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://cbaejlgsjefyp"]
+
+[ext_resource type="Script" uid="uid://pgsp1iusn4dk" path="res://script/dropped_item.gd" id="1_wejgp"]
+[ext_resource type="Texture2D" uid="uid://c8jg2633kd13o" path="res://assets/block/unknown-block.png" id="2_y8hqn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mti6b"]
+size = Vector2(8, 8)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_62yky"]
+size = Vector2(16, 16)
+
+[node name="DroppedItem" type="CharacterBody2D" unique_id=1228625033]
+collision_layer = 4
+script = ExtResource("1_wejgp")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1695607158]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_y8hqn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2035016041]
+shape = SubResource("RectangleShape2D_mti6b")
+
+[node name="PickupArea" type="Area2D" parent="." unique_id=2059801709]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PickupArea" unique_id=2031851383]
+shape = SubResource("RectangleShape2D_62yky")
+debug_color = Color(0, 0.64638394, 0.24569649, 0.41960785)

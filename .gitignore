@@ -1,0 +1,26 @@
+# --- GODOT INTERNAL ---
+.godot/
+*.translation
+*.mono/
+*.import
+
+# --- IDE & TEXT EDITOR ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# --- EXPORT / BUILDS ---
+build/
+bin/
+export/
+*.apk
+*.aab
+*.exe
+*.zip
+
+# --- SYSTEM & OS FILES ---
+.DS_Store
+Thumbs.db
+desktop.ini

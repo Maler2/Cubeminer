@@ -1,0 +1,86 @@
+[gd_scene format=4 uid="uid://l6wpvw7lxvnl"]
+
+[ext_resource type="PackedScene" uid="uid://c5252366xsd56" path="res://scene/player.tscn" id="1_5kiuu"]
+[ext_resource type="Script" uid="uid://bjp0v63ewhmwx" path="res://script/game.gd" id="1_dbls1"]
+[ext_resource type="PackedScene" uid="uid://diwgedd8t1eme" path="res://scene/HotbarUI.tscn" id="2_ll5lq"]
+[ext_resource type="PackedScene" uid="uid://cjiw6cck3c4wv" path="res://scene/inventory_slot.tscn" id="3_ll5lq"]
+[ext_resource type="TileSet" uid="uid://c3f0hrfgj5jfw" path="res://assets/tileset/foreground.tres" id="3_p1ry8"]
+[ext_resource type="Script" uid="uid://lgqvubkp5aq7" path="res://script/tile_map_layer.gd" id="4_xwcet"]
+[ext_resource type="PackedScene" uid="uid://dxbpvb8o31836" path="res://scene/ui.tscn" id="6_xlg7c"]
+[ext_resource type="PackedScene" uid="uid://c0cr7akcl0hre" path="res://scene/inventory.tscn" id="7_qpk70"]
+
+[node name="Node2D" type="Node2D" unique_id=1834473650]
+script = ExtResource("1_dbls1")
+
+[node name="Inventory" parent="." unique_id=81308667 instance=ExtResource("7_qpk70")]
+
+[node name="InventorySlot" parent="." unique_id=993860492 instance=ExtResource("3_ll5lq")]
+
+[node name="HotbarUI" parent="." unique_id=569034783 instance=ExtResource("2_ll5lq")]
+slot_tile_ids = Array[Vector2i]([Vector2i(-1, -1), Vector2i(-1, -1), Vector2i(-1, -1), Vector2i(-1, -1), Vector2i(-1, -1), Vector2i(-1, -1), Vector2i(-1, -1)])
+
+[node name="ForegroundMapLayer" type="TileMapLayer" parent="." unique_id=1682738660 node_paths=PackedStringArray("background_layer", "player")]
+visibility_layer = 2
+tile_map_data = PackedByteArray("AAAeAA0AAQAAAAAAAAAfAA0AAQAAAAAAAAAgAA0AAQAAAAAAAAAhAA0AAQAAAAAAAAANAAYACQAAAAAAAAANAAcACQAAAAAAAAAOAAUACQAAAAAAAAAOAAYACQAAAAAAAAAOAAcACQAAAAAAAAAPAAUACQAAAAAAAAAPAAYACQAAAAAAAAAPAAcACQAAAAAAAAAPAAgACAAAAAAAAAAPAAkACAAAAAAAAAAPAAoACAAAAAAAAAAQAAUACQAAAAAAAAAQAAYACQAAAAAAAAAQAAcACQAAAAAAAAARAAYACQAAAAAAAAARAAcACQAAAAAAAAAUAAcACQAAAAAAAAAUAAgACQAAAAAAAAAVAAYACQAAAAAAAAAVAAcACQAAAAAAAAAVAAgACQAAAAAAAAAWAAYACQAAAAAAAAAWAAcACQAAAAAAAAAWAAgACQAAAAAAAAAWAAkACAAAAAAAAAAWAAoACAAAAAAAAAAXAAYACQAAAAAAAAAXAAcACQAAAAAAAAAXAAgACQAAAAAAAAAYAAcACQAAAAAAAAAYAAgACQAAAAAAAAAaAAgACQAAAAAAAAAaAAkACQAAAAAAAAAbAAcACQAAAAAAAAAbAAgACQAAAAAAAAAbAAkACQAAAAAAAAAcAAcACQAAAAAAAAAcAAgACQAAAAAAAAAcAAkACQAAAAAAAAAcAAoACAAAAAAAAAAdAAcACQAAAAAAAAAdAAgACQAAAAAAAAAdAAkACQAAAAAAAAAeAAgACQAAAAAAAAAeAAkACQAAAAAAAAA=")
+tile_set = ExtResource("3_p1ry8")
+script = ExtResource("4_xwcet")
+background_layer = NodePath("../BackgroundMapLayer")
+player = NodePath("../CharacterBody2D")
+
+[node name="BackgroundMapLayer" type="TileMapLayer" parent="." unique_id=502176043]
+modulate = Color(0.5019608, 0.5019608, 0.5019608, 1)
+show_behind_parent = true
+tile_set = ExtResource("3_p1ry8")
+collision_enabled = false
+
+[node name="CharacterBody2D" parent="." unique_id=1669300621 instance=ExtResource("1_5kiuu")]
+position = Vector2(512, 208)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2092147056]
+
+[node name="LeftButton" type="Button" parent="CanvasLayer" unique_id=1385041396]
+anchors_preset = -1
+anchor_left = 0.035
+anchor_top = 0.49400002
+anchor_right = 0.09
+anchor_bottom = 0.59300005
+offset_left = -0.3199997
+offset_top = -0.11199951
+offset_right = 0.31999207
+offset_bottom = -0.2640381
+text = "Left"
+
+[node name="RightButton" type="Button" parent="CanvasLayer" unique_id=1392998464]
+anchors_preset = -1
+anchor_left = 0.11100001
+anchor_top = 0.49400002
+anchor_right = 0.16700001
+anchor_bottom = 0.59300005
+offset_left = 0.12799072
+offset_top = -0.11199951
+offset_right = -0.38401794
+offset_bottom = -0.2640381
+text = "Right"
+
+[node name="JumpButton" type="Button" parent="CanvasLayer" unique_id=1376430322]
+anchors_preset = -1
+offset_left = 808.0
+offset_top = 336.0
+offset_right = 872.0
+offset_bottom = 400.0
+text = "A"
+
+[node name="RunButton" type="Button" parent="CanvasLayer" unique_id=1350278792]
+anchors_preset = -1
+offset_left = 736.0
+offset_top = 336.0
+offset_right = 800.0
+offset_bottom = 400.0
+text = "Run"
+
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=1085904827]
+
+[node name="UI" parent="UILayer" unique_id=819649612 instance=ExtResource("6_xlg7c")]
+
+[connection signal="pressed" from="CanvasLayer/LeftButton" to="." method="_on_left_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/RightButton" to="." method="_on_right_button_pressed"]

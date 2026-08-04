@@ -1,0 +1,138 @@
+[gd_scene format=3 uid="uid://diwgedd8t1eme"]
+
+[ext_resource type="Texture2D" uid="uid://do46ck1qu3tra" path="res://assets/icon/hotbar-icon.png" id="1_j1lgk"]
+[ext_resource type="Script" uid="uid://csch1668weknt" path="res://script/hotbar_ui.gd" id="1_k5xhi"]
+[ext_resource type="Texture2D" uid="uid://djxwvjhnc18t" path="res://assets/block/dirt_block.png" id="2_k5xhi"]
+[ext_resource type="Texture2D" uid="uid://bm6p7altsgl1d" path="res://assets/block/grass_block.png" id="3_sq4k5"]
+[ext_resource type="Texture2D" uid="uid://cp1163kiw8i5w" path="res://assets/block/stone_block.png" id="4_wqru8"]
+[ext_resource type="Texture2D" uid="uid://dhwdcbvlu556n" path="res://assets/block/coal_block.png" id="6_wqru8"]
+[ext_resource type="Texture2D" uid="uid://dry1jhby24kg" path="res://assets/block/iron_block.png" id="7_64nyv"]
+[ext_resource type="Texture2D" uid="uid://oqyacbfa77kv" path="res://assets/block/gold_block.png" id="8_vyggu"]
+[ext_resource type="Texture2D" uid="uid://b6jmo2necb1sx" path="res://assets/block/diamond_block.png" id="9_yd1e1"]
+
+[node name="HotbarUI" type="CanvasLayer" unique_id=569034783]
+script = ExtResource("1_k5xhi")
+slot_tile_ids = null
+
+[node name="HotbarContainer" type="Control" parent="." unique_id=1121313167]
+layout_mode = 3
+anchor_left = 0.45200002
+anchor_top = 0.975
+anchor_right = 0.549
+anchor_bottom = 1.0
+offset_left = -520.70404
+offset_top = 0.2000122
+offset_right = 519.552
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HotbarContainer" unique_id=1795333266]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.45100003
+anchor_right = 0.55600005
+anchor_bottom = 1.0
+offset_left = 0.447937
+offset_top = -10.0
+offset_right = 0.48791504
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HotbarBG" type="TextureRect" parent="HotbarContainer/MarginContainer" unique_id=1316122502]
+layout_mode = 2
+texture = ExtResource("1_j1lgk")
+stretch_mode = 1
+
+[node name="ItemSlots" type="Control" parent="HotbarContainer/MarginContainer/HotbarBG" unique_id=429636491]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Item1" type="TextureRect" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots" unique_id=1936494213]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.018000001
+anchor_top = 0.125
+anchor_right = 0.124000005
+anchor_bottom = 0.8880001
+offset_left = -0.17799973
+offset_top = 1.21593475e-05
+offset_right = -0.0040006638
+offset_bottom = -0.007976532
+texture = ExtResource("2_k5xhi")
+expand_mode = 1
+
+[node name="Item2" type="TextureRect" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots" unique_id=2105843071]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.16100001
+anchor_top = 0.125
+anchor_right = 0.268
+anchor_bottom = 0.87500006
+offset_left = -0.03199768
+offset_right = -0.015996933
+texture = ExtResource("3_sq4k5")
+expand_mode = 1
+
+[node name="Item3" type="TextureRect" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots" unique_id=1589938706]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.30400002
+anchor_top = 0.125
+anchor_right = 0.411
+anchor_bottom = 0.87500006
+offset_left = -0.04801941
+offset_right = -0.032016754
+texture = ExtResource("4_wqru8")
+expand_mode = 1
+
+[node name="Item4" type="TextureRect" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots" unique_id=1806491435]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.446
+anchor_top = 0.125
+anchor_right = 0.554
+anchor_bottom = 0.87500006
+offset_left = 0.048000336
+offset_right = -0.04800415
+texture = ExtResource("6_wqru8")
+expand_mode = 1
+
+[node name="Item5" type="TextureRect" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots" unique_id=1355755247]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.58900005
+anchor_top = 0.125
+anchor_right = 0.69600004
+anchor_bottom = 0.87500006
+offset_left = 0.03199768
+offset_right = 0.04799652
+texture = ExtResource("7_64nyv")
+expand_mode = 1
+
+[node name="Item6" type="TextureRect" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots" unique_id=1471087170]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.73200005
+anchor_top = 0.125
+anchor_right = 0.83900005
+anchor_bottom = 0.87500006
+offset_left = 0.015991211
+offset_right = 0.03199768
+texture = ExtResource("8_vyggu")
+expand_mode = 1
+
+[node name="Item7" type="TextureRect" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots" unique_id=837604461]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.87500006
+anchor_top = 0.125
+anchor_right = 0.98200005
+anchor_bottom = 0.87500006
+offset_right = 0.015991211
+texture = ExtResource("9_yd1e1")
+expand_mode = 1

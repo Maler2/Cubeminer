@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://dxbpvb8o31836"]
+
+[ext_resource type="Script" uid="uid://mb8m3y054y0v" path="res://script/ui.gd" id="1_xh8xk"]
+[ext_resource type="Texture2D" uid="uid://b4jmhy26my114" path="res://assets/icon/heart-full-icon.png" id="2_ytdjg"]
+[ext_resource type="Texture2D" uid="uid://defmclnniru0t" path="res://assets/icon/heart-half-icon.png" id="3_ajaei"]
+[ext_resource type="Texture2D" uid="uid://co2o4dul4ajnn" path="res://assets/icon/heart-lose-icon.png" id="4_0oc5v"]
+
+[node name="UI" type="Control" unique_id=819649612]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xh8xk")
+heart_full = ExtResource("2_ytdjg")
+heart_half = ExtResource("3_ajaei")
+heart_empty = ExtResource("4_0oc5v")
+
+[node name="HeartsContainer" type="HBoxContainer" parent="." unique_id=165684024]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.014
+anchor_bottom = 0.025
+offset_right = -0.12800026
+offset_bottom = -0.20000076

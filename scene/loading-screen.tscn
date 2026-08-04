@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://btlguvaymlq7n"]
+
+[ext_resource type="Script" uid="uid://cvx8ro2ai6jch" path="res://script/loading_screen.gd" id="1_8vs4c"]
+
+[node name="LoadingScreen" type="Control" unique_id=471903797]
+layout_mode = 3
+anchor_right = 0.333
+anchor_bottom = 0.395
+offset_right = 1152.384
+offset_bottom = 512.04
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.25, 0.25)
+script = ExtResource("1_8vs4c")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=2009981462]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.125
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="." unique_id=1917133351]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.208
+anchor_top = 0.39600003
+anchor_right = 0.79200006
+anchor_bottom = 0.60400003
+offset_left = 0.3840027
+offset_top = -0.10803223
+offset_right = -0.3840332
+offset_bottom = 0.10797119
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
+text = "Loading..."
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="ProgressBar" type="ProgressBar" parent="." unique_id=911102832]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.312
+anchor_top = 0.864
+anchor_right = 0.68700004
+anchor_bottom = 0.901
+offset_left = 0.57598877
+offset_top = 0.12799072
+offset_right = 0.57592773
+offset_bottom = 2.1519775
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LabelTips" type="Label" parent="." unique_id=869129167]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.16700001
+anchor_top = 0.583
+anchor_right = 0.83300006
+anchor_bottom = 0.66700006
+offset_left = -0.5120239
+offset_top = 0.25598145
+offset_right = 0.5119629
+offset_bottom = -0.25604248
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.12645198, 0.12645198, 0.12645198, 1)
+theme_override_font_sizes/font_size = 25
+text = "Tips"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+uppercase = true
