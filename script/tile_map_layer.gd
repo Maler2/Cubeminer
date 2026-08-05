@@ -114,32 +114,48 @@ var placed_bg_tiles: Dictionary = {} 			# Background dipasang
 var spawned_trees: Dictionary = {}
 
 func _ready() -> void:
-		noise = FastNoiseLite.new()
-		noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
-		noise.seed = randi()
-		noise.frequency = frequency
+	# 1. Ambil Seed dari Global (atau gunakan seed acak jika 0/kosong)
+	var current_seed: int = Global.current_world_seed
+	var world_name = Global.current_world_name
+	if current_seed == 0:
+		current_seed = randi()
+	elif world_name == "":
+		world_name = "My World"
+
+	print("World Name: ", world_name)
+	print("Seed: ", current_seed)
+	
+	# 2. Pasang Seed ke fungsi bawaan Godot (untuk pola randi() seperti variasi pohon)
+	seed(current_seed)
+	
+	# 3. Pasang Seed ke masing-masing Noise Generator
+	# (Beri offset angka seperti + 1, + 2 agar bentuk noise tidak saling tumpang tindih)
+	noise = FastNoiseLite.new()
+	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
+	noise.seed = current_seed
+	noise.frequency = frequency
+	
+	dirt_depth_noise = FastNoiseLite.new()
+	dirt_depth_noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
+	dirt_depth_noise.seed = current_seed + 1
+	dirt_depth_noise.frequency = 0.05
+	
+	cave_noise = FastNoiseLite.new()
+	cave_noise.noise_type = FastNoiseLite.TYPE_PERLIN
+	cave_noise.seed = current_seed + 2
+	cave_noise.frequency = cave_frequency
+	
+	ore_noise = FastNoiseLite.new()
+	ore_noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
+	ore_noise.seed = current_seed + 3
+	ore_noise.frequency = ore_frequency
+	
+	clear()
+	if background_layer:
+		background_layer.clear()
 		
-		dirt_depth_noise = FastNoiseLite.new()
-		dirt_depth_noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
-		dirt_depth_noise.seed = randi()
-		dirt_depth_noise.frequency = 0.05
-		
-		cave_noise = FastNoiseLite.new()
-		cave_noise.noise_type = FastNoiseLite.TYPE_PERLIN
-		cave_noise.seed = randi()
-		cave_noise.frequency = cave_frequency
-		
-		ore_noise = FastNoiseLite.new()
-		ore_noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
-		ore_noise.seed = randi()
-		ore_noise.frequency = ore_frequency
-		
-		clear()
-		if background_layer:
-				background_layer.clear()
-				
-		call_deferred("inisialisasi_dunia")
-		call_deferred("connect_hotbar_signal")
+	call_deferred("inisialisasi_dunia")
+	call_deferred("connect_hotbar_signal")
 
 func _process(_delta: float) -> void:
 		if not player: return

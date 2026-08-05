@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="survival 2d game"
-run/main_scene="uid://btlguvaymlq7n"
+run/main_scene="uid://cx41k6rbh66gx"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+Global="*uid://bkxv8uinqpyhp"
 
 [display]
 
