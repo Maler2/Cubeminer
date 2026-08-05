@@ -24,6 +24,15 @@ var current_slot: int = 0
 @onready var item_slots: Control = $HotbarContainer/MarginContainer/HotbarBG/ItemSlots
 
 func _ready() -> void:
+	# 🛠️ PAKSA RESET ARRAY KE -1 AGAR TIDAK TERTIMPA NILAI DARI INSPECTOR
+	if slot_tile_ids.is_empty() or slot_tile_ids.size() != 7:
+		slot_tile_ids = [-1, -1, -1, -1, -1, -1, -1]
+	else:
+		# Jika di inspector ada data, pastikan slot yang bernilai 0 diubah jadi -1 jika 0 bukan ID item
+		for i in range(slot_tile_ids.size()):
+			if slot_tile_ids[i] == 0:
+				slot_tile_ids[i] = -1
+
 	call_deferred("update_and_emit")
 	
 	var items = item_slots.get_children()
@@ -102,18 +111,23 @@ func update_item_indicators() -> void:
 			item_slot.modulate = Color(0.7, 0.7, 0.7, 0.85)
 			item_slot.scale = Vector2(1.0, 1.0)
 
-func add_item_to_hotbar(tile_id: int, _amount: int = 1) -> void:
+func add_item_to_hotbar(tile_id: int, _amount: int = 1) -> bool:
+	# 1. Cek jika item SUDAH ADA di hotbar
 	var target_index = slot_tile_ids.find(tile_id)
-	
 	if target_index != -1:
 		select_slot(target_index)
-		update_item_indicators() # 💡 TAMBAHKAN BARIS INI agar ikon di slot dipastikan update!
-		return
+		update_item_indicators()
+		print("ℹ️ Item sudah ada di Hotbar Slot ", target_index)
+		return true
 
+	# 2. Jika BELUM ADA, cari slot kosong (-1)
 	var empty_index = slot_tile_ids.find(-1)
 	if empty_index != -1:
 		slot_tile_ids[empty_index] = tile_id
-		select_slot(empty_index) # select_slot sudah otomatis memanggil update_item_indicators()
+		select_slot(empty_index)
 		print("✨ Item Baru Tile ID ", tile_id, " dimasukkan ke Slot ", empty_index)
-	else:
-		print("⚠️ Hotbar Penuh!")
+		return true
+
+	# 3. Jika benar-benar TIDAK ADA slot kosong (-1)
+	print("⚠️ Hotbar Penuh!")
+	return false

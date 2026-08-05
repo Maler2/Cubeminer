@@ -456,28 +456,10 @@ func spawn_tree_pattern(surface_coord: Vector2i, pattern_index: int = 0) -> void
 
 # --- FUNGSI HOTBAR & NOTIFIKASI ---
 func add_item_to_hotbar(tile_id: int) -> bool:
-	# 1. Jika item SUDAH ADA di hotbar, tidak usah tambah slot baru (berhasil)
-	if tile_id in hotbar_slots:
-		var slot_index = hotbar_slots.find(tile_id)
-		print("ℹ️ Item sudah ada di Hotbar Slot ", slot_index)
-		return true # Kembalikan true agar pemanggil tahu item tidak 'hilang'
+	var hotbar_ui = get_tree().root.find_child("HotbarUI", true, false)
+	if hotbar_ui and hotbar_ui.has_method("add_item_to_hotbar"):
+		# Serahkan tugas penambahan item & return status ke HotbarUI
+		return hotbar_ui.add_item_to_hotbar(tile_id)
 		
-	# 2. Jika item BELUM ADA, cari slot kosong (-1)
-	for i in range(hotbar_slots.size()):
-		if hotbar_slots[i] == -1:
-			hotbar_slots[i] = tile_id
-			var display_name = item_names.get(tile_id, "Tile ID " + str(tile_id))
-			print("✨ Item Baru " + display_name + " ditambahkan ke Hotbar!")
-			print("Isi Hotbar Sekarang: ", hotbar_slots)
-			
-			# Update tampilan UI Hotbar
-			var hotbar_ui = get_tree().root.find_child("HotbarUI", true, false)
-			if hotbar_ui and hotbar_ui.has_method("update_item_indicators"):
-				hotbar_ui.slot_tile_ids = hotbar_slots
-				hotbar_ui.update_item_indicators()
-				
-			return true
-			
-	# 3. Jika benar-benar TIDAK ADA slot bernilai -1
-	print("⚠️ Hotbar Penuh!")
+	print("⚠️ HotbarUI tidak ditemukan!")
 	return false
