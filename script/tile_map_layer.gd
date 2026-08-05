@@ -116,14 +116,17 @@ var spawned_trees: Dictionary = {}
 func _ready() -> void:
 	# 1. Ambil Seed dari Global (atau gunakan seed acak jika 0/kosong)
 	var current_seed: int = Global.current_world_seed
+	var current_temp_seed: String = Global.current_temp_seed_text
 	var world_name = Global.current_world_name
 	if current_seed == 0:
 		current_seed = randi()
-	elif world_name == "":
+	if current_temp_seed == "":
+		current_temp_seed = "Empty"
+	if world_name == "":
 		world_name = "My World"
 
 	print("World Name: ", world_name)
-	print("Seed: ", current_seed)
+	print("Seed: " + str(current_seed) + " (" + str(current_temp_seed) + ")")
 	
 	# 2. Pasang Seed ke fungsi bawaan Godot (untuk pola randi() seperti variasi pohon)
 	seed(current_seed)

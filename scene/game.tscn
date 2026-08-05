@@ -3,7 +3,6 @@
 [ext_resource type="PackedScene" uid="uid://c5252366xsd56" path="res://scene/player.tscn" id="1_5kiuu"]
 [ext_resource type="Script" uid="uid://bjp0v63ewhmwx" path="res://script/game.gd" id="1_dbls1"]
 [ext_resource type="PackedScene" uid="uid://diwgedd8t1eme" path="res://scene/HotbarUI.tscn" id="2_ll5lq"]
-[ext_resource type="PackedScene" uid="uid://cjiw6cck3c4wv" path="res://scene/inventory_slot.tscn" id="3_ll5lq"]
 [ext_resource type="TileSet" uid="uid://c3f0hrfgj5jfw" path="res://assets/tileset/foreground.tres" id="3_p1ry8"]
 [ext_resource type="Script" uid="uid://lgqvubkp5aq7" path="res://script/tile_map_layer.gd" id="4_xwcet"]
 [ext_resource type="PackedScene" uid="uid://dxbpvb8o31836" path="res://scene/ui.tscn" id="6_xlg7c"]
@@ -13,8 +12,6 @@
 script = ExtResource("1_dbls1")
 
 [node name="Inventory" parent="." unique_id=81308667 instance=ExtResource("7_qpk70")]
-
-[node name="InventorySlot" parent="." unique_id=993860492 instance=ExtResource("3_ll5lq")]
 
 [node name="HotbarUI" parent="." unique_id=569034783 instance=ExtResource("2_ll5lq")]
 slot_tile_ids = Array[Vector2i]([Vector2i(-1, -1), Vector2i(-1, -1), Vector2i(-1, -1), Vector2i(-1, -1), Vector2i(-1, -1), Vector2i(-1, -1), Vector2i(-1, -1)])
