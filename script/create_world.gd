@@ -7,6 +7,7 @@ extends Control
 @onready var back_button: Button = $VBoxContainer/BackButton   # Ganti ke BackButton jika sudah di-rename
 
 func _ready() -> void:
+	get_window().content_scale_factor = 4.0
 	# Menghubungkan sinyal klik tombol secara otomatis lewat kode
 	create_button.pressed.connect(_on_create_button_pressed)
 	back_button.pressed.connect(_on_back_button_pressed)
@@ -26,6 +27,10 @@ func _on_create_button_pressed() -> void:
 	else:
 		final_seed = seed_text.hash()
 
+	var world_folder = "user://worlds/" + world_name
+	if not DirAccess.dir_exists_absolute(world_folder):
+		DirAccess.make_dir_recursive_absolute(world_folder)
+
 	# Simpan ke Autoload Global
 	Global.current_world_name = world_name
 	Global.current_world_seed = final_seed
@@ -35,4 +40,4 @@ func _on_create_button_pressed() -> void:
 
 func _on_back_button_pressed() -> void:
 	# Kembali ke Main Menu (sesuaikan path-nya jika ada main menu)
-	get_tree().change_scene_to_file("res://scene/ui.tscn")
+	get_tree().change_scene_to_file("res://scene/select_world.tscn")

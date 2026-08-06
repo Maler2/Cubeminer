@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://l8stuymeau7x"]
+
+[ext_resource type="Script" uid="uid://s8j0tl47ie4" path="res://script/select_world.gd" id="1_53ahk"]
+[ext_resource type="Texture2D" uid="uid://bq18ifa7vvn3a" path="res://assets/block/big_dirt_block.png" id="1_bu8a3"]
+
+[node name="SelectWorld" type="Control" unique_id=1789210485]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_53ahk")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=2005795106]
+modulate = Color(0.23462236, 0.23462236, 0.23462236, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("1_bu8a3")
+stretch_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1357200880]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -20.0
+offset_right = 64.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer" unique_id=1027604803]
+layout_mode = 2
+text = "select world"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=1449636760]
+custom_minimum_size = Vector2(0, 250)
+layout_mode = 2
+
+[node name="WorldListContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer" unique_id=958428337]
+layout_mode = 2
+
+[node name="ButtonHBox" type="HBoxContainer" parent="VBoxContainer" unique_id=2005349416]
+layout_mode = 2
+
+[node name="CreateButton" type="Button" parent="VBoxContainer/ButtonHBox" unique_id=198577808]
+layout_mode = 2
+text = "CREATE NEW WORLD"
+
+[node name="BackButton" type="Button" parent="VBoxContainer/ButtonHBox" unique_id=518180970]
+layout_mode = 2
+text = "BACK
+"
