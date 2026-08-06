@@ -67,3 +67,20 @@ func _on_create_button_pressed() -> void:
 func _on_back_button_pressed() -> void:
 	# Kembali ke Main Menu
 	get_tree().change_scene_to_file("res://scene/MainMenu.tscn")
+
+# Panggil fungsi ini saat salah satu tombol world diklik
+func load_selected_world(world_name: String) -> void:
+	var seed_file_path = "user://worlds/" + world_name + "/seed.txt"
+	
+	if FileAccess.file_exists(seed_file_path):
+		var file = FileAccess.open(seed_file_path, FileAccess.READ)
+		if file:
+			var loaded_seed = file.get_as_text().to_int()
+			file.close()
+			
+			# Set ke Global
+			Global.current_world_name = world_name
+			Global.current_world_seed = loaded_seed
+			
+			# Pindah ke game
+			get_tree().change_scene_to_file("res://scene/loading-screen.tscn")

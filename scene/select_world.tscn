@@ -51,6 +51,7 @@ layout_mode = 2
 
 [node name="WorldListContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer" unique_id=958428337]
 layout_mode = 2
+alignment = 1
 
 [node name="ButtonHBox" type="HBoxContainer" parent="VBoxContainer" unique_id=2005349416]
 layout_mode = 2

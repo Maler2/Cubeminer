@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://lgqvubkp5aq7" path="res://script/tile_map_layer.gd" id="4_xwcet"]
 [ext_resource type="PackedScene" uid="uid://dxbpvb8o31836" path="res://scene/ui.tscn" id="6_xlg7c"]
 [ext_resource type="PackedScene" uid="uid://c0cr7akcl0hre" path="res://scene/inventory.tscn" id="7_qpk70"]
+[ext_resource type="PackedScene" uid="uid://cnvror5qycu0a" path="res://scene/pause_menu.tscn" id="8_ll5lq"]
 
 [node name="Node2D" type="Node2D" unique_id=1834473650]
 script = ExtResource("1_dbls1")
@@ -78,6 +79,8 @@ text = "Run"
 [node name="UILayer" type="CanvasLayer" parent="." unique_id=1085904827]
 
 [node name="UI" parent="UILayer" unique_id=819649612 instance=ExtResource("6_xlg7c")]
+
+[node name="PauseMenu" parent="." unique_id=2074378836 instance=ExtResource("8_ll5lq")]
 
 [connection signal="pressed" from="CanvasLayer/LeftButton" to="." method="_on_left_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/RightButton" to="." method="_on_right_button_pressed"]

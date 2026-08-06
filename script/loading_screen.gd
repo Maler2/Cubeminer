@@ -27,6 +27,7 @@ var is_loaded: bool = false
 var packed_scene: PackedScene = null
 
 func _ready() -> void:
+	get_window().content_scale_factor = 4.0
 	progress_bar.value = 0.0
 	
 	# 💡 Tampilkan tips acak saat loading screen muncul

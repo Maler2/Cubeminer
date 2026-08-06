@@ -114,25 +114,36 @@ var placed_bg_tiles: Dictionary = {} 			# Background dipasang
 var spawned_trees: Dictionary = {}
 
 func _ready() -> void:
-	# 1. Ambil Seed dari Global (atau gunakan seed acak jika 0/kosong)
+	# 1. Ambil Nama & Seed dari Global
+	var world_name: String = Global.current_world_name
 	var current_seed: int = Global.current_world_seed
 	var current_temp_seed: String = Global.current_temp_seed_text
-	var world_name = Global.current_world_name
-	if current_seed == 0:
-		current_seed = randi()
-	if current_temp_seed == "":
-		current_temp_seed = "Empty"
+	
+	# Fallback jika data kosong
 	if world_name == "":
 		world_name = "My World"
+		
+	# 2. Cek & Muat dari file txt spesifik world jika ada
+	var seed_file_path = "user://worlds/" + world_name + "/seed.txt"
+	if FileAccess.file_exists(seed_file_path):
+		var file = FileAccess.open(seed_file_path, FileAccess.READ)
+		if file:
+			current_seed = file.get_as_text().to_int()
+			file.close()
+			print(" Successfully loaded seed from file: ", current_seed)
+	elif current_seed == 0:
+		current_seed = randi()
+
+	if current_temp_seed == "":
+		current_temp_seed = str(current_seed)
 
 	print("World Name: ", world_name)
 	print("Seed: " + str(current_seed) + " (" + str(current_temp_seed) + ")")
 	
-	# 2. Pasang Seed ke fungsi bawaan Godot (untuk pola randi() seperti variasi pohon)
+	# 3. Pasang Seed ke fungsi bawaan Godot (untuk pola randi() seperti variasi pohon)
 	seed(current_seed)
 	
-	# 3. Pasang Seed ke masing-masing Noise Generator
-	# (Beri offset angka seperti + 1, + 2 agar bentuk noise tidak saling tumpang tindih)
+	# 4. Inisialisasi FastNoiseLite dengan Seed dari file txt
 	noise = FastNoiseLite.new()
 	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
 	noise.seed = current_seed

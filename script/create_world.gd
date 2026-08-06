@@ -27,15 +27,15 @@ func _on_create_button_pressed() -> void:
 	else:
 		final_seed = seed_text.hash()
 
-	var world_folder = "user://worlds/" + world_name
-	if not DirAccess.dir_exists_absolute(world_folder):
-		DirAccess.make_dir_recursive_absolute(world_folder)
-
-	# Simpan ke Autoload Global
+	# 1. Simpan variabel ke Global Autoload
 	Global.current_world_name = world_name
 	Global.current_world_seed = final_seed
 	Global.current_temp_seed_text = seed_text
+
+	# 2. Simpan seed ke txt menggunakan SaveManager
+	SaveManager.save_seed(final_seed, world_name)
 	
+	# 3. Pindah ke Loading Screen
 	get_tree().change_scene_to_file("res://scene/loading-screen.tscn")
 
 func _on_back_button_pressed() -> void:
