@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://bsci62dbaulks"]
+
+[node name="InputLayer" type="CanvasLayer" unique_id=674262392]
+
+[node name="LeftButton" type="Button" parent="." unique_id=1149605451]
+custom_minimum_size = Vector2(24, 24)
+anchors_preset = -1
+anchor_left = 0.07300001
+anchor_top = 0.772
+anchor_right = 0.094000004
+anchor_bottom = 0.809
+offset_left = -0.0960083
+offset_top = -0.25601196
+offset_right = -0.288002
+offset_bottom = -0.23199463
+focus_mode = 0
+theme_override_font_sizes/font_size = 4
+text = "Left"
+
+[node name="RightButton" type="Button" parent="." unique_id=1508866872]
+custom_minimum_size = Vector2(24, 24)
+anchors_preset = -1
+anchor_left = 0.18400002
+anchor_top = 0.772
+anchor_right = 0.20500001
+anchor_bottom = 0.809
+offset_left = 0.031982422
+offset_top = -0.25601196
+offset_right = -0.16001892
+offset_bottom = -0.23199463
+focus_mode = 0
+theme_override_font_sizes/font_size = 3
+text = "Right"
+
+[node name="JumpButton" type="Button" parent="." unique_id=1338628596]
+custom_minimum_size = Vector2(24, 24)
+anchors_preset = -1
+anchor_left = 0.851
+anchor_top = 0.772
+anchor_right = 0.87200004
+anchor_bottom = 0.809
+offset_left = -0.35198975
+offset_top = -0.25601196
+offset_right = -0.5440674
+offset_bottom = -0.23199463
+focus_mode = 0
+theme_override_font_sizes/font_size = 3
+text = "A"
+
+[node name="RunButton" type="Button" parent="." unique_id=1490938639]
+custom_minimum_size = Vector2(24, 24)
+anchors_preset = -1
+anchor_left = 0.74
+anchor_top = 0.772
+anchor_right = 0.76000005
+anchor_bottom = 0.809
+offset_left = -0.47998047
+offset_top = -0.25601196
+offset_right = 0.47991943
+offset_bottom = -0.23199463
+focus_mode = 0
+theme_override_font_sizes/font_size = 3
+text = "Run"

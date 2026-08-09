@@ -15,6 +15,7 @@ var is_falling: bool = false
 
 # --- NODE REFERENCES ---
 @onready var ui = get_node_or_null("../UILayer/UI")
+@onready var input_layer = get_node_or_null("../InputLayer") # Referensi ke InputLayer
 @onready var anim_player = $AnimationPlayer
 @onready var body_container = $Body # Node penampung semua part sprite tubuh
 
@@ -24,6 +25,33 @@ var is_ui_running = false
 
 func _ready() -> void:
 	add_to_group("players")
+	
+	# Hubungkan tombol InputLayer ke fungsi Player secara otomatis jika kodenya ada
+	_setup_mobile_controls()
+
+func _setup_mobile_controls() -> void:
+	if not input_layer:
+		return
+		
+	var left_btn = input_layer.get_node_or_null("LeftButton")
+	var right_btn = input_layer.get_node_or_null("RightButton")
+	var jump_btn = input_layer.get_node_or_null("JumpButton")
+	var run_btn = input_layer.get_node_or_null("RunButton")
+	
+	if left_btn:
+		left_btn.button_down.connect(func(): set_move_direction(-1.0))
+		left_btn.button_up.connect(func(): set_move_direction(0.0))
+		
+	if right_btn:
+		right_btn.button_down.connect(func(): set_move_direction(1.0))
+		right_btn.button_up.connect(func(): set_move_direction(0.0))
+		
+	if jump_btn:
+		jump_btn.button_down.connect(func(): jump())
+		
+	if run_btn:
+		run_btn.button_down.connect(func(): set_running(true))
+		run_btn.button_up.connect(func(): set_running(false))
 
 func _physics_process(delta: float) -> void:
 	# 1. GRAVITASI & FALL DAMAGE
@@ -38,7 +66,6 @@ func _physics_process(delta: float) -> void:
 			var fall_distance = global_position.y - start_fall_y
 			if fall_distance > min_fall_height:
 				_apply_fall_damage(fall_distance)
-		# Baris velocity.y = 0 dihapus agar tidak mengganggu kalkulasi pendaratan bawaan move_and_slide()
 
 	# 2. Input Keyboard PC
 	var keyboard_dir = Input.get_axis("left", "right")
@@ -62,7 +89,7 @@ func _physics_process(delta: float) -> void:
 	elif final_dir < 0:
 		body_container.scale.x = -1.0  # Hadap Kiri
 
-	# 6. Lompat (Bisa ditahan pakai is_action_pressed)
+	# 6. Lompat
 	if Input.is_action_pressed("jump") and is_on_floor():
 		jump()
 
@@ -72,26 +99,24 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-	# 7. PEMICU ANIMASI (Dengan Efek Transisi Mulus & Kecepatan 2x Lipat)
-	var blend_time = 0.3 # Waktu transisi (0.3 detik)
+	# 7. PEMICU ANIMASI
+	var blend_time = 0.3
 
 	if is_on_floor():
 		if final_dir != 0:
-			# Jika sedang berlari, kecepatan animasi jadi 2.0x, jika jalan biasa tetap 1.0x
 			if is_running:
-				anim_player.speed_scale = 2.0
+				anim_player.speed_scale = 2.5
 			else:
 				anim_player.speed_scale = 1.0
 			
 			if anim_player.current_animation != "walk":
 				anim_player.play("walk", blend_time)
 		else:
-			anim_player.speed_scale = 1.0 # Reset ke normal saat diam
+			anim_player.speed_scale = 1.0
 			if anim_player.current_animation != "idle":
 				anim_player.play("idle", blend_time)
 	else:
-		anim_player.speed_scale = 1.0 # Reset ke normal saat di udara
-		# KONDISI DI UDARA (LOMPAT ATAU JATUH)
+		anim_player.speed_scale = 1.0
 		if velocity.y > 0:
 			if anim_player.current_animation != "fall":
 				anim_player.play("fall", blend_time)
