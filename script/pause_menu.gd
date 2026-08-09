@@ -3,8 +3,6 @@ extends CanvasLayer
 @onready var resume_button: Button = $VBoxContainer/ResumeButton
 @onready var main_menu_button: Button = $VBoxContainer/MainMenuButton
 
-var current_seed = Global.current_world_seed
-
 func _ready() -> void:
 	# Memaksa PauseMenu & Tombol tetap aktif saat game di-pause
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -31,10 +29,16 @@ func _on_resume_button_pressed() -> void:
 	toggle_pause()
 
 func _on_main_menu_button_pressed() -> void:
-	get_tree().paused = false
-	
+	# 1. Ambil data dari Global Autoload
 	var active_seed = Global.current_world_seed
 	var active_world = Global.current_world_name
-	SaveManager.save_seed(active_seed, active_world)
 	
+	# 2. Simpan seed via SaveManager terlebih dahulu
+	if SaveManager:
+		SaveManager.save_seed(active_seed, active_world)
+	
+	# 3. Unpause game setelah proses simpan selesai
+	get_tree().paused = false
+	
+	# 4. Baru pindah ke Main Menu
 	get_tree().change_scene_to_file("res://scene/MainMenu.tscn")

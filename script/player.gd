@@ -1,21 +1,22 @@
 extends CharacterBody2D
 
-const SPEED = 100.0         # Kecepatan jalan biasa
-const RUN_SPEED = 150.0     # Kecepatan lari
+const SPEED = 100.0 # Kecepatan jalan biasa
+const RUN_SPEED = 150.0 # Kecepatan lari
 const JUMP_VELOCITY = -200.0 # Ditingkatkan agar lompatan terasa pas
 const JUMP_CUT_MAGNITUDE = 0.4 # Pemotong tinggi lompatan jika tombol dilepas cepat
 const GRAVITY = 980.0
 const MAX_FALL_SPEED = 400.0 # Bounded Terminal Velocity
 
 # --- PENGATURAN FALL DAMAGE ---
-@export var min_fall_height: float = 64.0  # Jarak aman minimal (dalam piksel)
+@export var min_fall_height: float = 64.0 # Jarak aman minimal (dalam piksel)
 @export var pixels_per_damage: float = 16.0 # Setiap berapa piksel damage bertambah 1
-
-var start_fall_y: float = 0.0                 # Menampung titik Y awal saat lepas dari tanah
+var start_fall_y: float = 0.0 # Menampung titik Y awal saat lepas dari tanah
 var is_falling: bool = false
 
-# Hubungkan node UI
+# --- NODE REFERENCES ---
 @onready var ui = get_node_or_null("../UILayer/UI")
+@onready var anim_player = $AnimationPlayer
+@onready var body_container = $Body # Node penampung semua part sprite tubuh
 
 # Variabel untuk input dari Tombol UI HP
 var ui_move_direction = 0.0
@@ -30,7 +31,6 @@ func _physics_process(delta: float) -> void:
 		if not is_falling:
 			start_fall_y = global_position.y
 			is_falling = true
-		
 		velocity.y = move_toward(velocity.y, MAX_FALL_SPEED, GRAVITY * delta)
 	else:
 		if is_falling:
@@ -38,43 +38,72 @@ func _physics_process(delta: float) -> void:
 			var fall_distance = global_position.y - start_fall_y
 			if fall_distance > min_fall_height:
 				_apply_fall_damage(fall_distance)
-
-		if velocity.y > 0:
-			velocity.y = 0
+		# Baris velocity.y = 0 dihapus agar tidak mengganggu kalkulasi pendaratan bawaan move_and_slide()
 
 	# 2. Input Keyboard PC
 	var keyboard_dir = Input.get_axis("left", "right")
 	var is_keyboard_running = Input.is_action_pressed("run")
 
 	# 3. Kecepatan (Lari vs Jalan)
+	var is_running = is_keyboard_running or is_ui_running
 	var current_speed = SPEED
-	if is_keyboard_running or is_ui_running:
+	if is_running:
 		current_speed = RUN_SPEED
 
 	# 4. Pergerakan Horisontal
 	var final_dir = keyboard_dir
 	if ui_move_direction != 0.0:
 		final_dir = ui_move_direction
-
 	velocity.x = final_dir * current_speed
 
-	# 5. Lompat (Bisa ditahan pakai is_action_pressed)
+	# 5. Membalikkan Arah Visual (Flip Body Container)
+	if final_dir > 0:
+		body_container.scale.x = 1.0   # Hadap Kanan
+	elif final_dir < 0:
+		body_container.scale.x = -1.0  # Hadap Kiri
+
+	# 6. Lompat (Bisa ditahan pakai is_action_pressed)
 	if Input.is_action_pressed("jump") and is_on_floor():
 		jump()
 
-	# 🌟 Tahan Lompat: Jika tombol dilepas saat meluncur ke atas, lompatan terhenti lebih cepat
+	# Tahan Lompat: Jika tombol dilepas saat meluncur ke atas, lompatan terhenti lebih cepat
 	if Input.is_action_just_released("jump") and velocity.y < 0:
 		velocity.y *= JUMP_CUT_MAGNITUDE
 
 	move_and_slide()
 
+	# 7. PEMICU ANIMASI (Dengan Efek Transisi Mulus & Kecepatan 2x Lipat)
+	var blend_time = 0.3 # Waktu transisi (0.3 detik)
+
+	if is_on_floor():
+		if final_dir != 0:
+			# Jika sedang berlari, kecepatan animasi jadi 2.0x, jika jalan biasa tetap 1.0x
+			if is_running:
+				anim_player.speed_scale = 2.0
+			else:
+				anim_player.speed_scale = 1.0
+			
+			if anim_player.current_animation != "walk":
+				anim_player.play("walk", blend_time)
+		else:
+			anim_player.speed_scale = 1.0 # Reset ke normal saat diam
+			if anim_player.current_animation != "idle":
+				anim_player.play("idle", blend_time)
+	else:
+		anim_player.speed_scale = 1.0 # Reset ke normal saat di udara
+		# KONDISI DI UDARA (LOMPAT ATAU JATUH)
+		if velocity.y > 0:
+			if anim_player.current_animation != "fall":
+				anim_player.play("fall", blend_time)
+		else:
+			if anim_player.current_animation != "jump":
+				anim_player.play("jump", blend_time)
+
 # --- FUNGSI MENGHITUNG FALL DAMAGE ---
 func _apply_fall_damage(distance: float) -> void:
 	var excess_distance = distance - min_fall_height
 	var damage_amount: int = 1 + int(excess_distance / pixels_per_damage)
-	
 	print("[FALL DAMAGE] Jarak Jatuh: ", distance, " px | Damage: ", damage_amount)
-	
 	if ui and ui.has_method("take_damage"):
 		ui.take_damage(damage_amount)
 

@@ -2,13 +2,12 @@ extends Control
 
 # Referensi Node sesuai struktur VBoxContainer kamu
 @onready var world_name_input: LineEdit = $VBoxContainer/WorldNameInput
-@onready var seed_input: LineEdit = $VBoxContainer/SeedInput # Ganti ke SeedInput jika sudah di-rename
-@onready var create_button: Button = $VBoxContainer/CreateButton  # Ganti ke CreateButton jika sudah di-rename
-@onready var back_button: Button = $VBoxContainer/BackButton   # Ganti ke BackButton jika sudah di-rename
+@onready var seed_input: LineEdit = $VBoxContainer/SeedInput
+@onready var create_button: Button = $VBoxContainer/CreateButton
+@onready var back_button: Button = $VBoxContainer/BackButton
 
 func _ready() -> void:
 	get_window().content_scale_factor = 4.0
-	# Menghubungkan sinyal klik tombol secara otomatis lewat kode
 	create_button.pressed.connect(_on_create_button_pressed)
 	back_button.pressed.connect(_on_back_button_pressed)
 
@@ -32,12 +31,11 @@ func _on_create_button_pressed() -> void:
 	Global.current_world_seed = final_seed
 	Global.current_temp_seed_text = seed_text
 
-	# 2. Simpan seed ke txt menggunakan SaveManager
+	# 2. Simpan seed menggunakan SaveManager
 	SaveManager.save_seed(final_seed, world_name)
 	
 	# 3. Pindah ke Loading Screen
 	get_tree().change_scene_to_file("res://scene/loading-screen.tscn")
 
 func _on_back_button_pressed() -> void:
-	# Kembali ke Main Menu (sesuaikan path-nya jika ada main menu)
 	get_tree().change_scene_to_file("res://scene/select_world.tscn")

@@ -1,7 +1,7 @@
-[gd_scene format=3 uid="uid://c5252366xsd56"]
+[gd_scene format=3 uid="uid://divu40buo0dqb"]
 
-[ext_resource type="Script" uid="uid://g2flfaro2pb2" path="res://script/player.gd" id="1_xo3ru"]
-[ext_resource type="Texture2D" uid="uid://d33srhs02nod7" path="res://assets/entity/player.png" id="2_hjaqi"]
+[ext_resource type="Script" uid="uid://cdjyoqnu5k6b" path="res://script/character_body_2d.gd" id="2_0e48y"]
+[ext_resource type="Texture2D" uid="uid://d33srhs02nod7" path="res://assets/entity/player.png" id="3_q6r6c"]
 
 [sub_resource type="Animation" id="Animation_q6r6c"]
 length = 0.001
@@ -750,7 +750,7 @@ tracks/11/keys = {
 "values": [0.2617993877991494, 0.5235987755982988, 0.2617993877991494, 0.0, -0.2617993877991494, 0.0]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_fvtld"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_d21ai"]
 _data = {
 &"RESET": SubResource("Animation_q6r6c"),
 &"fall": SubResource("Animation_rj586"),
@@ -759,67 +759,59 @@ _data = {
 &"walk": SubResource("Animation_d21ai")
 }
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_mti6b"]
-size = Vector2(10, 23.5)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4kxuq"]
+size = Vector2(6, 24)
 
-[node name="CharacterBody2D" type="CharacterBody2D" unique_id=1669300621]
-collision_layer = 2
-script = ExtResource("1_xo3ru")
+[node name="idk" type="Node2D" unique_id=403522891]
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=74799591]
-libraries/ = SubResource("AnimationLibrary_fvtld")
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1634077805]
+position = Vector2(228, 152)
+script = ExtResource("2_0e48y")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player" unique_id=1846268382]
+libraries/ = SubResource("AnimationLibrary_d21ai")
 autoplay = &"idle"
 
-[node name="Body" type="Sprite2D" parent="." unique_id=739028830]
+[node name="Body" type="Sprite2D" parent="Player" unique_id=1020472467]
 position = Vector2(0, -1)
-texture = ExtResource("2_hjaqi")
+texture = ExtResource("3_q6r6c")
 region_enabled = true
 region_rect = Rect2(0, 9, 4, 9)
 
-[node name="Head" type="Sprite2D" parent="Body" unique_id=1137711234]
+[node name="Head" type="Sprite2D" parent="Player/Body" unique_id=1539266683]
 position = Vector2(0, -8)
-texture = ExtResource("2_hjaqi")
+texture = ExtResource("3_q6r6c")
 offset = Vector2(0, 0.5)
 region_enabled = true
 region_rect = Rect2(0, 0, 8, 8)
 
-[node name="RightArm" type="Sprite2D" parent="Body" unique_id=1704047883]
+[node name="RightArm" type="Sprite2D" parent="Player/Body" unique_id=89194748]
 position = Vector2(0, 1)
-texture = ExtResource("2_hjaqi")
+texture = ExtResource("3_q6r6c")
 region_enabled = true
 region_rect = Rect2(9, 0, 4, 9)
 
-[node name="LeftArm" type="Sprite2D" parent="Body" unique_id=1481742845]
+[node name="LeftArm" type="Sprite2D" parent="Player/Body" unique_id=755210590]
 show_behind_parent = true
 position = Vector2(0, 1)
-texture = ExtResource("2_hjaqi")
+texture = ExtResource("3_q6r6c")
 region_enabled = true
 region_rect = Rect2(14, 0, 4, 9)
 
-[node name="RightLeg" type="Sprite2D" parent="Body" unique_id=445807515]
+[node name="RightLeg" type="Sprite2D" parent="Player/Body" unique_id=720598244]
 position = Vector2(0, 9)
-texture = ExtResource("2_hjaqi")
+texture = ExtResource("3_q6r6c")
 region_enabled = true
 region_rect = Rect2(19, 0, 4, 9)
 
-[node name="LeftLeg" type="Sprite2D" parent="Body" unique_id=1057328023]
+[node name="LeftLeg" type="Sprite2D" parent="Player/Body" unique_id=1060326661]
 show_behind_parent = true
 position = Vector2(0, 9)
-texture = ExtResource("2_hjaqi")
+texture = ExtResource("3_q6r6c")
 region_enabled = true
 region_rect = Rect2(24, 0, 4, 9)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2045027999]
-position = Vector2(0, 0.75)
-shape = SubResource("RectangleShape2D_mti6b")
-debug_color = Color(0.6655917, 0.51211435, 0, 0.41960785)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=1176293570]
+shape = SubResource("RectangleShape2D_4kxuq")
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=329188528]
-limit_enabled = false
-position_smoothing_speed = 10.0
-drag_horizontal_enabled = true
-drag_vertical_enabled = true
-drag_left_margin = 0.05
-drag_top_margin = 0.05
-drag_right_margin = 0.05
-drag_bottom_margin = 0.05
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=2039002796]

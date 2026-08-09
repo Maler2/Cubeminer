@@ -19,6 +19,7 @@ export/
 *.aab
 *.exe
 *.zip
+export_presets.cfg
 
 # --- SYSTEM & OS FILES ---
 .DS_Store
