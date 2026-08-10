@@ -13,10 +13,19 @@ func _ready() -> void:
 		title_label.text = game_name
 
 	var version_name: String = ProjectSettings.get_setting("application/config/version")
-	if version_name != "":
-		version_label.text = "v" + str(version_name)
-	else:
+
+	if version_name == "":
 		version_label.text = "vnull"
+	elif (version_name.contains("b") or version_name.contains("B")) and (version_name.contains("d") or version_name.contains("D")):
+		version_label.text = "v" + str(version_name) + " (Beta Development)"
+	elif version_name.contains("b") or version_name.contains("B"):
+		# Jika ada huruf 'b' atau 'B' (misal: "1.0b")
+		version_label.text = "v" + str(version_name) + " (Beta)"
+	elif version_name.contains("d") or version_name.contains("D"):
+		version_label.text = "v" + str(version_name) + " (Dev)"
+	else:
+		# Versi rilis normal tanpa huruf 'b'
+		version_label.text = "v" + str(version_name)
 	
 	# Hubungkan tombol dengan fungsinya
 	play_button.pressed.connect(_on_play_button_pressed)

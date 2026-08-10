@@ -1,47 +1,51 @@
 extends Node
 
-# --- FITUR SIMPAN SEED DUNIA ---
-func save_seed(seed_value: int, world_name: String) -> void:
-	var clean_world_name = world_name.strip_edges()
-	if clean_world_name.is_empty():
-		print("⚠️ Gagal simpan seed: Nama World kosong!")
-		return
+# Path folder penyimpanan dunia
+const WORLDS_DIR = "user://worlds/"
 
-	var world_folder = "user://worlds/" + clean_world_name
-	if not DirAccess.dir_exists_absolute(world_folder):
-		DirAccess.make_dir_recursive_absolute(world_folder)
-
-	# Simpan seed ke file seed.json di folder world terkait
-	var save_path = world_folder + "/seed.json"
-	var file = FileAccess.open(save_path, FileAccess.WRITE)
+# --- FUNGSI MENYIMPAN SEED & DATA DUNIA ---
+func save_world(world_name: String, world_seed: int) -> void:
+	if world_name.strip_edges() == "":
+		world_name = "My World"
+		
+	var dir_path = WORLDS_DIR + world_name + "/"
+	
+	# Buat folder jika belum ada
+	if not DirAccess.dir_exists_absolute(dir_path):
+		DirAccess.make_dir_recursive_absolute(dir_path)
+		
+	var file_path = dir_path + "seed.txt"
+	var file = FileAccess.open(file_path, FileAccess.WRITE)
+	
 	if file:
-		var seed_data = {
-			"world_seed": seed_value
-		}
-		var json_string = JSON.stringify(seed_data, "\t")
-		file.store_string(json_string)
+		# Simpan seed sebagai String angka yang bersih
+		file.store_string(str(world_seed))
 		file.close()
-		print("✅ Seed (", seed_value, ") berhasil disimpan untuk world: ", clean_world_name)
+		print("✅ SaveManager: Berhasil menyimpan seed [", world_seed, "] ke: ", file_path)
 	else:
-		print("❌ Gagal menyimpan seed.json! Error: ", FileAccess.get_open_error())
+		print("❌ SaveManager: Gagal membuka file untuk menulis! Error code: ", FileAccess.get_open_error())
 
-
-# --- FITUR LOAD SEED DUNIA ---
-func load_seed(world_name: String) -> int:
-	var clean_world_name = world_name.strip_edges()
-	var save_path = "user://worlds/" + clean_world_name + "/seed.json"
-
-	if not FileAccess.file_exists(save_path):
-		print("ℹ️ File seed.json tidak ditemukan untuk world: ", clean_world_name)
-		return 0
-
-	var file = FileAccess.open(save_path, FileAccess.READ)
-	if file:
-		var json_string = file.get_as_text()
-		file.close()
-
-		var json = JSON.new()
-		if json.parse(json_string) == OK:
-			return int(json.data.get("world_seed", 0))
-
-	return 0
+# --- FUNGSI MEMUAT SEED ---
+func load_world_seed(world_name: String) -> int:
+	if world_name.strip_edges() == "":
+		world_name = "My World"
+		
+	var file_path = WORLDS_DIR + world_name + "/seed.txt"
+	
+	if FileAccess.file_exists(file_path):
+		var file = FileAccess.open(file_path, FileAccess.READ)
+		if file:
+			var content = file.get_as_text().strip_edges()
+			file.close()
+			
+			# Pastikan teks tidak kosong sebelum diubah ke integer
+			if content.is_valid_int():
+				var loaded_seed = content.to_int()
+				print("✅ SaveManager: Berhasil memuat seed [", loaded_seed, "] dari file.")
+				return loaded_seed
+			else:
+				print("⚠️ SaveManager: Isi file seed bukan angka valid ('", content, "'). Refactor ke angka acak.")
+	else:
+		print("⚠️ SaveManager: File seed tidak ditemukan di: ", file_path)
+		
+	return 0 # Fallback jika file tidak ada

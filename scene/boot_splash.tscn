@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://ciw0kfof0ceix"]
+
+[ext_resource type="Script" uid="uid://cfwmvi5ils7v6" path="res://script/boot_splash.gd" id="1_m1wen"]
+[ext_resource type="Texture2D" uid="uid://brcr7f6agqe21" path="res://assets/icon/game_startup_icon.png" id="2_bou02"]
+[ext_resource type="PackedScene" uid="uid://goytp2xg1hvf" path="res://scene/MainMenu.tscn" id="2_luu12"]
+
+[node name="BootSplash" type="Control" unique_id=766420060]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_m1wen")
+next_scene = ExtResource("2_luu12")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1665205235]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=926414955]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -68.0
+offset_right = 64.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_bou02")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SplashTimer" type="Timer" parent="." unique_id=535885368]
+wait_time = 2.0
+one_shot = true
+autostart = true

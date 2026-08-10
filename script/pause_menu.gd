@@ -35,7 +35,7 @@ func _on_main_menu_button_pressed() -> void:
 	
 	# 2. Simpan seed via SaveManager terlebih dahulu
 	if SaveManager:
-		SaveManager.save_seed(active_seed, active_world)
+		SaveManager.save_world(active_world, active_seed)
 	
 	# 3. Unpause game setelah proses simpan selesai
 	get_tree().paused = false
