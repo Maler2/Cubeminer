@@ -23,11 +23,33 @@ var is_falling: bool = false
 var ui_move_direction = 0.0
 var is_ui_running = false
 
+var footstep_timer: float = 0.0
+@export var step_interval: float = 0.45 # Jeda antar langkah kaki (detik)
+
+@onready var sfx_player: AudioStreamPlayer2D = $FootstepAudioPlayer
+
 func _ready() -> void:
 	add_to_group("players")
 	
 	# Hubungkan tombol InputLayer ke fungsi Player secara otomatis jika kodenya ada
 	_setup_mobile_controls()
+
+func handle_footstep_sfx(delta: float) -> void:
+	if is_on_floor() and abs(velocity.x) > 10:
+		# Jika lari interval 0.2s, jika jalan biasa interval 0.35s
+		var current_interval = 0.2 if (is_ui_running or Input.is_action_pressed("run")) else step_interval
+		
+		footstep_timer += delta
+		if footstep_timer >= current_interval:
+			footstep_timer = 0.0
+			play_footstep_sfx()
+	else:
+		footstep_timer = step_interval
+
+func play_footstep_sfx() -> void:
+	print("SFX Langkah Dipanggil!") # Cek apakah pesan ini muncul di Output Log
+	sfx_player.pitch_scale = randf_range(0.9, 1.1)
+	sfx_player.play()
 
 func _setup_mobile_controls() -> void:
 	if not input_layer:
@@ -98,6 +120,9 @@ func _physics_process(delta: float) -> void:
 		velocity.y *= JUMP_CUT_MAGNITUDE
 
 	move_and_slide()
+
+	# --- PANGGIL FUNGSI SFX DI SINI ---
+	handle_footstep_sfx(delta)
 
 	# 7. PEMICU ANIMASI
 	var blend_time = 0.3
