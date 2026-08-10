@@ -16,7 +16,7 @@ script = ExtResource("1_dbls1")
 [node name="Inventory" parent="." unique_id=81308667 instance=ExtResource("7_qpk70")]
 
 [node name="HotbarUI" parent="." unique_id=569034783 instance=ExtResource("2_ll5lq")]
-slot_tile_ids = Array[Vector2i]([Vector2i(-1, -1), Vector2i(-1, -1), Vector2i(-1, -1), Vector2i(-1, -1), Vector2i(-1, -1), Vector2i(-1, -1), Vector2i(-1, -1)])
+slot_tile_ids = Array[int]([-1, -1, -1, -1, -1, -1, -1])
 
 [node name="ForegroundMapLayer" type="TileMapLayer" parent="." unique_id=1682738660 node_paths=PackedStringArray("background_layer", "player")]
 visibility_layer = 2
@@ -32,8 +32,9 @@ show_behind_parent = true
 tile_set = ExtResource("3_p1ry8")
 collision_enabled = false
 
-[node name="CharacterBody2D" parent="." unique_id=1669300621 instance=ExtResource("1_5kiuu")]
+[node name="CharacterBody2D" parent="." unique_id=1669300621 node_paths=PackedStringArray("hotbar") instance=ExtResource("1_5kiuu")]
 position = Vector2(512, 208)
+hotbar = NodePath("../HotbarUI")
 
 [node name="UILayer" type="CanvasLayer" parent="." unique_id=1085904827]
 

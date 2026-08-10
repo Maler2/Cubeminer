@@ -14,6 +14,7 @@ var start_fall_y: float = 0.0 # Menampung titik Y awal saat lepas dari tanah
 var is_falling: bool = false
 
 # --- NODE REFERENCES ---
+@export var hotbar: Node # Tarik Node Hotbar kamu ke kolom ini di Inspector
 @onready var ui = get_node_or_null("../UILayer/UI")
 @onready var input_layer = get_node_or_null("../InputLayer") # Referensi ke InputLayer
 @onready var anim_player = $AnimationPlayer
@@ -27,12 +28,55 @@ var footstep_timer: float = 0.0
 @export var step_interval: float = 0.45 # Jeda antar langkah kaki (detik)
 
 @onready var sfx_player: AudioStreamPlayer2D = $FootstepAudioPlayer
+@onready var held_item_sprite: Sprite2D = $Body/RightArm/ItemHeldSprite # Sesuaikan path Node tanganmu
 
 func _ready() -> void:
 	add_to_group("players")
 	
 	# Hubungkan tombol InputLayer ke fungsi Player secara otomatis jika kodenya ada
 	_setup_mobile_controls()
+	
+	# Hubungkan sinyal dari Hotbar
+	_setup_hotbar_connection()
+
+func _setup_hotbar_connection() -> void:
+	# Jika hotbar belum di-assign lewat Inspector, coba cari via path
+	if not hotbar:
+		hotbar = get_node_or_null("../UILayer/Hotbar")
+		
+	if hotbar:
+		if hotbar.has_signal("slot_changed"):
+			if not hotbar.is_connected("slot_changed", _on_hotbar_slot_changed):
+				hotbar.slot_changed.connect(_on_hotbar_slot_changed)
+				print("✅ PLAYER: Berhasil connect ke sinyal Hotbar!")
+	else:
+		print("⚠️ PLAYER: Node Hotbar tidak ditemukan! Drag Node Hotbar ke Inspector Player.")
+
+# Callback saat slot di Hotbar berubah / dimasukkan item
+func _on_hotbar_slot_changed(_slot_index: int, tile_id: int) -> void:
+	if not held_item_sprite:
+		return
+		
+	# Jika slot kosong (-1) atau ID tidak ada di Dictionary Hotbar
+	if tile_id == -1 or not hotbar or not hotbar.tile_textures.has(tile_id):
+		update_held_item(null)
+	else:
+		# Ambil Texture2D dari dictionary milik hotbar
+		var new_tex = hotbar.tile_textures[tile_id]
+		update_held_item(new_tex)
+
+# Fungsi untuk mengubah item yang dipegang
+func update_held_item(new_texture: Texture2D) -> void:
+	if not held_item_sprite:
+		return
+		
+	if new_texture:
+		held_item_sprite.texture = new_texture
+		held_item_sprite.visible = true
+	else:
+		# Jika slot hotbar kosong/tangan kosong
+		held_item_sprite.texture = null
+		held_item_sprite.visible = false
 
 func handle_footstep_sfx(delta: float) -> void:
 	if is_on_floor() and abs(velocity.x) > 10:
@@ -47,9 +91,9 @@ func handle_footstep_sfx(delta: float) -> void:
 		footstep_timer = step_interval
 
 func play_footstep_sfx() -> void:
-	print("SFX Langkah Dipanggil!") # Cek apakah pesan ini muncul di Output Log
-	sfx_player.pitch_scale = randf_range(0.9, 1.1)
-	sfx_player.play()
+	if sfx_player:
+		sfx_player.pitch_scale = randf_range(0.9, 1.1)
+		sfx_player.play()
 
 func _setup_mobile_controls() -> void:
 	if not input_layer:
