@@ -24,7 +24,6 @@ func _on_create_button_pressed() -> void:
 	elif seed_text.is_valid_int():
 		final_seed = seed_text.to_int()
 	else:
-		# Jika input mengandung huruf, diubah jadi angka integer via hash()
 		final_seed = seed_text.hash()
 
 	# 1. Simpan variabel ke Global Autoload
@@ -32,10 +31,13 @@ func _on_create_button_pressed() -> void:
 	Global.current_world_seed = final_seed
 	Global.current_temp_seed_text = seed_text
 
-	# 2. Simpan seed menggunakan SaveManager (Perbaikan nama fungsi & urutan: String dulu, baru int)
+	# 2. Simpan seed via SaveManager (Gunakan file.flush di SaveManager)
 	SaveManager.save_world(world_name, final_seed)
 	
-	# 3. Pindah ke Loading Screen
+	# 3. Beri delay mikro/tunggu 1 frame agar OS selesai menulis file fisik
+	await get_tree().process_frame
+	
+	# 4. Pindah ke Loading Screen
 	get_tree().change_scene_to_file("res://scene/loading-screen.tscn")
 
 func _on_back_button_pressed() -> void:

@@ -70,17 +70,14 @@ func _on_back_button_pressed() -> void:
 
 # Panggil fungsi ini saat salah satu tombol world diklik
 func load_selected_world(world_name: String) -> void:
-	var seed_file_path = "user://worlds/" + world_name + "/seed.txt"
+	# Ambil seed dari SaveManager yang sudah menangani JSON dengan benar
+	var loaded_seed: int = SaveManager.load_world_seed(world_name)
 	
-	if FileAccess.file_exists(seed_file_path):
-		var file = FileAccess.open(seed_file_path, FileAccess.READ)
-		if file:
-			var loaded_seed = file.get_as_text().to_int()
-			file.close()
-			
-			# Set ke Global
-			Global.current_world_name = world_name
-			Global.current_world_seed = loaded_seed
-			
-			# Pindah ke game
-			get_tree().change_scene_to_file("res://scene/loading-screen.tscn")
+	# Set ke Global
+	Global.current_world_name = world_name
+	Global.current_world_seed = loaded_seed
+	
+	print("📂 World Selected: ", world_name, " | Loaded Seed: ", loaded_seed)
+	
+	# Pindah ke game
+	get_tree().change_scene_to_file("res://scene/loading-screen.tscn")

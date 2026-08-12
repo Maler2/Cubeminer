@@ -13,7 +13,7 @@ func save_world(world_name: String, world_seed: int, hotbar_data: Array = [], pl
 		
 	var file_path = dir_path + "info.txt"
 	
-	# Baca data lama jika ada
+	# 1. Read data lama jika ada
 	var data_dict: Dictionary = {}
 	if FileAccess.file_exists(file_path):
 		var file_read = FileAccess.open(file_path, FileAccess.READ)
@@ -24,20 +24,38 @@ func save_world(world_name: String, world_seed: int, hotbar_data: Array = [], pl
 					data_dict = json_helper.data
 			file_read.close()
 
-	# Update data
-	if world_seed != 0 or not data_dict.has("seed"):
-		data_dict["seed"] = world_seed
+	# 2. Update Seed (FIX BUG SEED 0.0)
+	var existing_seed: int = int(data_dict.get("seed", 0))
+	
+	if world_seed != 0:
+		data_dict["seed"] = int(world_seed)
+	elif existing_seed != 0:
+		data_dict["seed"] = existing_seed
+	else:
+		data_dict["seed"] = int(randi() % 1000000)
+
+	# 3. Update Hotbar (jika belum ada, buatkan default)
 	if hotbar_data.size() > 0:
 		data_dict["hotbar"] = hotbar_data
+	elif not data_dict.has("hotbar"):
+		data_dict["hotbar"] = [-1, -1, -1, -1, -1, -1, -1]
+
+	# 4. Update Posisi Player (pastikan selalu ada struktur default)
 	if player_pos != Vector2.ZERO:
 		data_dict["player_pos"] = {"x": player_pos.x, "y": player_pos.y}
+	elif not data_dict.has("player_pos"):
+		data_dict["player_pos"] = {"x": 0, "y": 0}
 
-	# Tulis kembali sebagai JSON
+	# 5. Tulis kembali sebagai JSON
 	var file_write = FileAccess.open(file_path, FileAccess.WRITE)
 	if file_write:
 		file_write.store_string(JSON.stringify(data_dict, "\t"))
+		
+		# 🔑 PAKSA OS TULIS KE STORAGE HP SEKARANG JUGA
+		file_write.flush()
 		file_write.close()
-		print("✅ SaveManager: Berhasil menyimpan posisi player & info dunia ke: ", file_path)
+		
+		print("✅ SaveManager: Berhasil menyimpan info dunia. Seed: ", data_dict["seed"])
 	else:
 		print("❌ SaveManager: Gagal menulis file!")
 
@@ -58,6 +76,9 @@ func load_world_info(world_name: String) -> Dictionary:
 			
 			if parse_result == OK and json_helper.data is Dictionary:
 				print("✅ SaveManager: Berhasil memuat info.txt (JSON) untuk dunia '", world_name, "'")
+				# Pastikan seed yang dibaca dipaksa konversi ke integer
+				if json_helper.data.has("seed"):
+					json_helper.data["seed"] = int(json_helper.data["seed"])
 				return json_helper.data
 				
 	return default_result
