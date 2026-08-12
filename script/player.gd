@@ -25,10 +25,14 @@ var ui_move_direction = 0.0
 var is_ui_running = false
 
 var footstep_timer: float = 0.0
-@export var step_interval: float = 0.45 # Jeda antar langkah kaki (detik)
+@export var step_interval: float = 0.3333 # Jeda antar langkah kaki (detik)
 
 @onready var sfx_player: AudioStreamPlayer2D = $FootstepAudioPlayer
 @onready var held_item_sprite: Sprite2D = $Body/RightArm/ItemHeldSprite # Sesuaikan path Node tanganmu
+
+# --- VARIABEL EFEK FLIP ---
+var flip_tween: Tween
+var is_facing_right: bool = true # Menyimpan status arah karakter saat ini
 
 func _ready() -> void:
 	add_to_group("players")
@@ -40,7 +44,6 @@ func _ready() -> void:
 	_setup_hotbar_connection()
 
 func _setup_hotbar_connection() -> void:
-	# Jika hotbar belum di-assign lewat Inspector, coba cari via path
 	if not hotbar:
 		hotbar = get_node_or_null("../UILayer/Hotbar")
 		
@@ -52,20 +55,16 @@ func _setup_hotbar_connection() -> void:
 	else:
 		print("⚠️ PLAYER: Node Hotbar tidak ditemukan! Drag Node Hotbar ke Inspector Player.")
 
-# Callback saat slot di Hotbar berubah / dimasukkan item
 func _on_hotbar_slot_changed(_slot_index: int, tile_id: int) -> void:
 	if not held_item_sprite:
 		return
 		
-	# Jika slot kosong (-1) atau ID tidak ada di Dictionary Hotbar
 	if tile_id == -1 or not hotbar or not hotbar.tile_textures.has(tile_id):
 		update_held_item(null)
 	else:
-		# Ambil Texture2D dari dictionary milik hotbar
 		var new_tex = hotbar.tile_textures[tile_id]
 		update_held_item(new_tex)
 
-# Fungsi untuk mengubah item yang dipegang
 func update_held_item(new_texture: Texture2D) -> void:
 	if not held_item_sprite:
 		return
@@ -74,13 +73,11 @@ func update_held_item(new_texture: Texture2D) -> void:
 		held_item_sprite.texture = new_texture
 		held_item_sprite.visible = true
 	else:
-		# Jika slot hotbar kosong/tangan kosong
 		held_item_sprite.texture = null
 		held_item_sprite.visible = false
 
 func handle_footstep_sfx(delta: float) -> void:
 	if is_on_floor() and abs(velocity.x) > 10:
-		# Jika lari interval 0.2s, jika jalan biasa interval 0.35s
 		var current_interval = 0.2 if (is_ui_running or Input.is_action_pressed("run")) else step_interval
 		
 		footstep_timer += delta
@@ -149,23 +146,22 @@ func _physics_process(delta: float) -> void:
 		final_dir = ui_move_direction
 	velocity.x = final_dir * current_speed
 
-	# 5. Membalikkan Arah Visual (Flip Body Container)
-	if final_dir > 0:
-		body_container.scale.x = 1.0   # Hadap Kanan
-	elif final_dir < 0:
-		body_container.scale.x = -1.0  # Hadap Kiri
+	# 5. Membalikkan Arah Visual dengan Efek Smooth Flip (Tween)
+	if final_dir > 0 and not is_facing_right:
+		_apply_smooth_flip(true)
+	elif final_dir < 0 and is_facing_right:
+		_apply_smooth_flip(false)
 
 	# 6. Lompat
 	if Input.is_action_pressed("jump") and is_on_floor():
 		jump()
 
-	# Tahan Lompat: Jika tombol dilepas saat meluncur ke atas, lompatan terhenti lebih cepat
 	if Input.is_action_just_released("jump") and velocity.y < 0:
 		velocity.y *= JUMP_CUT_MAGNITUDE
 
 	move_and_slide()
 
-	# --- PANGGIL FUNGSI SFX DI SINI ---
+	# --- SFX ---
 	handle_footstep_sfx(delta)
 
 	# 7. PEMICU ANIMASI
@@ -192,6 +188,21 @@ func _physics_process(delta: float) -> void:
 		else:
 			if anim_player.current_animation != "jump":
 				anim_player.play("jump", blend_time)
+
+# --- FUNGSI EFEK SMOOTH FLIP ---
+func _apply_smooth_flip(facing_right: bool) -> void:
+	is_facing_right = facing_right
+	var target_scale_x = 1.0 if facing_right else -1.0
+	
+	# Hentikan tween sebelumnya jika pemain dengan cepat bolak-balik arah
+	if flip_tween and flip_tween.is_running():
+		flip_tween.kill()
+		
+	flip_tween = create_tween()
+	# Membuat animasi transisi scale.x dari ukuran lama ke target selama 0.1 detik
+	flip_tween.tween_property(body_container, "scale:x", target_scale_x, 0.1)\
+		.set_trans(Tween.TRANS_SINE)\
+		.set_ease(Tween.EASE_OUT)
 
 # --- FUNGSI MENGHITUNG FALL DAMAGE ---
 func _apply_fall_damage(distance: float) -> void:
