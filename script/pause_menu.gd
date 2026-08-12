@@ -3,6 +3,9 @@ extends CanvasLayer
 @onready var resume_button: Button = $VBoxContainer/ResumeButton
 @onready var main_menu_button: Button = $VBoxContainer/MainMenuButton
 
+# Node Hotbar (Sesuaikan path jika posisinya berbeda di scene kamu)
+@onready var hotbar = get_node_or_null("../UILayer/Hotbar")
+
 func _ready() -> void:
 	# Memaksa PauseMenu & Tombol tetap aktif saat game di-pause
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -33,12 +36,24 @@ func _on_main_menu_button_pressed() -> void:
 	var active_seed = Global.current_world_seed
 	var active_world = Global.current_world_name
 	
-	# 2. Simpan seed via SaveManager terlebih dahulu
-	if SaveManager:
-		SaveManager.save_world(active_world, active_seed)
+	# 2. Ambil data array ID item dari Hotbar
+	var hotbar_data: Array = []
 	
-	# 3. Unpause game setelah proses simpan selesai
+	if hotbar and hotbar.has_method("get_hotbar_data"):
+		hotbar_data = hotbar.get_hotbar_data()
+	elif "hotbar_slots" in Global: # Fallback jika data simpan di Global
+		hotbar_data = Global.hotbar_slots
+	
+	# 3. Simpan seed & hotbar via SaveManager ke info.txt
+	if SaveManager:
+		SaveManager.save_world(active_world, active_seed, hotbar_data)
+
+	var player = get_tree().get_first_node_in_group("players")
+	if player and player.has_method("simpan_posisi_player"):
+		player.simpan_posisi_player()
+	
+	# 4. Unpause game setelah proses simpan selesai
 	get_tree().paused = false
 	
-	# 4. Baru pindah ke Main Menu
+	# 5. Baru pindah ke Main Menu
 	get_tree().change_scene_to_file("res://scene/MainMenu.tscn")

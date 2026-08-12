@@ -42,6 +42,32 @@ func _ready() -> void:
 	
 	# Hubungkan sinyal dari Hotbar
 	_setup_hotbar_connection()
+	
+	# --- LOAD POSISI PLAYER SAAT GAME DIMULAI ---
+	call_deferred("muat_posisi_player")
+
+# --- FUNGSI SAVE & LOAD POSISI ---
+func muat_posisi_player() -> void:
+	var world_name: String = Global.current_world_name
+	if world_name == "": world_name = "My World"
+	
+	var saved_pos = SaveManager.load_player_position(world_name)
+	if saved_pos != Vector2.ZERO:
+		global_position = saved_pos
+		print("📍 PLAYER: Berhasil memuat posisi tersimpan di: ", global_position)
+
+func simpan_posisi_player() -> void:
+	var world_name: String = Global.current_world_name
+	if world_name == "": world_name = "My World"
+	
+	var current_seed: int = SaveManager.load_world_seed(world_name)
+	
+	# Ambil data hotbar agar hotbar tidak ikut ter-reset saat simpan posisi
+	var hotbar_data: Array = []
+	if hotbar and "slot_tile_ids" in hotbar:
+		hotbar_data = hotbar.slot_tile_ids
+		
+	SaveManager.save_world(world_name, current_seed, hotbar_data, global_position)
 
 func _setup_hotbar_connection() -> void:
 	if not hotbar:
@@ -194,12 +220,10 @@ func _apply_smooth_flip(facing_right: bool) -> void:
 	is_facing_right = facing_right
 	var target_scale_x = 1.0 if facing_right else -1.0
 	
-	# Hentikan tween sebelumnya jika pemain dengan cepat bolak-balik arah
 	if flip_tween and flip_tween.is_running():
 		flip_tween.kill()
 		
 	flip_tween = create_tween()
-	# Membuat animasi transisi scale.x dari ukuran lama ke target selama 0.1 detik
 	flip_tween.tween_property(body_container, "scale:x", target_scale_x, 0.1)\
 		.set_trans(Tween.TRANS_SINE)\
 		.set_ease(Tween.EASE_OUT)

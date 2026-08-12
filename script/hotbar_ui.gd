@@ -3,18 +3,16 @@ extends CanvasLayer
 signal slot_changed(selected_slot_index: int, selected_tile_id: int)
 
 # Masking ID Tile ke Tekstur Gambar
-# Masukkan gambar item di Inspector Godot sesuai urutan Tile ID (misal: ID 0, ID 1, ID 2, dst)
-# Atau kita buat Dictionary/Mapping jika ID tidak berurutan.
 @export var tile_textures: Dictionary = {
-    1: preload("res://assets/block/grass_block.png"), # Sesuaikan path gambar itemmu
-    2: preload("res://assets/block/dirt_block.png"),
-    3: preload("res://assets/block/stone_block.png"),
-    4: preload("res://assets/block/coal_block.png"),
-    5: preload("res://assets/block/iron_block.png"),
-    6: preload("res://assets/block/gold_block.png"),
-    7: preload("res://assets/block/diamond_block.png"),
-    8: preload("res://assets/block/wood_block.png"),
-    9: preload("res://assets/block/leave_block.png")
+	1: preload("res://assets/block/grass_block.png"),
+	2: preload("res://assets/block/dirt_block.png"),
+	3: preload("res://assets/block/stone_block.png"),
+	4: preload("res://assets/block/coal_block.png"),
+	5: preload("res://assets/block/iron_block.png"),
+	6: preload("res://assets/block/gold_block.png"),
+	7: preload("res://assets/block/diamond_block.png"),
+	8: preload("res://assets/block/wood_block.png"),
+	9: preload("res://assets/block/leave_block.png")
 }
 
 # Inisialisasi 7 slot kosong (-1 artinya kosong)
@@ -24,14 +22,15 @@ var current_slot: int = 0
 @onready var item_slots: Control = $HotbarContainer/MarginContainer/HotbarBG/ItemSlots
 
 func _ready() -> void:
-	# 🛠️ PAKSA RESET ARRAY KE -1 AGAR TIDAK TERTIMPA NILAI DARI INSPECTOR
 	if slot_tile_ids.is_empty() or slot_tile_ids.size() != 7:
 		slot_tile_ids = [-1, -1, -1, -1, -1, -1, -1]
 	else:
-		# Jika di inspector ada data, pastikan slot yang bernilai 0 diubah jadi -1 jika 0 bukan ID item
 		for i in range(slot_tile_ids.size()):
 			if slot_tile_ids[i] == 0:
 				slot_tile_ids[i] = -1
+
+	# 🔄 COBA LOAD HOTBAR DARI FILE SAAAT START
+	muat_hotbar_dari_file()
 
 	call_deferred("update_and_emit")
 	
@@ -40,6 +39,29 @@ func _ready() -> void:
 		var item = items[i]
 		if item is Control:
 			item.gui_input.connect(_on_item_gui_input.bind(i))
+
+# --- FUNGSI SIMPAN DI HotbarUI.gd ---
+func simpan_hotbar_ke_file() -> void:
+	var world_name: String = Global.current_world_name
+	if world_name == "":
+		world_name = "My World"
+		
+	var current_seed: int = SaveManager.load_world_seed(world_name)
+	# Panggil SaveManager untuk simpan JSON
+	SaveManager.save_world(world_name, current_seed, slot_tile_ids)
+
+func muat_hotbar_dari_file() -> void:
+	var world_name: String = Global.current_world_name
+	if world_name == "":
+		world_name = "My World"
+		
+	var world_info = SaveManager.load_world_info(world_name)
+	var loaded_hotbar = world_info.get("hotbar", [])
+	
+	if loaded_hotbar is Array and loaded_hotbar.size() == 7:
+		for i in range(7):
+			slot_tile_ids[i] = int(loaded_hotbar[i])
+		print("📂 HotbarUI: Hotbar berhasil dimuat: ", slot_tile_ids)
 
 func _on_item_gui_input(event: InputEvent, slot_index: int) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
@@ -61,16 +83,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_7: select_slot(6)
 
 	if event is InputEventMouseButton and event.pressed:
-			# 💡 TAMBAHKAN PENGECEKAN INI DULU
-			if slot_tile_ids.is_empty() or slot_tile_ids.size() == 0: 
-				return
-				
-			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-				var prev_slot = (current_slot - 1 + slot_tile_ids.size()) % slot_tile_ids.size()
-				select_slot(prev_slot)
-			elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-				var next_slot = (current_slot + 1) % slot_tile_ids.size()
-				select_slot(next_slot)
+		if slot_tile_ids.is_empty() or slot_tile_ids.size() == 0: 
+			return
+			
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			var prev_slot = (current_slot - 1 + slot_tile_ids.size()) % slot_tile_ids.size()
+			select_slot(prev_slot)
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			var next_slot = (current_slot + 1) % slot_tile_ids.size()
+			select_slot(next_slot)
 
 func select_slot(index: int) -> void:
 	if index >= 0 and index < slot_tile_ids.size():
@@ -88,22 +109,17 @@ func update_item_indicators() -> void:
 		
 		var current_tile_id = slot_tile_ids[i] if i < slot_tile_ids.size() else -1
 		
-		# --- PERBAIKAN UPDATE VISUAL ---
-		# Cari node gambar ikon (bisa item_slot itu sendiri atau child pertamanya)
 		var icon_rect: TextureRect = item_slot as TextureRect
 		if item_slot.get_child_count() > 0 and item_slot.get_child(0) is TextureRect:
 			icon_rect = item_slot.get_child(0) as TextureRect
 
 		if icon_rect:
 			if current_tile_id != -1 and tile_textures.has(current_tile_id):
-				# Jika slot ada isinya, pasang gambar tekstur & tampilkan
 				icon_rect.texture = tile_textures[current_tile_id]
 				icon_rect.visible = true
 			else:
-				# Jika slot kosong (-1), sembunyikan gambar ikonnya
 				icon_rect.visible = false
 
-		# Highlight Slot Aktif vs Tidak Aktif
 		if i == current_slot:
 			item_slot.modulate = Color(1.3, 1.3, 1.3, 1.0)
 			item_slot.scale = Vector2(1.1, 1.1)
@@ -112,22 +128,20 @@ func update_item_indicators() -> void:
 			item_slot.scale = Vector2(1.0, 1.0)
 
 func add_item_to_hotbar(tile_id: int, _amount: int = 1) -> bool:
-	# 1. Cek jika item SUDAH ADA di hotbar
 	var target_index = slot_tile_ids.find(tile_id)
 	if target_index != -1:
 		select_slot(target_index)
 		update_item_indicators()
-		print("ℹ️ Item sudah ada di Hotbar Slot ", target_index)
 		return true
 
-	# 2. Jika BELUM ADA, cari slot kosong (-1)
 	var empty_index = slot_tile_ids.find(-1)
 	if empty_index != -1:
 		slot_tile_ids[empty_index] = tile_id
 		select_slot(empty_index)
-		print("✨ Item Baru Tile ID ", tile_id, " dimasukkan ke Slot ", empty_index)
+		update_item_indicators()
+		
+		# 💾 Otomatis simpan setiap kali ada item baru yang diambil
+		simpan_hotbar_ke_file()
 		return true
 
-	# 3. Jika benar-benar TIDAK ADA slot kosong (-1)
-	print("⚠️ Hotbar Penuh!")
 	return false

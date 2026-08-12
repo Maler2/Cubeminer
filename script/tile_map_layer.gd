@@ -128,7 +128,7 @@ func _ready() -> void:
 	touch_timer.timeout.connect(_on_touch_hold_timeout)
 	add_child(touch_timer)
 
-	# 1. Ambil Nama & Seed dari Global
+	# Ambil Nama & Seed dari Global
 	var world_name: String = Global.current_world_name
 	var current_seed: int = Global.current_world_seed
 	var current_temp_seed: String = Global.current_temp_seed_text
@@ -347,19 +347,17 @@ func _input(event: InputEvent) -> void:
 			hovered_grid_pos = touch_target_grid
 			is_holding_touch = false
 			
-			# Jalankan Timer Hold
 			touch_timer.start()
 		else:
-			# Saat jari diangkat dari layar
 			touch_timer.stop()
 			if not is_holding_touch:
-				# Jika diangkat sebelum Timer habis -> Dianggap TAP -> Pasang Blok
 				pasang_blok(touch_target_grid)
+			is_holding_touch = false
 
 	elif event is InputEventScreenDrag:
-		# Jika posisi geser jari terlalu jauh saat menahan layar, batalkan hold
 		if event.position.distance_to(touch_start_pos) > 15.0:
 			touch_timer.stop()
+			is_holding_touch = false
 
 	# 🖱️ INPUT MOUSE PC
 	elif event is InputEventMouseButton and event.pressed:
@@ -369,12 +367,10 @@ func _input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_LEFT:
 			hancurkan_blok(mouse_grid)
 
-# Trigger Timer saat Tahan Layar Tercapai -> Menghancurkan Blok
 func _on_touch_hold_timeout() -> void:
 	is_holding_touch = true
 	hancurkan_blok(touch_target_grid)
 
-# --- REVISI LOGIKA PASANG BLOK ---
 func pasang_blok(grid_pos: Vector2i = Vector2i.MIN) -> void:
 	if not player: return
 	if grid_pos == Vector2i.MIN:
@@ -388,16 +384,15 @@ func pasang_blok(grid_pos: Vector2i = Vector2i.MIN) -> void:
 	var fg_id = get_cell_source_id(grid_pos)
 	var bg_id = background_layer.get_cell_source_id(grid_pos) if background_layer else -1
 
-	# 1. PRIORITAS UTAMA: Pasang BACKGROUND dulu jika area background masih kosong
+	# 1. Pasang BACKGROUND jika background masih kosong
 	if bg_id == -1 and background_layer:
 		if destroyed_bg_tiles.has(grid_pos): destroyed_bg_tiles.erase(grid_pos)
 		placed_bg_tiles[grid_pos] = selected_block_id
 		background_layer.set_cell(grid_pos, selected_block_id, Vector2i(0, 0))
 		queue_redraw()
 
-	# 2. PRIORITAS KEDUA: Jika BACKGROUND SUDAH ADA & FOREGROUND MASIH KOSONG -> Pasang ke Foreground
+	# 2. Pasang FOREGROUND jika background sudah ada & foreground kosong
 	elif fg_id == -1:
-		# Pengecekan posisi badan/kepala player HANYA dilakukan saat mau pasang Foreground (agar tidak terjebak)
 		var player_head_grid = player_grid_pos + Vector2i(0, -1)
 		if grid_pos == player_grid_pos or grid_pos == player_head_grid: return
 
@@ -426,7 +421,7 @@ func hancurkan_blok(grid_pos: Vector2i = Vector2i.MIN) -> void:
 		spawn_dropped_item(grid_pos, fg_id)
 		queue_redraw()
 		
-	# Prioritas 2: Hancurkan Background (Jika Foreground sudah hancur/kosong)
+	# Prioritas 2: Hancurkan Background
 	elif bg_id != -1 and background_layer:
 		if placed_bg_tiles.has(grid_pos): placed_bg_tiles.erase(grid_pos)
 		destroyed_bg_tiles[grid_pos] = true
