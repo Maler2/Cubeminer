@@ -8,6 +8,7 @@ extends Control
 
 func _ready() -> void:
 	get_window().content_scale_factor = 1.0
+	FpsCounter.set_fps_label_scale(1.0)
 	# Ambil nama game dari Project Settings
 	var game_name: String = ProjectSettings.get_setting("application/config/name")
 	if game_name != "":

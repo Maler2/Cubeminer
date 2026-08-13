@@ -44,14 +44,17 @@ vertical_alignment = 1
 
 [node name="PlayButton" type="Button" parent="VBoxContainer" unique_id=2010222995]
 layout_mode = 2
+mouse_default_cursor_shape = 2
 text = "Play"
 
 [node name="SettingButton" type="Button" parent="VBoxContainer" unique_id=1919519022]
 layout_mode = 2
+mouse_default_cursor_shape = 2
 text = "Settings"
 
 [node name="QuitButton" type="Button" parent="VBoxContainer" unique_id=1659705270]
 layout_mode = 2
+mouse_default_cursor_shape = 2
 text = "Quit"
 
 [node name="VersionLabel" type="Label" parent="." unique_id=1342580864]

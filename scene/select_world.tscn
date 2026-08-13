@@ -51,6 +51,9 @@ layout_mode = 2
 
 [node name="WorldListContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer" unique_id=958428337]
 layout_mode = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(60, 0)
+offset_transform_visual_only = false
 alignment = 1
 
 [node name="ButtonHBox" type="HBoxContainer" parent="VBoxContainer" unique_id=2005349416]
@@ -58,9 +61,11 @@ layout_mode = 2
 
 [node name="CreateButton" type="Button" parent="VBoxContainer/ButtonHBox" unique_id=198577808]
 layout_mode = 2
+mouse_default_cursor_shape = 2
 text = "CREATE NEW WORLD"
 
 [node name="BackButton" type="Button" parent="VBoxContainer/ButtonHBox" unique_id=518180970]
 layout_mode = 2
+mouse_default_cursor_shape = 2
 text = "BACK
 "

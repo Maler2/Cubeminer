@@ -1,5 +1,8 @@
 extends Control
 
+# --- PATH SIMPAN FILE ---
+const SAVE_PATH: String = "user://config.json"
+
 # --- REFERENSI UI ---
 @onready var back_button: Button = %BackButton
 @onready var sound_button: Button = %SoundButton
@@ -36,20 +39,32 @@ func _ready() -> void:
 	_setup_sliders()
 	_setup_video_settings()
 	
-	# Connect event slider audio
+	# Load data yang tersimpan dari JSON
+	_load_settings_from_json()
+	
+	# Connect event slider audio (otomatis simpan saat digeser)
 	if master_slider:
-		master_slider.value_changed.connect(func(val): _set_bus_volume("Master", val))
+		master_slider.value_changed.connect(func(val): 
+			_set_bus_volume("Master", val)
+			_save_settings_to_json()
+		)
 	if sfx_slider:
-		sfx_slider.value_changed.connect(func(val): _set_bus_volume("SFX", val))
+		sfx_slider.value_changed.connect(func(val): 
+			_set_bus_volume("SFX", val)
+			_save_settings_to_json()
+		)
 	if music_slider:
-		music_slider.value_changed.connect(func(val): _set_bus_volume("BGM", val))
+		music_slider.value_changed.connect(func(val): 
+			_set_bus_volume("BGM", val)
+			_save_settings_to_json()
+		)
 		
 	print("--- ✅ PENGATURAN LOG: Inisialisasi Selesai ---")
 
 func _process(_delta: float) -> void:
-	# Update angka FPS tiap frame HANYA jika opsinya dinyalakan
+	# Update angka FPS tiap frame HANYA jika opsinya dinyalakan (dibulatkan dengan int())
 	if show_fps and fps_label:
-		fps_label.text = "FPS: " + str(Engine.get_frames_per_second())
+		fps_label.text = "FPS: " + str(int(Engine.get_frames_per_second()))
 
 # --- FUNGSI LOG UNTUK PENGECEKAN SELURUH NODE ---
 func _check_node_status() -> void:
@@ -85,38 +100,40 @@ func _setup_video_settings() -> void:
 	# 1. Setup VSync
 	if switch_button:
 		switch_button.toggle_mode = true
-		var is_vsync_on = DisplayServer.window_get_vsync_mode() == DisplayServer.VSYNC_ENABLED
-		switch_button.button_pressed = is_vsync_on
-		switch_button.text = "ON" if is_vsync_on else "OFF"
 		if not switch_button.is_connected("toggled", _on_vsync_toggled):
 			switch_button.toggled.connect(_on_vsync_toggled)
 
 	# 2. Setup FPS Show Switch
 	if switch_fps_button:
 		switch_fps_button.toggle_mode = true
-		switch_fps_button.button_pressed = show_fps
-		switch_fps_button.text = "ON" if show_fps else "OFF"
 		if not switch_fps_button.is_connected("toggled", _on_fps_toggled):
 			switch_fps_button.toggled.connect(_on_fps_toggled)
-			
-	if fps_label:
-		fps_label.visible = show_fps
 
 func _on_vsync_toggled(toggled_on: bool) -> void:
-	if toggled_on:
+	_apply_vsync(toggled_on)
+	_save_settings_to_json()
+
+func _apply_vsync(enabled: bool) -> void:
+	if enabled:
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
-		switch_button.text = "ON"
+		if switch_button: switch_button.text = "ON"
 	else:
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
-		switch_button.text = "OFF"
+		if switch_button: switch_button.text = "OFF"
 
 func _on_fps_toggled(toggled_on: bool) -> void:
-	show_fps = toggled_on
+	_apply_fps_show(toggled_on)
+	_save_settings_to_json()
+
+func _apply_fps_show(enabled: bool) -> void:
+	show_fps = enabled
 	if switch_fps_button:
-		switch_fps_button.text = "ON" if toggled_on else "OFF"
-	if fps_label:
-		fps_label.visible = toggled_on
-	print("📊 Tampilan FPS: ", "ON" if toggled_on else "OFF")
+		switch_fps_button.button_pressed = enabled
+		switch_fps_button.text = "ON" if enabled else "OFF"
+
+    # Memanggil Autoload Global FPS
+	if FpsCounter:
+		FpsCounter.set_fps_visible(enabled)
 
 # --- KONTROL AUDIO BUS ---
 func _set_bus_volume(bus_name: String, value_0_to_100: float) -> void:
@@ -132,13 +149,59 @@ func _setup_sliders() -> void:
 			slider.max_value = 100.0
 			slider.step = 1.0
 
-	if master_slider:
-		master_slider.value = db_to_linear(AudioServer.get_bus_volume_db(0)) * 100.0
+# ==========================================
+# --- SISTEM SAVE / LOAD SETTING JSON ---
+# ==========================================
+
+func _save_settings_to_json() -> void:
+	var config_data: Dictionary = {
+		"master_volume": master_slider.value if master_slider else 100.0,
+		"sfx_volume": sfx_slider.value if sfx_slider else 100.0,
+		"music_volume": music_slider.value if music_slider else 100.0,
+		"vsync": switch_button.button_pressed if switch_button else true,
+		"show_fps": show_fps
+	}
 	
-	var sfx_idx = AudioServer.get_bus_index("SFX")
-	if sfx_idx != -1 and sfx_slider:
-		sfx_slider.value = db_to_linear(AudioServer.get_bus_volume_db(sfx_idx)) * 100.0
+	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	if file:
+		var json_string = JSON.stringify(config_data, "\t")
+		file.store_string(json_string)
+		file.close()
+
+func _load_settings_from_json() -> void:
+	if not FileAccess.file_exists(SAVE_PATH):
+		print("ℹ️ File config.json belum ada. Menggunakan settingan default.")
+		return
 		
-	var bgm_idx = AudioServer.get_bus_index("BGM")
-	if bgm_idx != -1 and music_slider:
-		music_slider.value = db_to_linear(AudioServer.get_bus_volume_db(bgm_idx)) * 100.0
+	var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
+	if file:
+		var json_string = file.get_as_text()
+		file.close()
+		
+		var json = JSON.new()
+		var error = json.parse(json_string)
+		if error == OK:
+			var data: Dictionary = json.data
+			
+			# Applied Audio Data
+			if master_slider and data.has("master_volume"):
+				master_slider.value = data["master_volume"]
+				_set_bus_volume("Master", data["master_volume"])
+				
+			if sfx_slider and data.has("sfx_volume"):
+				sfx_slider.value = data["sfx_volume"]
+				_set_bus_volume("SFX", data["sfx_volume"])
+				
+			if music_slider and data.has("music_volume"):
+				music_slider.value = data["music_volume"]
+				_set_bus_volume("BGM", data["music_volume"])
+				
+			# Applied Video Data
+			if switch_button and data.has("vsync"):
+				switch_button.button_pressed = data["vsync"]
+				_apply_vsync(data["vsync"])
+				
+			if data.has("show_fps"):
+				_apply_fps_show(data["show_fps"])
+				
+			print("💾 Log: Berhasil memuat settingan dari config.json!")

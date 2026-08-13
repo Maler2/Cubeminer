@@ -11,6 +11,7 @@ var start_time_msec: int = 0
 func _ready() -> void:
 	start_time_msec = Time.get_ticks_msec()
 	get_window().content_scale_factor = 1.0
+	FpsCounter.set_fps_offset(Vector2(1, 624))
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	
 	if progress_bar:

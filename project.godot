@@ -24,6 +24,7 @@ config/windows_native_icon="res://assets/appicon/app-32px-icon.ico"
 
 Global="*uid://bkxv8uinqpyhp"
 SaveManager="*uid://dsrjdb413kn6c"
+FpsCounter="*uid://dst3wt7mjfkgh"
 
 [display]
 

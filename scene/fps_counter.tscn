@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://dst3wt7mjfkgh"]
+
+[ext_resource type="Script" uid="uid://dy1ycuheuy8yp" path="res://script/fps_counter.gd" id="1_cpowx"]
+
+[node name="FpsCounter" type="CanvasLayer" unique_id=1984402478]
+layer = 100
+script = ExtResource("1_cpowx")
+
+[node name="Label" type="Label" parent="." unique_id=1013848511]
+anchors_preset = -1
+anchor_top = 0.966
+anchor_right = 0.035
+anchor_bottom = 1.0
+offset_top = 0.031982422
+offset_right = -0.3199997
+grow_vertical = 0
+text = "fps"

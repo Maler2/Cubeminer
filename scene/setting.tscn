@@ -34,16 +34,19 @@ alignment = 1
 [node name="BackButton" type="Button" parent="optionMargin/VBoxContainer" unique_id=1724120235]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 text = "Back"
 
 [node name="SoundButton" type="Button" parent="optionMargin/VBoxContainer" unique_id=93591279]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 text = "Sound"
 
 [node name="VideoButton" type="Button" parent="optionMargin/VBoxContainer" unique_id=2931084]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 text = "Video"
 
 [node name="ContentMargin" type="MarginContainer" parent="." unique_id=500463441]
@@ -71,7 +74,6 @@ color = Color(0, 0, 0, 0.40392157)
 
 [node name="AudioPage" type="VBoxContainer" parent="ContentMargin/ContentPanel" unique_id=936971158]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
@@ -116,6 +118,7 @@ value = 100.0
 
 [node name="VideoPage" type="VBoxContainer" parent="ContentMargin/ContentPanel" unique_id=1560013910]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
@@ -136,6 +139,7 @@ vertical_alignment = 1
 [node name="SwitchFPSButton" type="Button" parent="ContentMargin/ContentPanel/VideoPage" unique_id=1314541142]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 toggle_mode = true
 text = "OFF"
 
@@ -148,6 +152,7 @@ vertical_alignment = 1
 [node name="SwitchButton" type="Button" parent="ContentMargin/ContentPanel/VideoPage" unique_id=350889309]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 toggle_mode = true
 text = "ON"
 
@@ -160,6 +165,7 @@ anchor_bottom = 1.0
 offset_top = -22.0
 offset_right = 40.0
 grow_vertical = 0
+text = "fps"
 horizontal_alignment = 1
 vertical_alignment = 1
 
