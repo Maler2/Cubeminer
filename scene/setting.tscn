@@ -20,31 +20,147 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0.32156864, 0, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=113378451]
+[node name="optionMargin" type="MarginContainer" parent="." unique_id=3658873]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 88.0
+offset_bottom = 114.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="optionMargin" unique_id=113378451]
+layout_mode = 2
+alignment = 1
+
+[node name="BackButton" type="Button" parent="optionMargin/VBoxContainer" unique_id=1724120235]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Back"
+
+[node name="SoundButton" type="Button" parent="optionMargin/VBoxContainer" unique_id=93591279]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Sound"
+
+[node name="VideoButton" type="Button" parent="optionMargin/VBoxContainer" unique_id=2931084]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Video"
+
+[node name="ContentMargin" type="MarginContainer" parent="." unique_id=500463441]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
+anchors_preset = -1
+anchor_left = 0.194
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.5119934
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ContentPanel" type="Control" parent="ContentMargin" unique_id=599815304]
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="ContentMargin/ContentPanel" unique_id=309026066]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.40392157)
+
+[node name="AudioPage" type="VBoxContainer" parent="ContentMargin/ContentPanel" unique_id=936971158]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 14
 anchor_top = 0.5
-anchor_right = 0.5
+anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -25.5
-offset_top = -15.0
-offset_right = 25.5
-offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MasterLabel" type="Label" parent="ContentMargin/ContentPanel/AudioPage" unique_id=1911402209]
+layout_mode = 2
+text = "Master"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MasterSlider" type="HSlider" parent="ContentMargin/ContentPanel/AudioPage" unique_id=318740518]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+value = 50.0
+
+[node name="SFXLabel" type="Label" parent="ContentMargin/ContentPanel/AudioPage" unique_id=1765056583]
+layout_mode = 2
+text = "SFX"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SFXSlider" type="HSlider" parent="ContentMargin/ContentPanel/AudioPage" unique_id=70871646]
+unique_name_in_owner = true
+layout_mode = 2
+value = 100.0
+
+[node name="Label" type="Label" parent="ContentMargin/ContentPanel/AudioPage" unique_id=357947327]
+layout_mode = 2
+text = "Music"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MusicSlider" type="HSlider" parent="ContentMargin/ContentPanel/AudioPage" unique_id=1514581967]
+unique_name_in_owner = true
+layout_mode = 2
+value = 100.0
+
+[node name="VideoPage" type="VBoxContainer" parent="ContentMargin/ContentPanel" unique_id=1560013910]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -11.0
+offset_bottom = 11.0
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="BackButton" type="Button" parent="VBoxContainer" unique_id=1724120235]
+[node name="FPSshowLabel" type="Label" parent="ContentMargin/ContentPanel/VideoPage" unique_id=1456360507]
 layout_mode = 2
-text = "Back"
+text = "FPS Show"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="SoundButton" type="Button" parent="VBoxContainer" unique_id=93591279]
+[node name="SwitchFPSButton" type="Button" parent="ContentMargin/ContentPanel/VideoPage" unique_id=1314541142]
+unique_name_in_owner = true
 layout_mode = 2
-text = "Sound"
+toggle_mode = true
+text = "OFF"
 
-[node name="ConfigButton" type="Button" parent="VBoxContainer" unique_id=2931084]
+[node name="VsyncLabel" type="Label" parent="ContentMargin/ContentPanel/VideoPage" unique_id=1293578175]
 layout_mode = 2
-text = "Config"
+text = "Vsync"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[connection signal="pressed" from="VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]
+[node name="SwitchButton" type="Button" parent="ContentMargin/ContentPanel/VideoPage" unique_id=350889309]
+unique_name_in_owner = true
+layout_mode = 2
+toggle_mode = true
+text = "ON"
+
+[node name="FPSLabel" type="Label" parent="." unique_id=1905495939]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -22.0
+offset_right = 40.0
+grow_vertical = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="optionMargin/VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]
