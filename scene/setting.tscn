@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://cxbwk7nphhf5d"]
+
+[ext_resource type="Script" uid="uid://e2mwh4uuda6a" path="res://script/setting.gd" id="1_xthoy"]
+
+[node name="Setting" type="Control" unique_id=1862972517]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xthoy")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1334643815]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0.32156864, 0, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=113378451]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.5
+offset_top = -15.0
+offset_right = 25.5
+offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="BackButton" type="Button" parent="VBoxContainer" unique_id=1724120235]
+layout_mode = 2
+text = "Back"
+
+[node name="SoundButton" type="Button" parent="VBoxContainer" unique_id=93591279]
+layout_mode = 2
+text = "Sound"
+
+[node name="ConfigButton" type="Button" parent="VBoxContainer" unique_id=2931084]
+layout_mode = 2
+text = "Config"
+
+[connection signal="pressed" from="VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

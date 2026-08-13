@@ -20,15 +20,18 @@ var is_falling: bool = false
 @onready var anim_player = $AnimationPlayer
 @onready var body_container = $Body # Node penampung semua part sprite tubuh
 
+# --- AUDIO REFERENCES ---
+@onready var sfx_player: AudioStreamPlayer2D = $FootstepAudioPlayer
+@onready var jump_sfx_player: AudioStreamPlayer2D = $JumpAudioPlayer # Node Audio Lompat
+
+@onready var held_item_sprite: Sprite2D = $Body/RightArm/ItemHeldSprite # Sesuaikan path Node tanganmu
+
 # Variabel untuk input dari Tombol UI HP
 var ui_move_direction = 0.0
 var is_ui_running = false
 
 var footstep_timer: float = 0.0
 @export var step_interval: float = 0.3333 # Jeda antar langkah kaki (detik)
-
-@onready var sfx_player: AudioStreamPlayer2D = $FootstepAudioPlayer
-@onready var held_item_sprite: Sprite2D = $Body/RightArm/ItemHeldSprite # Sesuaikan path Node tanganmu
 
 # --- VARIABEL EFEK FLIP ---
 var flip_tween: Tween
@@ -187,7 +190,7 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-	# --- SFX ---
+	# --- SFX FOOTSTEP ---
 	handle_footstep_sfx(delta)
 
 	# 7. PEMICU ANIMASI
@@ -246,3 +249,8 @@ func set_running(running: bool):
 func jump():
 	if is_on_floor():
 		velocity.y = JUMP_VELOCITY
+		
+		# 🔊 Putar SFX Lompat
+		if jump_sfx_player:
+			jump_sfx_player.pitch_scale = randf_range(0.95, 1.05) # Variasi suara tipis
+			jump_sfx_player.play()

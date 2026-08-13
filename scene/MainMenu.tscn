@@ -28,12 +28,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -26.5
-offset_top = -45.0
-offset_right = 26.5
-offset_bottom = 45.0
+offset_left = -46.5
+offset_top = -62.0
+offset_right = 46.5
+offset_bottom = 62.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset = Vector2(46.5, 62)
 
 [node name="TitleLabel" type="Label" parent="VBoxContainer" unique_id=1467612577]
 layout_mode = 2
@@ -44,6 +45,10 @@ vertical_alignment = 1
 [node name="PlayButton" type="Button" parent="VBoxContainer" unique_id=2010222995]
 layout_mode = 2
 text = "Play"
+
+[node name="SettingButton" type="Button" parent="VBoxContainer" unique_id=1919519022]
+layout_mode = 2
+text = "Settings"
 
 [node name="QuitButton" type="Button" parent="VBoxContainer" unique_id=1659705270]
 layout_mode = 2
@@ -58,12 +63,11 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -144.0
-offset_top = 70.0
+offset_top = 302.0
 offset_right = 144.0
-offset_bottom = 86.0
+offset_bottom = 324.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_font_sizes/font_size = 4
 text = "version"
 horizontal_alignment = 1
 vertical_alignment = 1
