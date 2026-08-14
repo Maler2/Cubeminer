@@ -1,6 +1,37 @@
-[gd_scene format=3 uid="uid://goytp2xg1hvf"]
+[gd_scene format=4 uid="uid://goytp2xg1hvf"]
 
 [ext_resource type="Script" uid="uid://d15fb7p7hyanu" path="res://script/main_menu.gd" id="1_nn17b"]
+[ext_resource type="Texture2D" uid="uid://bq18ifa7vvn3a" path="res://assets/block/big_dirt_block.png" id="2_lnxie"]
+[ext_resource type="Texture2D" uid="uid://o16c88u4w4r4" path="res://assets/block/big_grass_block.png" id="3_tf3dk"]
+[ext_resource type="Texture2D" uid="uid://ci1b3rtr87wks" path="res://assets/block/big_leave_block.png" id="4_rvc10"]
+[ext_resource type="Texture2D" uid="uid://bulh3k7f5nnnx" path="res://assets/block/big_wood_block.png" id="5_85i58"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_sks6p"]
+texture = ExtResource("2_lnxie")
+0:0/size_in_atlas = Vector2i(8, 8)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_q4ih2"]
+texture = ExtResource("3_tf3dk")
+0:0/size_in_atlas = Vector2i(8, 8)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_b5lh0"]
+texture = ExtResource("4_rvc10")
+0:0/size_in_atlas = Vector2i(8, 8)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_581fk"]
+texture = ExtResource("5_85i58")
+0:0/size_in_atlas = Vector2i(8, 8)
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_nn17b"]
+tile_size = Vector2i(128, 128)
+sources/0 = SubResource("TileSetAtlasSource_sks6p")
+sources/1 = SubResource("TileSetAtlasSource_q4ih2")
+sources/2 = SubResource("TileSetAtlasSource_b5lh0")
+sources/3 = SubResource("TileSetAtlasSource_581fk")
 
 [node name="MainMenu" type="Control" unique_id=1162691394]
 layout_mode = 3
@@ -11,18 +42,13 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_nn17b")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=664065097]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0, 0.32156864, 0, 1)
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1999575280]
+tile_map_data = PackedByteArray("AAAAACUAAAAAAAAAAAAIACUAAAAAAAAAAAAQACUAAAAAAAAAAAAAAB0AAAAAAAAAAAAIAB0AAAAAAAAAAAAQAB0AAAAAAAAAAAAYACUAAAAAAAAAAAD//wQAAAAAAAAAAAD//wUAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAQAAAAAAAAAAAABAAUAAAAAAAAAAAACAAQAAAAAAAAAAAACAAUAAAAAAAAAAAABAAQAAAAAAAAAAAADAAUAAAAAAAAAAAAEAAUAAAAAAAAAAAAEAAQAAAAAAAAAAAADAAQAAAAAAAAAAAAFAAUAAAAAAAAAAAAFAAQAAAAAAAAAAAAGAAQAAAAAAAAAAAAGAAUAAAAAAAAAAAAHAAQAAAAAAAAAAAAHAAUAAAAAAAAAAAAIAAUAAAAAAAAAAAAIAAQAAAAAAAAAAAAJAAQAAAAAAAAAAAAJAAUAAAAAAAAAAAD//wMAAAAAAAAAAAAAAAMAAAAAAAAAAAAEAAMAAAAAAAAAAAAFAAMAAAAAAAAAAAAIAAMAAAAAAAAAAAD//wIAAQAAAAAAAAABAAMAAQAAAAAAAAACAAMAAQAAAAAAAAADAAMAAQAAAAAAAAAEAAIAAQAAAAAAAAAFAAIAAQAAAAAAAAAGAAMAAQAAAAAAAAAHAAMAAQAAAAAAAAAIAAIAAQAAAAAAAAAJAAMAAAAAAAAAAAAIAAEAAwAAAAAAAAAIAAAAAgAAAAAAAAAHAAAAAgAAAAAAAAAJAAAAAgAAAAAAAAAGAAAAAgAAAAAAAAAKAAAAAgAAAAAAAAAGAP//AgAAAAAAAAAHAP//AgAAAAAAAAAIAP//AgAAAAAAAAAJAP//AgAAAAAAAAAKAP//AgAAAAAAAAAHAP7/AgAAAAAAAAAIAP7/AgAAAAAAAAAJAP7/AgAAAAAAAAAAAAEAAwAAAAAAAAAAAAAAAwAAAAAAAAD+////AgAAAAAAAAD/////AgAAAAAAAAAAAP//AgAAAAAAAAABAP//AgAAAAAAAAACAP//AgAAAAAAAAD///7/AgAAAAAAAAAAAP7/AgAAAAAAAAABAP7/AgAAAAAAAAD+/wIAAAAAAAAAAAD9/wIAAAAAAAAAAAAKAAMAAAAAAAAAAAALAAMAAAAAAAAAAAAMAAIAAAAAAAAAAAANAAEAAQAAAAAAAAD7/wUAAAAAAAAAAAD8/wUAAAAAAAAAAAD9/wUAAAAAAAAAAAD+/wUAAAAAAAAAAAD+/wQAAAAAAAAAAAD+/wMAAAAAAAAAAAD9/wMAAAAAAAAAAAD9/wQAAAAAAAAAAAD8/wQAAAAAAAAAAAD8/wMAAAAAAAAAAAD8/wIAAAAAAAAAAAD7/wMAAAAAAAAAAAD7/wQAAAAAAAAAAAD7/wIAAAAAAAAAAAANAAIAAAAAAAAAAAANAAMAAAAAAAAAAAANAAQAAAAAAAAAAAANAAUAAAAAAAAAAAAKAAUAAAAAAAAAAAALAAUAAAAAAAAAAAAMAAUAAAAAAAAAAAAKAAQAAAAAAAAAAAALAAQAAAAAAAAAAAAMAAQAAAAAAAAAAAAMAAMAAAAAAAAAAAAJAAIAAQAAAAAAAAAKAAIAAQAAAAAAAAALAAIAAAAAAAAAAAAAAAIAAQAAAAAAAAD7/wEAAQAAAAAAAAD8/wEAAQAAAAAAAAAOAAIAAAAAAAAAAAAPAAIAAAAAAAAAAAAQAAIAAAAAAAAAAAAPAAMAAAAAAAAAAAAQAAMAAAAAAAAAAAAQAAQAAAAAAAAAAAAOAAUAAAAAAAAAAAAPAAUAAAAAAAAAAAAQAAUAAAAAAAAAAAAPAAQAAAAAAAAAAAAOAAQAAAAAAAAAAAAOAAMAAAAAAAAAAAD6/wIAAAAAAAAAAAD5/wIAAAAAAAAAAAD4/wIAAAAAAAAAAAD4/wMAAAAAAAAAAAD4/wQAAAAAAAAAAAD4/wUAAAAAAAAAAAD5/wUAAAAAAAAAAAD6/wUAAAAAAAAAAAD6/wQAAAAAAAAAAAD6/wMAAAAAAAAAAAD5/wMAAAAAAAAAAAD5/wQAAAAAAAAAAAD4/wEAAQAAAAAAAAD5/wEAAQAAAAAAAAD6/wEAAQAAAAAAAAAOAAEAAQAAAAAAAAAPAAEAAQAAAAAAAAAQAAEAAQAAAAAAAAD3/wEAAQAAAAAAAAD2/wEAAQAAAAAAAAD1/wEAAQAAAAAAAAARAAEAAQAAAAAAAAASAAEAAQAAAAAAAAATAAEAAQAAAAAAAAD3/wIAAAAAAAAAAAD2/wIAAAAAAAAAAAD1/wIAAAAAAAAAAAD1/wMAAAAAAAAAAAD1/wQAAAAAAAAAAAD2/wQAAAAAAAAAAAD3/wQAAAAAAAAAAAD3/wMAAAAAAAAAAAD2/wMAAAAAAAAAAAD3/wUAAAAAAAAAAAD2/wUAAAAAAAAAAAD1/wUAAAAAAAAAAAATAAUAAAAAAAAAAAASAAUAAAAAAAAAAAARAAUAAAAAAAAAAAARAAQAAAAAAAAAAAARAAMAAAAAAAAAAAASAAMAAAAAAAAAAAASAAIAAAAAAAAAAAARAAIAAAAAAAAAAAATAAIAAAAAAAAAAAATAAMAAAAAAAAAAAATAAQAAAAAAAAAAAASAAQAAAAAAAAAAAAUAAIAAAAAAAAAAAAUAAMAAAAAAAAAAAAUAAQAAAAAAAAAAAAUAAUAAAAAAAAAAAD0/wIAAAAAAAAAAAD0/wMAAAAAAAAAAAD0/wQAAAAAAAAAAAD0/wUAAAAAAAAAAAD0/wEAAQAAAAAAAAAUAAEAAQAAAAAAAAAMAAEAAQAAAAAAAAD9/wEAAQAAAAAAAAD+/wEAAQAAAAAAAAALAAEAAQAAAAAAAAD+//7/AgAAAAAAAAACAP7/AgAAAAAAAAABAP3/AgAAAAAAAAAAAP3/AgAAAAAAAAD///3/AgAAAAAAAAA=")
+tile_set = SubResource("TileSet_nn17b")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=640471214]
-layout_mode = 1
+[node name="ButtonLayer" type="CanvasLayer" parent="." unique_id=475270527]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ButtonLayer" unique_id=640471214]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -36,30 +62,31 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(46.5, 62)
 
-[node name="TitleLabel" type="Label" parent="VBoxContainer" unique_id=1467612577]
+[node name="TitleLabel" type="Label" parent="ButtonLayer/VBoxContainer" unique_id=1467612577]
 layout_mode = 2
 text = "TITLE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PlayButton" type="Button" parent="VBoxContainer" unique_id=2010222995]
+[node name="PlayButton" type="Button" parent="ButtonLayer/VBoxContainer" unique_id=2010222995]
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "Play"
 
-[node name="SettingButton" type="Button" parent="VBoxContainer" unique_id=1919519022]
+[node name="SettingButton" type="Button" parent="ButtonLayer/VBoxContainer" unique_id=1919519022]
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "Settings"
 
-[node name="QuitButton" type="Button" parent="VBoxContainer" unique_id=1659705270]
+[node name="QuitButton" type="Button" parent="ButtonLayer/VBoxContainer" unique_id=1659705270]
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "Quit"
 
-[node name="VersionLabel" type="Label" parent="." unique_id=1342580864]
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=1103420254]
+
+[node name="VersionLabel" type="Label" parent="UILayer" unique_id=1342580864]
 modulate = Color(0.6099924, 0.6099924, 0.6099924, 1)
-layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -74,3 +101,6 @@ grow_vertical = 2
 text = "version"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=218461829]
+position = Vector2(576, 324)
