@@ -24,6 +24,7 @@ func pasang_blok(grid_pos: Vector2i = Vector2i.MIN) -> void:
 		if tilemap.destroyed_bg_tiles.has(grid_pos): tilemap.destroyed_bg_tiles.erase(grid_pos)
 		tilemap.placed_bg_tiles[grid_pos] = tilemap.selected_block_id
 		background_layer.set_cell(grid_pos, tilemap.selected_block_id, Vector2i(0, 0))
+		tilemap.blocks_dirty = true
 		tilemap.queue_redraw()
 
 	elif fg_id == -1:
@@ -33,6 +34,7 @@ func pasang_blok(grid_pos: Vector2i = Vector2i.MIN) -> void:
 		if tilemap.destroyed_tiles.has(grid_pos): tilemap.destroyed_tiles.erase(grid_pos)
 		tilemap.placed_tiles[grid_pos] = tilemap.selected_block_id
 		tilemap.set_cell(grid_pos, tilemap.selected_block_id, Vector2i(0, 0))
+		tilemap.blocks_dirty = true
 		tilemap.queue_redraw()
 
 func hancurkan_blok(grid_pos: Vector2i = Vector2i.MIN) -> void:
@@ -51,6 +53,7 @@ func hancurkan_blok(grid_pos: Vector2i = Vector2i.MIN) -> void:
 		if tilemap.placed_tiles.has(grid_pos): tilemap.placed_tiles.erase(grid_pos)
 		tilemap.destroyed_tiles[grid_pos] = true
 		tilemap.set_cell(grid_pos, -1)
+		tilemap.blocks_dirty = true
 		spawn_dropped_item(grid_pos, fg_id)
 		tilemap.queue_redraw()
 		
@@ -58,6 +61,7 @@ func hancurkan_blok(grid_pos: Vector2i = Vector2i.MIN) -> void:
 		if tilemap.placed_bg_tiles.has(grid_pos): tilemap.placed_bg_tiles.erase(grid_pos)
 		tilemap.destroyed_bg_tiles[grid_pos] = true
 		background_layer.set_cell(grid_pos, -1)
+		tilemap.blocks_dirty = true
 		spawn_dropped_item(grid_pos, bg_id)
 		tilemap.queue_redraw()
 

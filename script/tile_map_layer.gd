@@ -108,6 +108,11 @@ var placed_tiles: Dictionary = {}           # Foreground dipasang
 var destroyed_bg_tiles: Dictionary = {}     # Background hancur
 var placed_bg_tiles: Dictionary = {}        # Background dipasang
 
+# --- SIMPAN BLOK PER CHUNK (16 lebar x TINGGI PENUH) ---
+var blocks_dirty: bool = false
+var autosave_interval: float = 300.0        # 5 menit
+var autosave_timer: float = 0.0
+
 # --- KOMPONEN (PISAH PER TANGGUNG JAWAB) ---
 var world_generator = null
 var block_interaction = null
@@ -155,6 +160,14 @@ func _ready() -> void:
 	block_interaction = preload("res://script/block_interaction.gd").new()
 	block_interaction.setup(self)
 
+	# Muat perubahan blok tersimpan (per chunk) SEBELUM terrain digenerate,
+	# supaya blok yang dihancurkan/dipasang player dipulihkan dengan benar
+	var saved_blocks: Dictionary = SaveManager.load_blocks(world_name)
+	destroyed_tiles = saved_blocks.get("destroyed_tiles", {})
+	placed_tiles = saved_blocks.get("placed_tiles", {})
+	destroyed_bg_tiles = saved_blocks.get("destroyed_bg_tiles", {})
+	placed_bg_tiles = saved_blocks.get("placed_bg_tiles", {})
+
 	clear()
 	if background_layer:
 		background_layer.clear()
@@ -167,6 +180,13 @@ func inisialisasi_dunia() -> void:
 
 func _process(_delta: float) -> void:
 	if not player: return
+	
+	# Autosave berkala (5 menit) kalau ada perubahan blok
+	if blocks_dirty:
+		autosave_timer += _delta
+		if autosave_timer >= autosave_interval:
+			autosave_timer = 0.0
+			save_blocks_now()
 	
 	var mouse_grid = local_to_map(to_local(get_global_mouse_position()))
 	if mouse_grid != hovered_grid_pos:
@@ -256,3 +276,17 @@ func connect_hotbar_signal() -> void:
 	if hotbar:
 		if not hotbar.slot_changed.is_connected(_on_hotbar_slot_changed):
 			hotbar.slot_changed.connect(_on_hotbar_slot_changed)
+
+# --- SIMPAN PERUBAHAN BLOK KE DISK (PER CHUNK 16 x TINGGI PENUH) ---
+func save_blocks_now() -> void:
+	if not blocks_dirty:
+		return
+	var world_name: String = Global.current_world_name
+	if world_name.strip_edges() == "":
+		world_name = "My World"
+	SaveManager.save_blocks(world_name, destroyed_tiles, placed_tiles, destroyed_bg_tiles, placed_bg_tiles)
+	blocks_dirty = false
+	autosave_timer = 0.0
+
+func _exit_tree() -> void:
+	save_blocks_now()
