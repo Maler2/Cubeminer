@@ -4,6 +4,7 @@ const SPEED = 100.0 # Kecepatan jalan biasa
 const RUN_SPEED = 150.0 # Kecepatan lari
 const JUMP_VELOCITY = -200.0 # Ditingkatkan agar lompatan terasa pas
 const JUMP_CUT_MAGNITUDE = 0.4 # Pemotong tinggi lompatan jika tombol dilepas cepat
+const MAX_AIR_JUMPS = 1 # Jumlah lompatan ekstra yang boleh dilakukan di udara (double jump)
 const GRAVITY = 980.0
 const MAX_FALL_SPEED = 400.0 # Bounded Terminal Velocity
 
@@ -32,6 +33,9 @@ var is_ui_running = false
 
 var footstep_timer: float = 0.0
 @export var step_interval: float = 0.3333 # Jeda antar langkah kaki (detik)
+
+# --- VARIABEL DOUBLE JUMP ---
+var air_jumps_used: int = 0 # Menghitung lompatan udara yang sudah dipakai sebelum mendarat
 
 # --- VARIABEL EFEK FLIP ---
 var flip_tween: Tween
@@ -158,6 +162,7 @@ func _physics_process(delta: float) -> void:
 			var fall_distance = global_position.y - start_fall_y
 			if fall_distance > min_fall_height:
 				_apply_fall_damage(fall_distance)
+		air_jumps_used = 0 # Reset jumlah lompatan udara saat mendarat
 
 	# 2. Input Keyboard PC
 	var keyboard_dir = Input.get_axis("left", "right")
@@ -181,8 +186,10 @@ func _physics_process(delta: float) -> void:
 	elif final_dir < 0 and is_facing_right:
 		_apply_smooth_flip(false)
 
-	# 6. Lompat
+	# 6. Lompat (auto-jump saat ditahan di tanah + double jump dengan tekan baru di udara)
 	if Input.is_action_pressed("jump") and is_on_floor():
+		jump()
+	elif Input.is_action_just_pressed("jump") and not is_on_floor() and air_jumps_used < MAX_AIR_JUMPS:
 		jump()
 
 	if Input.is_action_just_released("jump") and velocity.y < 0:
@@ -247,10 +254,23 @@ func set_running(running: bool):
 	is_ui_running = running
 
 func jump():
+	# Lompat dari tanah (tidak memakai slot lompatan udara)
 	if is_on_floor():
 		velocity.y = JUMP_VELOCITY
 		
-		# 🔊 Putar SFX Lompat
 		if jump_sfx_player:
-			jump_sfx_player.pitch_scale = randf_range(0.95, 1.05) # Variasi suara tipis
+			jump_sfx_player.pitch_scale = randf_range(0.95, 1.05)
 			jump_sfx_player.play()
+		return
+		
+	# Double jump di udara (sekali per waktu terbang, naik maupun jatuh)
+	if air_jumps_used >= MAX_AIR_JUMPS:
+		return
+		
+	air_jumps_used += 1
+	velocity.y = JUMP_VELOCITY
+	
+	# 🔊 Putar SFX khusus double jump
+	if jump_sfx_player:
+		jump_sfx_player.pitch_scale = randf_range(0.8, 0.9)
+		jump_sfx_player.play()
