@@ -1,36 +1,102 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://67jbp3usoimn"]
 
-[ext_resource type="Script" path="res://script/mob.gd" id="1_mob"]
+[ext_resource type="Script" uid="uid://ckhc6a52jvn75" path="res://script/mob.gd" id="1_mob"]
+[ext_resource type="Texture2D" uid="uid://dbxkyn7yxwyxq" path="res://assets/entity/sheep-sheet.png" id="2_sheep"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mob"]
-size = Vector2(10, 12)
+size = Vector2(14, 14)
 
-[node name="Mob" type="CharacterBody2D"]
+[sub_resource type="Animation" id="Animation_mob_reset"]
+resource_name = "RESET"
+length = 0.001
+step = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visual/SheepSprite:region_rect")
+tracks/0/interp = 0
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Rect2(9, 8, 16, 17)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Visual/SheepSprite:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, -8)]
+}
+
+[sub_resource type="Animation" id="Animation_mob_idle"]
+resource_name = "idle"
+loop_mode = 1
+step = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visual/SheepSprite:region_rect")
+tracks/0/interp = 0
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Rect2(9, 8, 16, 17), Rect2(41, 9, 16, 16)]
+}
+
+[sub_resource type="Animation" id="Animation_mob_walk"]
+resource_name = "walk"
+length = 0.8
+loop_mode = 1
+step = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visual/SheepSprite:region_rect")
+tracks/0/interp = 0
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Rect2(9, 40, 16, 17), Rect2(41, 40, 16, 17), Rect2(9, 40, 16, 17), Rect2(41, 40, 16, 17)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mob"]
+_data = {
+&"RESET": SubResource("Animation_mob_reset"),
+&"idle": SubResource("Animation_mob_idle"),
+&"walk": SubResource("Animation_mob_walk")
+}
+
+[node name="Mob" type="CharacterBody2D" unique_id=1221318786]
 collision_layer = 0
-collision_mask = 1
 script = ExtResource("1_mob")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -6)
+[node name="Visual" type="Node2D" parent="." unique_id=1140402801]
+
+[node name="SheepSprite" type="Sprite2D" parent="Visual" unique_id=1922991720]
+position = Vector2(0, -8)
+texture = ExtResource("2_sheep")
+offset = Vector2(0, 0.5)
+region_enabled = true
+region_rect = Rect2(9, 8, 16, 17)
+
+[node name="LedgeRay" type="RayCast2D" parent="." unique_id=534893808]
+target_position = Vector2(8, 26)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1500337989]
+position = Vector2(1, -7)
 shape = SubResource("RectangleShape2D_mob")
 debug_color = Color(0.35, 0.75, 0.35, 0.41960785)
 
-[node name="Visual" type="Node2D" parent="."]
-
-[node name="Body" type="Polygon2D" parent="Visual"]
-polygon = PackedVector2Array(-6, -12, 6, -12, 6, 0, -6, 0)
-color = Color(0.35, 0.75, 0.35, 1)
-
-[node name="EyeL" type="Polygon2D" parent="Visual"]
-position = Vector2(-3, -8)
-polygon = PackedVector2Array(-1, -1, 1, -1, 1, 1, -1, 1)
-color = Color(1, 1, 1, 1)
-
-[node name="EyeR" type="Polygon2D" parent="Visual"]
-position = Vector2(3, -8)
-polygon = PackedVector2Array(-1, -1, 1, -1, 1, 1, -1, 1)
-color = Color(1, 1, 1, 1)
-
-[node name="LedgeRay" type="RayCast2D" parent="."]
-target_position = Vector2(8, 26)
-collision_mask = 1
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2020698825]
+libraries/ = SubResource("AnimationLibrary_mob")

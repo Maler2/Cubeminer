@@ -17,11 +17,14 @@ var jump_cooldown: float = 0.0
 var climb_attempts: int = 0
 
 @onready var visual: Node2D = $Visual
+@onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var ledge_ray: RayCast2D = $LedgeRay
 
 func _ready() -> void:
 	add_to_group("mobs")
 	make_decision()
+	if anim:
+		anim.play("idle")
 
 func _physics_process(delta: float) -> void:
 	jump_cooldown = max(jump_cooldown - delta, 0.0)
@@ -53,6 +56,12 @@ func _physics_process(delta: float) -> void:
 		make_decision()
 	
 	move_and_slide()
+	
+	# Animasi: walk saat bergerak, idle saat diam
+	if anim:
+		var desired = "walk" if direction != 0 else "idle"
+		if anim.current_animation != desired:
+			anim.play(desired)
 
 func make_decision() -> void:
 	var r = randi() % 10
