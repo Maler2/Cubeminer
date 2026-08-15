@@ -56,6 +56,7 @@ func add_world_button(world_name: String) -> void:
 func _on_world_selected(world_name: String) -> void:
 	# Set data dunia ke Global saat dipilih
 	Global.current_world_name = world_name
+	Global.current_world_seed = SaveManager.load_world_seed(world_name)
 	
 	# Lanjut ke loading screen / game
 	get_tree().change_scene_to_file("res://scene/loading-screen.tscn")
