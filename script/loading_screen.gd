@@ -27,9 +27,7 @@ var is_loaded: bool = false
 var packed_scene: PackedScene = null
 
 func _ready() -> void:
-	get_window().content_scale_factor = 4.0
-	FpsCounter.set_fps_label_scale(0.25)
-	FpsCounter.set_fps_offset(Vector2(1, 156))
+	get_window().content_scale_factor = 1.0
 	progress_bar.value = 0.0
 	
 	# 💡 Tampilkan tips acak saat loading screen muncul

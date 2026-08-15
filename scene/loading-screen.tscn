@@ -4,20 +4,17 @@
 
 [node name="LoadingScreen" type="Control" unique_id=471903797]
 layout_mode = 3
-anchor_right = 0.333
-anchor_bottom = 0.395
-offset_right = 1152.384
-offset_bottom = 512.04
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.25, 0.25)
 script = ExtResource("1_8vs4c")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=2009981462]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
-anchor_bottom = 1.125
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)

@@ -302,6 +302,11 @@ func jump():
 	air_jumps_used += 1
 	velocity.y = JUMP_VELOCITY
 	
+	# Reset pengukuran jarak jatuh → fall damage dihitung dari double jump,
+	# bukan dari jatuh sebelumnya (mis. terjun dari tebing lalu double jump)
+	start_fall_y = global_position.y
+	is_falling = true
+	
 	# 🔊 Putar SFX khusus double jump
 	if jump_sfx_player:
 		jump_sfx_player.pitch_scale = randf_range(0.8, 0.9)

@@ -10,6 +10,9 @@ extends Node2D
 @onready var btn_run = $InputLayer/RunButton
 
 func _ready():
+	get_window().content_scale_factor = 4.0
+	FpsCounter.set_fps_label_scale(0.25)
+	FpsCounter.set_fps_offset(Vector2(1, 156))
 	# 1. Atur visibilitas UI (Sembunyi di PC, tampil di Mobile/Touchscreen)
 	if OS.has_feature("pc") and not DisplayServer.is_touchscreen_available():
 		if input_layer:
