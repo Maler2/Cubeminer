@@ -10,6 +10,9 @@ var ore_noise: FastNoiseLite
 
 var generated_columns: Dictionary = {}
 var spawned_trees: Dictionary = {}
+var spawned_mobs: Dictionary = {}
+
+var mob_scene = preload("res://scene/mob.tscn")
 
 func setup(tilemap_ref: TileMapLayer, current_seed: int) -> void:
 	tilemap = tilemap_ref
@@ -112,9 +115,15 @@ func update_terrain_around_player(center_pos: Vector2i) -> void:
 
 						if x % 7 == 0 and not spawned_trees.has(x):
 							var above_coord = current_coord + Vector2i(0, -1)
-							if not tilemap.destroyed_tiles.has(above_coord) and not tilemap.placed_tiles.has(above_coord):
+							if not tilemap.destroyed_tiles.has(above_coord) and not tilemap.placed_tiles.has(above_coord) \
+								and not tilemap.destroyed_bg_tiles.has(above_coord) and not tilemap.placed_bg_tiles.has(above_coord):
 								var random_pattern = randi() % 3
 								spawn_tree_pattern(current_coord, random_pattern)
+						
+						if abs(x) > 2 and not spawned_mobs.has(x) \
+							and not spawned_trees.has(x - 1) and not spawned_trees.has(x) and not spawned_trees.has(x + 1):
+							if randi() % 100 < int(tilemap.mob_spawn_chance * 100.0):
+								spawn_mob(current_coord)
 					else:
 						var ore_val = abs(ore_noise.get_noise_2d(x, y))
 						var is_ore_spawned: bool = false
@@ -180,6 +189,28 @@ func unload_far_tiles(player_x: int) -> void:
 	for x in columns_to_erase:
 		generated_columns.erase(x)
 		spawned_trees.erase(x)
+		if spawned_mobs.has(x):
+			var mob = spawned_mobs[x]
+			if is_instance_valid(mob):
+				mob.queue_free()
+			spawned_mobs.erase(x)
+
+func spawn_mob(surface_coord: Vector2i) -> void:
+	if count_active_mobs() >= tilemap.max_active_mobs: return
+	if not mob_scene: return
+	
+	var mob = mob_scene.instantiate()
+	var spawn_pos = tilemap.to_global(tilemap.map_to_local(surface_coord)) + Vector2(0, -3)
+	mob.global_position = spawn_pos
+	tilemap.get_parent().add_child(mob)
+	spawned_mobs[surface_coord.x] = mob
+
+func count_active_mobs() -> int:
+	var count: int = 0
+	for x in spawned_mobs:
+		if is_instance_valid(spawned_mobs[x]):
+			count += 1
+	return count
 
 func spawn_tree_pattern(surface_coord: Vector2i, pattern_index: int = 0) -> void:
 	if not tilemap.tile_set: return
@@ -197,6 +228,9 @@ func spawn_tree_pattern(surface_coord: Vector2i, pattern_index: int = 0) -> void
 		
 		if cell_source_id != -1:
 			var target_coord = origin_coord + used_cell
-			tilemap.set_cell(target_coord, cell_source_id, cell_atlas_coord, cell_alternative_tile)
+			if background_layer:
+				background_layer.set_cell(target_coord, cell_source_id, cell_atlas_coord, cell_alternative_tile)
+			else:
+				tilemap.set_cell(target_coord, cell_source_id, cell_atlas_coord, cell_alternative_tile)
 			
 	spawned_trees[surface_coord.x] = true

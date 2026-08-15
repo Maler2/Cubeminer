@@ -71,6 +71,11 @@ var item_names: Dictionary = {
 @export var cave_threshold: float = 0.25
 @export var cave_frequency: float = 0.05
 
+# --- PENGATURAN MOB ---
+@export_group("Mob Settings")
+@export var mob_spawn_chance: float = 0.12
+@export var max_active_mobs: int = 12
+
 # ⛏️ FREKUENSI SPAWN ORE
 @export_group("Ore Generator Thresholds")
 @export var ore_frequency: float = 0.15

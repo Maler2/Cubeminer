@@ -13,11 +13,17 @@ var bounce_strength: float = -120.0
 var is_being_picked_up: bool = false
 var target_player: Node2D = null
 
+# 🎨 Texture yang menunggu diterapkan (untuk kasus setup_item dipanggil sebelum add_child)
+var pending_texture: Texture2D = null
+
 # ⏱️ Variabel Cooldown Pickup
 var can_be_picked_up: bool = false
 @export var pickup_delay: float = 0.25 # Cooldown 0.25 detik
 
 func _ready() -> void:
+		if sprite and pending_texture:
+				sprite.texture = pending_texture
+		
 		# Bikin cipratan acak pas item baru dijatuhkan
 		velocity.y = bounce_strength
 		velocity.x = randf_range(-30.0, 30.0)
@@ -55,6 +61,7 @@ func _physics_process(delta: float) -> void:
 
 func setup_item(id: int, item_texture: Texture2D) -> void:
 		tile_id = id
+		pending_texture = item_texture
 		if sprite:
 				sprite.texture = item_texture
 

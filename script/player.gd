@@ -8,8 +8,10 @@ const MAX_AIR_JUMPS = 1 # Jumlah lompatan ekstra yang boleh dilakukan di udara (
 const GRAVITY = 980.0
 const MAX_FALL_SPEED = 400.0 # Bounded Terminal Velocity
 
+const dropped_item_scene = preload("res://scene/dropped_item.tscn")
+
 # --- PENGATURAN FALL DAMAGE ---
-@export var min_fall_height: float = 64.0 # Jarak aman minimal (dalam piksel)
+@export var min_fall_height: float = 128.0 # Jarak aman minimal (dalam piksel)
 @export var pixels_per_damage: float = 16.0 # Setiap berapa piksel damage bertambah 1
 var start_fall_y: float = 0.0 # Menampung titik Y awal saat lepas dari tanah
 var is_falling: bool = false
@@ -108,6 +110,36 @@ func update_held_item(new_texture: Texture2D) -> void:
 	else:
 		held_item_sprite.texture = null
 		held_item_sprite.visible = false
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and event.keycode == KEY_Q:
+		drop_current_item()
+
+func drop_current_item() -> void:
+	if not hotbar or not hotbar.has_method("remove_current_item"):
+		return
+		
+	var current_slot: int = hotbar.current_slot
+	if current_slot >= hotbar.slot_tile_ids.size():
+		return
+		
+	var tile_id: int = hotbar.slot_tile_ids[current_slot]
+	if tile_id == -1:
+		return
+		
+	var item_instance = dropped_item_scene.instantiate()
+	var drop_offset = Vector2(24.0 if is_facing_right else -24.0, -8.0)
+	item_instance.global_position = global_position + drop_offset
+	
+	var item_texture: Texture2D = null
+	if hotbar.tile_textures.has(tile_id):
+		item_texture = hotbar.tile_textures[tile_id]
+		
+	if item_instance.has_method("setup_item"):
+		item_instance.setup_item(tile_id, item_texture)
+		
+	get_parent().add_child(item_instance)
+	hotbar.remove_current_item()
 
 func handle_footstep_sfx(delta: float) -> void:
 	if is_on_floor() and abs(velocity.x) > 10:

@@ -145,3 +145,17 @@ func add_item_to_hotbar(tile_id: int, _amount: int = 1) -> bool:
 		return true
 
 	return false
+
+func remove_current_item() -> bool:
+	var tile_id: int = -1
+	if current_slot < slot_tile_ids.size():
+		tile_id = slot_tile_ids[current_slot]
+		
+	if tile_id == -1:
+		return false
+		
+	slot_tile_ids[current_slot] = -1
+	update_item_indicators()
+	emit_signal("slot_changed", current_slot, -1)
+	simpan_hotbar_ke_file()
+	return true
