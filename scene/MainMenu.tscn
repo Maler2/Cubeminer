@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://o16c88u4w4r4" path="res://assets/block/big_grass_block.png" id="3_tf3dk"]
 [ext_resource type="Texture2D" uid="uid://ci1b3rtr87wks" path="res://assets/block/big_leave_block.png" id="4_rvc10"]
 [ext_resource type="Texture2D" uid="uid://bulh3k7f5nnnx" path="res://assets/block/big_wood_block.png" id="5_85i58"]
+[ext_resource type="Texture2D" uid="uid://dl7invsm3o6nw" path="res://assets/menu/title.png" id="6_85i58"]
 [ext_resource type="Texture2D" uid="uid://7pornp7cuv25" path="res://assets/ui/nineslicing.png" id="6_rvc10"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_sks6p"]
@@ -34,9 +35,9 @@ sources/1 = SubResource("TileSetAtlasSource_q4ih2")
 sources/2 = SubResource("TileSetAtlasSource_b5lh0")
 sources/3 = SubResource("TileSetAtlasSource_581fk")
 
-[sub_resource type="LabelSettings" id="LabelSettings_cq4tv"]
-outline_size = 8
-outline_color = Color(0.012617188, 0.012617188, 0.012617188, 1)
+[sub_resource type="LabelSettings" id="LabelSettings_85i58"]
+outline_size = 4
+outline_color = Color(0, 0, 0, 1)
 
 [node name="MainMenu" type="Control" unique_id=1162691394]
 layout_mode = 3
@@ -67,10 +68,17 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(46.5, 62)
 
-[node name="TitleLabel" type="Label" parent="ButtonLayer/VBoxContainer" unique_id=1467612577]
+[node name="TitleImage" type="TextureRect" parent="ButtonLayer/VBoxContainer" unique_id=1563957450]
+visible = false
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("6_85i58")
+stretch_mode = 5
+
+[node name="TitleLabel" type="Label" parent="ButtonLayer/VBoxContainer" unique_id=1939880502]
 layout_mode = 2
 text = "TITLE"
-label_settings = SubResource("LabelSettings_cq4tv")
+label_settings = SubResource("LabelSettings_85i58")
 horizontal_alignment = 1
 vertical_alignment = 1
 
