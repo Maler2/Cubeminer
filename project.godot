@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="survival 2d game"
-config/version="0.1d"
+config/version="0.1.1d"
 run/main_scene="uid://ciw0kfof0ceix"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="JustMe10n/Survival-game"

@@ -20,9 +20,9 @@ const SAVE_PATH: String = "user://config.json"
 # --- REFERENSI VIDEO SETTING ---
 @onready var switch_button: Button = %SwitchButton # VSync
 @onready var switch_fps_button: Button = %SwitchFPSButton # Toggle FPS Show
-@onready var fps_label: Label = %FPSLabel # Label teks FPS di pojok layar
 
 var show_fps: bool = false
+var is_loading_settings: bool = false # Flag untuk cegah save berulang saat loading
 
 func _ready() -> void:
 	print("--- 🛠️ PENGATURAN LOG: Memulai Inisialisasi Settings ---")
@@ -39,10 +39,10 @@ func _ready() -> void:
 	_setup_sliders()
 	_setup_video_settings()
 	
-	# Load data yang tersimpan dari JSON
+	# Load data yang tersimpan dari JSON (atau set default jika belum ada)
 	_load_settings_from_json()
 	
-	# Connect event slider audio (otomatis simpan saat digeser)
+	# Connect event slider audio
 	if master_slider:
 		master_slider.value_changed.connect(func(val): 
 			_set_bus_volume("Master", val)
@@ -61,11 +61,6 @@ func _ready() -> void:
 		
 	print("--- ✅ PENGATURAN LOG: Inisialisasi Selesai ---")
 
-func _process(_delta: float) -> void:
-	# Update angka FPS tiap frame HANYA jika opsinya dinyalakan (dibulatkan dengan int())
-	if show_fps and fps_label:
-		fps_label.text = "FPS: " + str(int(Engine.get_frames_per_second()))
-
 # --- FUNGSI LOG UNTUK PENGECEKAN SELURUH NODE ---
 func _check_node_status() -> void:
 	print("📌 Status BackButton: ", "OK" if back_button else "❌ NULL")
@@ -81,7 +76,6 @@ func _check_node_status() -> void:
 	print("---")
 	print("📌 Status SwitchButton (VSync): ", "OK" if switch_button else "❌ NULL")
 	print("📌 Status SwitchFPSButton: ", "OK" if switch_fps_button else "❌ NULL")
-	print("📌 Status FPSLabel: ", "OK" if fps_label else "❌ NULL")
 
 # --- FUNGSI TOMBOL NAVIGASI TAB ---
 func _on_sound_button_pressed() -> void:
@@ -97,13 +91,11 @@ func _on_back_button_pressed() -> void:
 
 # --- KONTROL VIDEO & FPS ---
 func _setup_video_settings() -> void:
-	# 1. Setup VSync
 	if switch_button:
 		switch_button.toggle_mode = true
 		if not switch_button.is_connected("toggled", _on_vsync_toggled):
 			switch_button.toggled.connect(_on_vsync_toggled)
 
-	# 2. Setup FPS Show Switch
 	if switch_fps_button:
 		switch_fps_button.toggle_mode = true
 		if not switch_fps_button.is_connected("toggled", _on_fps_toggled):
@@ -116,10 +108,14 @@ func _on_vsync_toggled(toggled_on: bool) -> void:
 func _apply_vsync(enabled: bool) -> void:
 	if enabled:
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
-		if switch_button: switch_button.text = "ON"
+		if switch_button: 
+			switch_button.button_pressed = true
+			switch_button.text = "ON"
 	else:
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
-		if switch_button: switch_button.text = "OFF"
+		if switch_button: 
+			switch_button.button_pressed = false
+			switch_button.text = "OFF"
 
 func _on_fps_toggled(toggled_on: bool) -> void:
 	_apply_fps_show(toggled_on)
@@ -131,7 +127,6 @@ func _apply_fps_show(enabled: bool) -> void:
 		switch_fps_button.button_pressed = enabled
 		switch_fps_button.text = "ON" if enabled else "OFF"
 
-    # Memanggil Autoload Global FPS
 	if FpsCounter:
 		FpsCounter.set_fps_visible(enabled)
 
@@ -148,12 +143,17 @@ func _setup_sliders() -> void:
 			slider.min_value = 0.0
 			slider.max_value = 100.0
 			slider.step = 1.0
+			slider.value = 100.0 # Default awal di 100%
 
 # ==========================================
 # --- SISTEM SAVE / LOAD SETTING JSON ---
 # ==========================================
 
 func _save_settings_to_json() -> void:
+	# Abaikan simpan jika proses loading JSON masih berlangsung
+	if is_loading_settings:
+		return
+		
 	var config_data: Dictionary = {
 		"master_volume": master_slider.value if master_slider else 100.0,
 		"sfx_volume": sfx_slider.value if sfx_slider else 100.0,
@@ -171,6 +171,8 @@ func _save_settings_to_json() -> void:
 func _load_settings_from_json() -> void:
 	if not FileAccess.file_exists(SAVE_PATH):
 		print("ℹ️ File config.json belum ada. Menggunakan settingan default.")
+		# Terapkan VSync default ON saat pertama kali main
+		_apply_vsync(true)
 		return
 		
 	var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
@@ -182,6 +184,7 @@ func _load_settings_from_json() -> void:
 		var error = json.parse(json_string)
 		if error == OK:
 			var data: Dictionary = json.data
+			is_loading_settings = true # Aktifkan perlindungan agar sinyal value_changed tidak mentrigger save
 			
 			# Applied Audio Data
 			if master_slider and data.has("master_volume"):
@@ -197,11 +200,11 @@ func _load_settings_from_json() -> void:
 				_set_bus_volume("BGM", data["music_volume"])
 				
 			# Applied Video Data
-			if switch_button and data.has("vsync"):
-				switch_button.button_pressed = data["vsync"]
+			if data.has("vsync"):
 				_apply_vsync(data["vsync"])
 				
 			if data.has("show_fps"):
 				_apply_fps_show(data["show_fps"])
 				
+			is_loading_settings = false # Matikan perlindungan
 			print("💾 Log: Berhasil memuat settingan dari config.json!")

@@ -122,7 +122,10 @@ var touch_timer: Timer
 var touch_start_pos: Vector2 = Vector2.ZERO
 var touch_target_grid: Vector2i = Vector2i.MIN
 var is_holding_touch: bool = false
+var touch_index: int = -1
+var touch_on_ui: bool = false
 @export var hold_duration: float = 0.25  # Waktu tahan (detik) untuk menghancurkan blok
+@export var touch_drag_cancel: float = 30.0  # Jarak drag (px) yang membatalkan tahan-hancur
 
 func _ready() -> void:
 	# Inisialisasi Timer Hold
@@ -203,6 +206,12 @@ func _input(event: InputEvent) -> void:
 	# 📱 INPUT LAYAR SENTUH HP
 	if event is InputEventScreenTouch:
 		if event.pressed:
+			touch_index = event.index
+			touch_on_ui = false
+			# Cek ke frame berikutnya: kalau sentuhan di atas tombol UI (gerak/run/jump),
+			# batalkan agar tidak ikut menghancurkan/memasang blok
+			call_deferred("_check_touch_on_ui")
+			
 			touch_start_pos = event.position
 			var touch_world = get_canvas_transform().affine_inverse() * event.position
 			touch_target_grid = local_to_map(to_local(touch_world))
@@ -211,13 +220,18 @@ func _input(event: InputEvent) -> void:
 			
 			touch_timer.start()
 		else:
+			if event.index != touch_index:
+				return
 			touch_timer.stop()
-			if not is_holding_touch:
+			if not is_holding_touch and not touch_on_ui:
 				block_interaction.pasang_blok(touch_target_grid)
 			is_holding_touch = false
+			touch_index = -1
 
 	elif event is InputEventScreenDrag:
-		if event.position.distance_to(touch_start_pos) > 15.0:
+		if event.index != touch_index:
+			return
+		if not touch_on_ui and event.position.distance_to(touch_start_pos) > touch_drag_cancel:
 			touch_timer.stop()
 			is_holding_touch = false
 
@@ -229,7 +243,16 @@ func _input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_LEFT:
 			block_interaction.hancurkan_blok(mouse_grid)
 
+func _check_touch_on_ui() -> void:
+	var gui = get_viewport().gui_get_hovered_control()
+	if gui:
+		touch_on_ui = true
+		touch_timer.stop()
+		is_holding_touch = false
+
 func _on_touch_hold_timeout() -> void:
+	if touch_on_ui:
+		return
 	is_holding_touch = true
 	block_interaction.hancurkan_blok(touch_target_grid)
 
