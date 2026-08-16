@@ -25,6 +25,7 @@ config/windows_native_icon="res://assets/appicon/app-32px-icon.ico"
 Global="*uid://bkxv8uinqpyhp"
 SaveManager="*uid://dsrjdb413kn6c"
 FpsCounter="*uid://dst3wt7mjfkgh"
+HoverManager="*res://script/hover_manager.gd"
 
 [display]
 
@@ -70,7 +71,6 @@ run={
 
 [input_devices]
 
-pointing/android/enable_long_press_as_right_click=false
 pointing/emulate_mouse_from_touch=false
 
 [physics]

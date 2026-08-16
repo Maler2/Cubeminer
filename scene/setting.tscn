@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cxbwk7nphhf5d"]
 
 [ext_resource type="Script" uid="uid://e2mwh4uuda6a" path="res://script/setting.gd" id="1_xthoy"]
+[ext_resource type="Texture2D" uid="uid://7pornp7cuv25" path="res://assets/ui/nineslicing.png" id="2_ahr6q"]
 
 [node name="Setting" type="Control" unique_id=1862972517]
 layout_mode = 3
@@ -36,18 +37,66 @@ unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "Back"
+flat = true
+
+[node name="BGButton" type="NinePatchRect" parent="optionMargin/VBoxContainer/BackButton" unique_id=2077965532]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ahr6q")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
 
 [node name="SoundButton" type="Button" parent="optionMargin/VBoxContainer" unique_id=93591279]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "Sound"
+flat = true
+
+[node name="BGButton" type="NinePatchRect" parent="optionMargin/VBoxContainer/SoundButton" unique_id=1069709562]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ahr6q")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
 
 [node name="VideoButton" type="Button" parent="optionMargin/VBoxContainer" unique_id=2931084]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "Video"
+flat = true
+
+[node name="BGButton" type="NinePatchRect" parent="optionMargin/VBoxContainer/VideoButton" unique_id=1353671308]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ahr6q")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
 
 [node name="ContentMargin" type="MarginContainer" parent="." unique_id=500463441]
 layout_mode = 1
@@ -142,6 +191,22 @@ layout_mode = 2
 mouse_default_cursor_shape = 2
 toggle_mode = true
 text = "OFF"
+flat = true
+
+[node name="BGButton" type="NinePatchRect" parent="ContentMargin/ContentPanel/VideoPage/SwitchFPSButton" unique_id=1779265396]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ahr6q")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
 
 [node name="VsyncLabel" type="Label" parent="ContentMargin/ContentPanel/VideoPage" unique_id=1293578175]
 layout_mode = 2
@@ -155,5 +220,21 @@ layout_mode = 2
 mouse_default_cursor_shape = 2
 toggle_mode = true
 text = "ON"
+flat = true
+
+[node name="BGButton" type="NinePatchRect" parent="ContentMargin/ContentPanel/VideoPage/SwitchButton" unique_id=24664578]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ahr6q")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
 
 [connection signal="pressed" from="optionMargin/VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

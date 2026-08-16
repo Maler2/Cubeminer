@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://s8j0tl47ie4" path="res://script/select_world.gd" id="1_53ahk"]
 [ext_resource type="Texture2D" uid="uid://bq18ifa7vvn3a" path="res://assets/block/big_dirt_block.png" id="1_bu8a3"]
+[ext_resource type="Texture2D" uid="uid://7pornp7cuv25" path="res://assets/ui/nineslicing.png" id="3_m87ah"]
 
 [node name="SelectWorld" type="Control" unique_id=1789210485]
 layout_mode = 3
@@ -64,8 +65,38 @@ layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "CREATE NEW WORLD"
 
+[node name="BGButton" type="NinePatchRect" parent="VBoxContainer/ButtonHBox/CreateButton" unique_id=757437380]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_m87ah")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
+
 [node name="BackButton" type="Button" parent="VBoxContainer/ButtonHBox" unique_id=518180970]
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "BACK
 "
+
+[node name="BGButton" type="NinePatchRect" parent="VBoxContainer/ButtonHBox/BackButton" unique_id=1358616813]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_m87ah")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4

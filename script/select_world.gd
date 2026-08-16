@@ -50,7 +50,22 @@ func add_world_button(world_name: String) -> void:
 	var btn = Button.new()
 	btn.text = world_name
 	btn.custom_minimum_size.y = 40
+	btn.flat = true
 	btn.pressed.connect(func(): _on_world_selected(world_name))
+
+	# Background nine-slicing supaya dapat efek hover dari HoverManager
+	var bg = NinePatchRect.new()
+	bg.name = "BGButton"
+	bg.show_behind_parent = true
+	bg.texture = preload("res://assets/ui/nineslicing.png")
+	bg.region_rect = Rect2(0, 0, 16, 16)
+	bg.patch_margin_left = 4
+	bg.patch_margin_top = 4
+	bg.patch_margin_right = 4
+	bg.patch_margin_bottom = 4
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	btn.add_child(bg)
+
 	world_list_container.add_child(btn)
 
 func _on_world_selected(world_name: String) -> void:
