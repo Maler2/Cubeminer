@@ -82,18 +82,21 @@ patch_margin_bottom = 4
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -40.0
+offset_top = -16.0
 offset_right = 53.0
 grow_vertical = 0
+alignment = 2
 
-[node name="SeedLabel" type="Label" parent="VBoxInfoContainer" unique_id=278132511]
+[node name="WorldLabel" type="Label" parent="VBoxInfoContainer" unique_id=1798496670]
 layout_mode = 2
-text = "SEEDLABEL"
+theme_override_font_sizes/font_size = 4
+text = "WORLDLABEL"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label" type="Label" parent="VBoxInfoContainer" unique_id=1798496670]
+[node name="SeedLabel" type="Label" parent="VBoxInfoContainer" unique_id=278132511]
 layout_mode = 2
-text = "WORLDLABEL"
+theme_override_font_sizes/font_size = 4
+text = "SEEDLABEL"
 horizontal_alignment = 1
 vertical_alignment = 1

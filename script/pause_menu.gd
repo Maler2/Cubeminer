@@ -2,6 +2,8 @@ extends CanvasLayer
 
 @onready var resume_button: Button = $VBoxContainer/ResumeButton
 @onready var main_menu_button: Button = $VBoxContainer/MainMenuButton
+@onready var world_label: Label = $VBoxInfoContainer/WorldLabel
+@onready var seed_label: Label = $VBoxInfoContainer/SeedLabel
 
 # Node Hotbar (Sesuaikan path jika posisinya berbeda di scene kamu)
 @onready var hotbar = get_node_or_null("../UILayer/Hotbar")
@@ -27,6 +29,9 @@ func toggle_pause() -> void:
 	# Memastikan kursor terlihat & bebas bergerak
 	if is_paused:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		# Tampilkan info dunia & seed saat pause
+		world_label.text = "World: " + str(Global.current_world_name)
+		seed_label.text = "Seed: " + str(Global.current_world_seed)
 
 func _on_resume_button_pressed() -> void:
 	toggle_pause()

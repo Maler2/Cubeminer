@@ -2,6 +2,10 @@
 
 [ext_resource type="Script" uid="uid://dy1ycuheuy8yp" path="res://script/fps_counter.gd" id="1_cpowx"]
 
+[sub_resource type="LabelSettings" id="LabelSettings_me6vf"]
+outline_size = 4
+outline_color = Color(0, 0, 0, 1)
+
 [node name="FpsCounter" type="CanvasLayer" unique_id=1984402478]
 layer = 100
 script = ExtResource("1_cpowx")
@@ -15,3 +19,4 @@ offset_top = 0.031982422
 offset_right = -0.3199997
 grow_vertical = 0
 text = "fps"
+label_settings = SubResource("LabelSettings_me6vf")
