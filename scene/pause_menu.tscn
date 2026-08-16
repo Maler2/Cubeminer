@@ -77,3 +77,23 @@ patch_margin_left = 4
 patch_margin_top = 4
 patch_margin_right = 4
 patch_margin_bottom = 4
+
+[node name="VBoxInfoContainer" type="VBoxContainer" parent="." unique_id=1048940585]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 53.0
+grow_vertical = 0
+
+[node name="SeedLabel" type="Label" parent="VBoxInfoContainer" unique_id=278132511]
+layout_mode = 2
+text = "SEEDLABEL"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="VBoxInfoContainer" unique_id=1798496670]
+layout_mode = 2
+text = "WORLDLABEL"
+horizontal_alignment = 1
+vertical_alignment = 1

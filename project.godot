@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Cubeminer"
+config/name="CUBEMINER"
 config/version="0.1.1d"
 run/main_scene="uid://ciw0kfof0ceix"
 config/use_custom_user_dir=true

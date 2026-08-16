@@ -1,5 +1,6 @@
 extends Control
 
+@onready var title_image: TextureRect = $ButtonLayer/VBoxContainer/TitleImage
 @onready var title_label: Label = $ButtonLayer/VBoxContainer/TitleLabel
 @onready var play_button: Button = $ButtonLayer/VBoxContainer/PlayButton
 @onready var setting_button: Button = $ButtonLayer/VBoxContainer/SettingButton
@@ -18,10 +19,24 @@ func _ready() -> void:
 	get_window().content_scale_factor = 1.0
 	FpsCounter.set_fps_label_scale(1.0)
 	
-	# Ambil nama game dari Project Settings
+	# Ambil nama game dari Project Settings (fallback title teks)
 	var game_name: String = ProjectSettings.get_setting("application/config/name")
 	if game_name != "":
 		title_label.text = game_name
+
+	# 🖼️ TITLE HIBRID:
+	# - Kalau file title.png ada → tampilkan gambar title (TitleImage)
+	# - Kalau tidak ada → fallback ke TitleLabel (nama game dari project settings)
+	var title_path := "res://assets/menu/title.png"
+	if ResourceLoader.exists(title_path):
+		title_image.visible = true
+		var tex: Texture2D = load(title_path)
+		if tex:
+			title_image.texture = tex
+		title_label.visible = false
+	else:
+		title_image.visible = false
+		title_label.visible = true
 
 	var version_name: String = ProjectSettings.get_setting("application/config/version")
 
