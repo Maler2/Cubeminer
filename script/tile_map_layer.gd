@@ -124,6 +124,7 @@ var touch_target_grid: Vector2i = Vector2i.MIN
 var is_holding_touch: bool = false
 var touch_index: int = -1
 var touch_on_ui: bool = false
+var touch_gesture_cancelled: bool = false
 @export var hold_duration: float = 0.25  # Waktu tahan (detik) untuk menghancurkan blok
 @export var touch_drag_cancel: float = 30.0  # Jarak drag (px) yang membatalkan tahan-hancur
 
@@ -207,10 +208,11 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
 		if event.pressed:
 			touch_index = event.index
-			touch_on_ui = false
-			# Cek ke frame berikutnya: kalau sentuhan di atas tombol UI (gerak/run/jump),
-			# batalkan agar tidak ikut menghancurkan/memasang blok
-			call_deferred("_check_touch_on_ui")
+			# Deteksi langsung dari posisi sentuhan: kalau di atas tombol UI
+			# (gerak/run/jump), batalkan agar tidak ikut hancur/pasang blok.
+			# Tidak pakai gui_get_hovered_control() karena tidak andal di HP.
+			touch_on_ui = _is_point_over_ui(event.position)
+			touch_gesture_cancelled = false
 			
 			touch_start_pos = event.position
 			var touch_world = get_canvas_transform().affine_inverse() * event.position
@@ -218,37 +220,56 @@ func _input(event: InputEvent) -> void:
 			hovered_grid_pos = touch_target_grid
 			is_holding_touch = false
 			
-			touch_timer.start()
+			if not touch_on_ui:
+				touch_timer.start()
 		else:
 			if event.index != touch_index:
 				return
 			touch_timer.stop()
-			if not is_holding_touch and not touch_on_ui:
+			# Pasang blok HANYA kalau ini gesture baru (tidak ada tahan-hancur
+			# sebelumnya) dan tidak dibatalkan oleh drag/jatuh di atas tombol UI.
+			if not is_holding_touch and not touch_on_ui and not touch_gesture_cancelled:
 				block_interaction.pasang_blok(touch_target_grid)
 			is_holding_touch = false
+			touch_gesture_cancelled = false
 			touch_index = -1
 
 	elif event is InputEventScreenDrag:
 		if event.index != touch_index:
 			return
 		if not touch_on_ui and event.position.distance_to(touch_start_pos) > touch_drag_cancel:
+			# Drag jauh = bukan maksud hancur. Batalkan sisa gesture.
+			# Jangan reset is_holding_touch: kalau tahan-hancur sudah terlanjur
+			# terjadi, release tetap TIDAK boleh memasang blok lagi.
 			touch_timer.stop()
-			is_holding_touch = false
+			touch_gesture_cancelled = true
 
-	# 🖱️ INPUT MOUSE PC
+	# 🖱️ INPUT MOUSE PC (di HP event mouse hanyalah emulasi dari sentuhan —
+	# sudah dimatikan lewat project.godot; guard ini untuk pengaman ganda)
 	elif event is InputEventMouseButton and event.pressed:
+		if OS.has_feature("mobile"):
+			return
 		var mouse_grid = local_to_map(to_local(get_global_mouse_position()))
 		if event.button_index == MOUSE_BUTTON_RIGHT:
 			block_interaction.pasang_blok(mouse_grid)
 		elif event.button_index == MOUSE_BUTTON_LEFT:
 			block_interaction.hancurkan_blok(mouse_grid)
 
-func _check_touch_on_ui() -> void:
-	var gui = get_viewport().gui_get_hovered_control()
-	if gui:
-		touch_on_ui = true
-		touch_timer.stop()
-		is_holding_touch = false
+func _is_point_over_ui(pos: Vector2) -> bool:
+	# Berjalan dari root, cari Control terlihat yang rect-nya memuat posisi.
+	# Ini mencakup tombol InputLayer, Hotbar, dll. (rect = ruang koordinat viewport,
+	# sama dengan event.position dari sentuhan layar).
+	return _ui_contains_point(get_tree().root, pos)
+
+func _ui_contains_point(node: Node, pos: Vector2) -> bool:
+	for child in node.get_children():
+		if child is Control and child.visible:
+			if child.mouse_filter != Control.MOUSE_FILTER_IGNORE:
+				if child.get_global_rect().has_point(pos):
+					return true
+			if _ui_contains_point(child, pos):
+				return true
+	return false
 
 func _on_touch_hold_timeout() -> void:
 	if touch_on_ui:
