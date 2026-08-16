@@ -192,9 +192,20 @@ func _process(_delta: float) -> void:
 			autosave_timer = 0.0
 			save_blocks_now()
 	
-	var mouse_grid = local_to_map(to_local(get_global_mouse_position()))
-	if mouse_grid != hovered_grid_pos:
-		hovered_grid_pos = mouse_grid
+	# Indikator tile target: di HP mengikuti sentuhan, di PC mengikuti mouse.
+	# min_y_limit - 1 dipakai sebagai nilai "sembunyi" (di luar batas gambar).
+	var target_grid: Vector2i = hovered_grid_pos
+	if touch_index != -1:
+		if touch_on_ui or touch_gesture_cancelled:
+			target_grid.y = min_y_limit - 1  # di atas tombol UI / drag batal → sembunyikan
+		else:
+			target_grid = touch_target_grid
+	elif OS.has_feature("mobile"):
+		target_grid.y = min_y_limit - 1  # HP tanpa sentuhan = tidak ada kursor
+	else:
+		target_grid = local_to_map(to_local(get_global_mouse_position()))
+	if target_grid != hovered_grid_pos:
+		hovered_grid_pos = target_grid
 		queue_redraw()
 		
 	var current_player_grid = local_to_map(to_local(player.global_position))
@@ -218,6 +229,7 @@ func _input(event: InputEvent) -> void:
 			var touch_world = get_canvas_transform().affine_inverse() * event.position
 			touch_target_grid = local_to_map(to_local(touch_world))
 			hovered_grid_pos = touch_target_grid
+			queue_redraw()
 			is_holding_touch = false
 			
 			if not touch_on_ui:
