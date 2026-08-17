@@ -1,7 +1,13 @@
-[gd_scene format=3 uid="uid://bsci62dbaulks"]
+[gd_scene load_steps=4 format=3 uid="uid://bsci62dbaulks"]
 
 [ext_resource type="Script" uid="uid://bc8ir8xbkrfah" path="res://script/dpad.gd" id="1_dpad"]
 [ext_resource type="Texture2D" uid="uid://byhvur7t23tv" path="res://assets/ui/four-move-button.png" id="2_img"]
+[ext_resource type="Shader" uid="uid://dpad01shader1d" path="res://assets/ui/dpad_shader.gdshader" id="3_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dpad"]
+shader = ExtResource("3_shader")
+shader_parameter/active_dir = 0
+shader_parameter/press_color = Color(0.5, 0.5, 0.5, 1)
 
 [node name="InputLayer" type="CanvasLayer" unique_id=1451272165]
 
@@ -20,59 +26,7 @@ texture = ExtResource("2_img")
 expand_mode = 3
 stretch_mode = 5
 script = ExtResource("1_dpad")
-
-[node name="BtnUp" type="ColorRect" parent="DPad" unique_id=1411413559]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.41700003
-anchor_right = 0.583
-anchor_bottom = 0.41700003
-offset_left = -0.016000748
-offset_right = 0.01599884
-offset_bottom = -0.016000748
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0)
-
-[node name="BtnDown" type="ColorRect" parent="DPad" unique_id=1019300486]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.41700003
-anchor_top = 0.583
-anchor_right = 0.583
-anchor_bottom = 1.0
-offset_left = -0.016000748
-offset_top = 0.01599884
-offset_right = 0.01599884
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0)
-
-[node name="BtnLeft" type="ColorRect" parent="DPad" unique_id=185946759]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.41700003
-anchor_right = 0.41700003
-anchor_bottom = 0.583
-offset_top = -0.016000748
-offset_right = -0.016000748
-offset_bottom = 0.01599884
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0)
-
-[node name="BtnRight" type="ColorRect" parent="DPad" unique_id=1367823195]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.41700003
-anchor_right = 1.0
-anchor_bottom = 0.583
-offset_left = 28.0
-offset_top = -0.016000748
-offset_bottom = 0.01599884
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0)
+material = SubResource("ShaderMaterial_dpad")
 
 [node name="JumpButton" type="Button" parent="." unique_id=82279200]
 custom_minimum_size = Vector2(24, 24)
