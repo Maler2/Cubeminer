@@ -105,6 +105,17 @@ func _check_node_status() -> void:
 	print("---")
 	print("📌 Status SwitchButton (VSync): ", "OK" if switch_button else "❌ NULL")
 	print("📌 Status SwitchFPSButton: ", "OK" if switch_fps_button else "❌ NULL")
+	print("---")
+	print("📌 Status KeybindButton: ", "OK" if keybind_button else "❌ NULL")
+	print("📌 Status KeybindPage: ", "OK" if keybind_page else "❌ NULL")
+	print("---")
+	print("📌 Status LeftButton: ", "OK" if left_button else "❌ NULL")
+	print("📌 Status RightButton: ", "OK" if right_button else "❌ NULL")
+	print("📌 Status UpButton: ", "OK" if up_button else "❌ NULL")
+	print("📌 Status DownButton: ", "OK" if down_button else "❌ NULL")
+	print("📌 Status ThrowButton: ", "OK" if throw_button else "❌ NULL")
+	print("📌 Status RunButton: ", "OK" if run_button else "❌ NULL")
+	print("📌 Status JumpButton: ", "OK" if jump_button else "❌ NULL")
 
 # --- FUNGSI TOMBOL NAVIGASI TAB ---
 func _on_sound_button_pressed() -> void:
@@ -199,7 +210,6 @@ func _save_settings_to_json() -> void:
 func _load_settings_from_json() -> void:
 	if not FileAccess.file_exists(SAVE_PATH):
 		print("ℹ️ File config.json belum ada. Menggunakan settingan default.")
-		# Terapkan VSync default ON saat pertama kali main
 		_apply_vsync(true)
 		return
 		
@@ -212,7 +222,7 @@ func _load_settings_from_json() -> void:
 		var error = json.parse(json_string)
 		if error == OK:
 			var data: Dictionary = json.data
-			is_loading_settings = true # Aktifkan perlindungan agar sinyal value_changed tidak mentrigger save
+			is_loading_settings = true
 			
 			# Applied Audio Data
 			if master_slider and data.has("master_volume"):
@@ -239,12 +249,14 @@ func _load_settings_from_json() -> void:
 				
 			_load_keybinds_from_json(data)
 				
-			is_loading_settings = false # Matikan perlindungan
+			is_loading_settings = false
 			print("💾 Log: Berhasil memuat settingan dari config.json!")
 
 # --- KEYBIND ---
 func _setup_keybind_buttons() -> void:
 	_connect_keybind(left_button, "left", "A")
+	_connect_keybind(down_button, "move_down", "S")
+	_connect_keybind(up_button, "move_up", "W")
 	_connect_keybind(right_button, "right", "D")
 	_connect_keybind(throw_button, "drop", "Q")
 	_connect_keybind(run_button, "run", "Shift")
@@ -277,31 +289,33 @@ func _input(event: InputEvent) -> void:
 		_cancel_rebind()
 		return
 	
+	var pressed_key = event.physical_keycode if event.physical_keycode != 0 else event.keycode
+	
 	# Cek duplikat
 	for action in InputMap.get_actions():
-		if action.begins_with("ui_"):
-			continue
-		if action == waiting_for_key:
+		if action.begins_with("ui_") or action == waiting_for_key:
 			continue
 		for ev in InputMap.action_get_events(action):
-			if ev is InputEventKey and ev.physical_keycode == event.physical_keycode:
-				_cancel_rebind()
-				return
+			if ev is InputEventKey:
+				var ev_key = ev.physical_keycode if ev.physical_keycode != 0 else ev.keycode
+				if ev_key == pressed_key:
+					print("⚠️ Keybind bentrok dengan action: ", action)
+					_cancel_rebind()
+					return
 	
 	# Apply rebind
 	InputMap.action_erase_events(waiting_for_key)
 	var new_event = InputEventKey.new()
-	new_event.physical_keycode = event.physical_keycode
+	new_event.physical_keycode = event.physical_keycode if event.physical_keycode != 0 else event.keycode
 	InputMap.action_add_event(waiting_for_key, new_event)
 	get_viewport().set_input_as_handled()
 	
-	# Update tampilan semua tombol keybind
 	_refresh_all_keybind_texts()
 	
 	var old_action = waiting_for_key
 	waiting_for_key = ""
 	_save_with_keybinds()
-	print("🔑 Keybind: ", old_action, " -> ", OS.get_keycode_string(event.keycode) if event.keycode != 0 else OS.get_keycode_string(event.physical_keycode))
+	print("🔑 Keybind: ", old_action, " -> ", OS.get_keycode_string(pressed_key))
 
 func _cancel_rebind() -> void:
 	_refresh_all_keybind_texts()
@@ -309,6 +323,8 @@ func _cancel_rebind() -> void:
 
 func _refresh_all_keybind_texts() -> void:
 	if left_button: left_button.text = _get_action_key_display("left", "A")
+	if down_button: down_button.text = _get_action_key_display("move_down", "S")
+	if up_button: up_button.text = _get_action_key_display("move_up", "W")
 	if right_button: right_button.text = _get_action_key_display("right", "D")
 	if throw_button: throw_button.text = _get_action_key_display("drop", "Q")
 	if run_button: run_button.text = _get_action_key_display("run", "Shift")
@@ -317,6 +333,8 @@ func _refresh_all_keybind_texts() -> void:
 func _get_keybind_button(action: String) -> Button:
 	match action:
 		"left": return left_button
+		"move_down": return down_button
+		"move_up": return up_button
 		"right": return right_button
 		"jump": return jump_button
 		"run": return run_button
@@ -328,10 +346,13 @@ func _save_with_keybinds(keybinds: Dictionary = {}) -> void:
 		return
 	if keybinds.is_empty():
 		keybinds = {}
-		for action in ["left", "right", "jump", "run", "drop"]:
-			var events = InputMap.action_get_events(action)
-			if events.size() > 0 and events[0] is InputEventKey:
-				keybinds[action] = events[0].physical_keycode
+		for action in ["left", "right", "move_down", "move_up", "jump", "run", "drop"]:
+			if InputMap.has_action(action):
+				var events = InputMap.action_get_events(action)
+				if events.size() > 0 and events[0] is InputEventKey:
+					var ev = events[0]
+					keybinds[action] = ev.physical_keycode if ev.physical_keycode != 0 else ev.keycode
+					
 	var config_data: Dictionary = {
 		"master_volume": master_slider.value if master_slider else 100.0,
 		"sfx_volume": sfx_slider.value if sfx_slider else 100.0,
@@ -350,10 +371,11 @@ func _load_keybinds_from_json(data: Dictionary) -> void:
 		return
 	var keybinds: Dictionary = data["keybinds"]
 	for action in keybinds:
-		var keycode: int = keybinds[action]
-		InputMap.action_erase_events(action)
-		var ev = InputEventKey.new()
-		ev.physical_keycode = keycode
-		InputMap.action_add_event(action, ev)
-	# Update tampilan tombol
+		var keycode: int = int(keybinds[action])
+		if InputMap.has_action(action):
+			InputMap.action_erase_events(action)
+			var ev = InputEventKey.new()
+			ev.physical_keycode = keycode
+			InputMap.action_add_event(action, ev)
+			
 	_refresh_all_keybind_texts()
