@@ -25,7 +25,6 @@ func _ready():
 
 	if dpad:
 		dpad.dpad_pressed.connect(_on_dpad_pressed)
-		dpad.dpad_released.connect(_on_dpad_released)
 
 	if btn_run:
 		btn_run.button_down.connect(func(): if player: player.set_running(true))
@@ -46,12 +45,8 @@ func _on_dpad_pressed(direction: String) -> void:
 			player.set_move_direction(-1.0)
 		"right":
 			player.set_move_direction(1.0)
-
-func _on_dpad_released() -> void:
-	if not player:
-		return
-	player.set_move_direction(0.0)
-	player.set_running(false)
+		"":
+			player.set_move_direction(0.0)
 
 func _on_jump_button_pressed():
 	if player and player.has_method("jump"):

@@ -1,7 +1,6 @@
 extends TextureRect
 
 signal dpad_pressed(direction: String)
-signal dpad_released()
 
 var active_direction: String = ""
 var touch_index: int = -1
@@ -13,29 +12,35 @@ func _input(event: InputEvent) -> void:
 		if event.pressed:
 			if get_global_rect().has_point(event.position):
 				touch_index = event.index
-				var local_pos = event.position - global_position
-				var center = size / 2.0
-				var diff = local_pos - center
-				
-				if abs(diff.x) > abs(diff.y):
-					if diff.x < 0:
-						active_direction = "left"
-					else:
-						active_direction = "right"
-				else:
-					if diff.y < 0:
-						active_direction = "up"
-					else:
-						active_direction = "down"
-				
-				dpad_pressed.emit(active_direction)
-				_update_shader()
+				_detect_direction(event.position)
 		else:
 			if event.index == touch_index:
 				touch_index = -1
 				active_direction = ""
-				dpad_released.emit()
+				dpad_pressed.emit(active_direction)
 				_update_shader()
+	elif event is InputEventScreenDrag:
+		if event.index == touch_index:
+			_detect_direction(event.position)
+
+func _detect_direction(pos: Vector2) -> void:
+	var local_pos = pos - global_position
+	var center = size / 2.0
+	var diff = local_pos - center
+	
+	if abs(diff.x) > abs(diff.y):
+		if diff.x < 0:
+			active_direction = "left"
+		else:
+			active_direction = "right"
+	else:
+		if diff.y < 0:
+			active_direction = "up"
+		else:
+			active_direction = "down"
+	
+	dpad_pressed.emit(active_direction)
+	_update_shader()
 
 func _update_shader() -> void:
 	if material and material is ShaderMaterial:
