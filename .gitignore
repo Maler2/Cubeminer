@@ -3,6 +3,7 @@
 *.translation
 *.mono/
 *.import
+android/
 
 # --- IDE & TEXT EDITOR ---
 .vscode/
@@ -28,5 +29,5 @@ desktop.ini
 gpush.bat
 pgpush.ps1
 
-# --- TESTIMG ---
+# --- TESTING ---
 test.*

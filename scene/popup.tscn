@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dn3ujfqwytkfk"]
+
+[node name="Popup" type="CanvasLayer" unique_id=1875547225]
+
+[node name="popupLabel" type="Label" parent="." unique_id=785113148]
+offset_right = 40.0
+offset_bottom = 22.0
+text = "popuplabel"
