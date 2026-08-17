@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://c8jg2633kd13o" path="res://assets/block/unknown-block.png" id="1_5tcr5"]
 [ext_resource type="Texture2D" uid="uid://bm6p7altsgl1d" path="res://assets/block/grass_block.png" id="2_85ewo"]
+[ext_resource type="Texture2D" uid="uid://dudv4dmsdr3qf" path="res://assets/block/plank.png" id="3_bbux4"]
 [ext_resource type="Texture2D" uid="uid://djxwvjhnc18t" path="res://assets/block/dirt_block.png" id="3_h6l10"]
 [ext_resource type="Texture2D" uid="uid://cp1163kiw8i5w" path="res://assets/block/stone_block.png" id="4_bbux4"]
 [ext_resource type="Texture2D" uid="uid://dhwdcbvlu556n" path="res://assets/block/coal_block.png" id="5_h6l10"]
@@ -29,6 +30,10 @@ texture = ExtResource("1_5tcr5")
 texture = ExtResource("2_85ewo")
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_x6fn2"]
+texture = ExtResource("3_bbux4")
+0:0/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qpk70"]
 texture = ExtResource("3_h6l10")
@@ -82,6 +87,7 @@ sources/6 = SubResource("TileSetAtlasSource_ux4dc")
 sources/7 = SubResource("TileSetAtlasSource_jrd6n")
 sources/8 = SubResource("TileSetAtlasSource_oi235")
 sources/9 = SubResource("TileSetAtlasSource_ok6jt")
+sources/10 = SubResource("TileSetAtlasSource_x6fn2")
 pattern_0 = SubResource("TileMapPattern_h6l10")
 pattern_1 = SubResource("TileMapPattern_bbux4")
 pattern_2 = SubResource("TileMapPattern_oi235")
