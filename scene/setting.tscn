@@ -123,11 +123,16 @@ color = Color(0, 0, 0, 0.40392157)
 
 [node name="AudioPage" type="VBoxContainer" parent="ContentMargin/ContentPanel" unique_id=936971158]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
+offset_left = 32.0
+offset_top = -67.0
+offset_right = -32.0
+offset_bottom = 67.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -167,14 +172,15 @@ value = 100.0
 
 [node name="VideoPage" type="VBoxContainer" parent="ContentMargin/ContentPanel" unique_id=1560013910]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_top = -11.0
-offset_bottom = 11.0
+offset_left = 32.0
+offset_top = -58.0
+offset_right = -32.0
+offset_bottom = 58.0
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
