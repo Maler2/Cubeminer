@@ -1,63 +1,90 @@
 [gd_scene format=3 uid="uid://bsci62dbaulks"]
 
-[node name="InputLayer" type="CanvasLayer" unique_id=674262392]
+[ext_resource type="Script" uid="uid://bc8ir8xbkrfah" path="res://script/dpad.gd" id="1_dpad"]
+[ext_resource type="Texture2D" uid="uid://byhvur7t23tv" path="res://assets/ui/four-move-button.png" id="2_img"]
 
-[node name="LeftButton" type="Button" parent="." unique_id=1149605451]
+[node name="InputLayer" type="CanvasLayer" unique_id=1451272165]
+
+[node name="DPad" type="TextureRect" parent="." unique_id=297093378]
+custom_minimum_size = Vector2(48, 48)
+anchors_preset = -1
+anchor_left = 0.056
+anchor_top = 0.65400004
+anchor_right = 0.097
+anchor_bottom = 0.72800004
+offset_left = -0.51200104
+offset_top = 0.2079773
+offset_right = 0.2559967
+offset_bottom = 0.25598145
+texture = ExtResource("2_img")
+expand_mode = 3
+stretch_mode = 5
+script = ExtResource("1_dpad")
+
+[node name="BtnUp" type="ColorRect" parent="DPad" unique_id=1411413559]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
+[node name="BtnDown" type="ColorRect" parent="DPad" unique_id=1019300486]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
+[node name="BtnLeft" type="ColorRect" parent="DPad" unique_id=185946759]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
+[node name="BtnRight" type="ColorRect" parent="DPad" unique_id=1367823195]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
+[node name="JumpButton" type="Button" parent="." unique_id=82279200]
 custom_minimum_size = Vector2(24, 24)
 anchors_preset = -1
-anchor_left = 0.07300001
-anchor_top = 0.772
-anchor_right = 0.094000004
-anchor_bottom = 0.809
-offset_left = -0.0960083
-offset_top = -0.25601196
-offset_right = -0.288002
-offset_bottom = -0.23199463
-focus_mode = 0
-theme_override_font_sizes/font_size = 4
-text = "Left"
-
-[node name="RightButton" type="Button" parent="." unique_id=1508866872]
-custom_minimum_size = Vector2(24, 24)
-anchors_preset = -1
-anchor_left = 0.18400002
-anchor_top = 0.772
-anchor_right = 0.20500001
-anchor_bottom = 0.809
-offset_left = 0.031982422
-offset_top = -0.25601196
-offset_right = -0.16001892
-offset_bottom = -0.23199463
-focus_mode = 0
-theme_override_font_sizes/font_size = 3
-text = "Right"
-
-[node name="JumpButton" type="Button" parent="." unique_id=1338628596]
-custom_minimum_size = Vector2(24, 24)
-anchors_preset = -1
-anchor_left = 0.851
-anchor_top = 0.772
-anchor_right = 0.87200004
-anchor_bottom = 0.809
-offset_left = -0.35198975
-offset_top = -0.25601196
-offset_right = -0.5440674
-offset_bottom = -0.23199463
+anchor_left = 0.83300006
+anchor_top = 0.69100004
+anchor_right = 0.86100006
+anchor_bottom = 0.74100006
+offset_left = 0.38391113
+offset_top = 0.23196411
+offset_right = 0.12792969
+offset_bottom = -0.16802979
 focus_mode = 0
 theme_override_font_sizes/font_size = 3
 text = "A"
 
-[node name="RunButton" type="Button" parent="." unique_id=1490938639]
+[node name="RunButton" type="Button" parent="." unique_id=56482639]
 custom_minimum_size = Vector2(24, 24)
 anchors_preset = -1
-anchor_left = 0.74
-anchor_top = 0.772
-anchor_right = 0.76000005
-anchor_bottom = 0.809
-offset_left = -0.47998047
-offset_top = -0.25601196
-offset_right = 0.47991943
-offset_bottom = -0.23199463
+anchor_left = 0.72200006
+anchor_top = 0.69100004
+anchor_right = 0.75000006
+anchor_bottom = 0.74100006
+offset_left = 0.2559204
+offset_top = 0.23196411
+offset_right = -6.1035156e-05
+offset_bottom = -0.16802979
 focus_mode = 0
 theme_override_font_sizes/font_size = 3
 text = "Run"
