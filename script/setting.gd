@@ -300,6 +300,7 @@ func _input(event: InputEvent) -> void:
 				var ev_key = ev.physical_keycode if ev.physical_keycode != 0 else ev.keycode
 				if ev_key == pressed_key:
 					print("⚠️ Keybind bentrok dengan action: ", action)
+					PopupGlobal.show_popup("keybind its already use on: %s", [action])
 					_cancel_rebind()
 					return
 	

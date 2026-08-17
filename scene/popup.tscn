@@ -1,8 +1,47 @@
 [gd_scene format=3 uid="uid://dn3ujfqwytkfk"]
 
-[node name="Popup" type="CanvasLayer" unique_id=1875547225]
+[ext_resource type="Script" uid="uid://hvyfbyurk4x2" path="res://script/popup.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dj86gumobhqpv" path="res://assets/ui/nineslicing-ui.png" id="2_ui"]
 
-[node name="popupLabel" type="Label" parent="." unique_id=785113148]
-offset_right = 40.0
-offset_bottom = 22.0
-text = "popuplabel"
+[sub_resource type="LabelSettings" id="LabelSettings_popup"]
+outline_size = 4
+outline_color = Color(0, 0, 0, 1)
+
+[node name="Popup" type="CanvasLayer" unique_id=25391945]
+script = ExtResource("1_script")
+
+[node name="Container" type="Control" parent="." unique_id=770226658]
+layout_mode = 3
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="Container" unique_id=359596780]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ui")
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 5
+
+[node name="popupLabel" type="Label" parent="Container" unique_id=2026508499]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_popup")
+horizontal_alignment = 1
+vertical_alignment = 1
