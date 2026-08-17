@@ -17,6 +17,10 @@ const SAVE_PATH: String = "user://config.json"
 @onready var sfx_slider: HSlider = %SFXSlider
 @onready var music_slider: HSlider = %MusicSlider
 
+@onready var master_label: Label = %MasterLabel
+@onready var sfx_label: Label = %SFXLabel
+@onready var music_label: Label = %MusicLabel
+
 # --- REFERENSI VIDEO SETTING ---
 @onready var switch_button: Button = %SwitchButton # VSync
 @onready var switch_fps_button: Button = %SwitchFPSButton # Toggle FPS Show
@@ -39,6 +43,11 @@ func _ready() -> void:
 	_setup_sliders()
 	_setup_video_settings()
 	
+	# Set label awal
+	_update_label_pct(master_label, master_slider.value if master_slider else 100.0)
+	_update_label_pct(sfx_label, sfx_slider.value if sfx_slider else 100.0)
+	_update_label_pct(music_label, music_slider.value if music_slider else 100.0)
+	
 	# Load data yang tersimpan dari JSON (atau set default jika belum ada)
 	_load_settings_from_json()
 	
@@ -46,16 +55,19 @@ func _ready() -> void:
 	if master_slider:
 		master_slider.value_changed.connect(func(val): 
 			_set_bus_volume("Master", val)
+			_update_label_pct(master_label, val)
 			_save_settings_to_json()
 		)
 	if sfx_slider:
 		sfx_slider.value_changed.connect(func(val): 
 			_set_bus_volume("SFX", val)
+			_update_label_pct(sfx_label, val)
 			_save_settings_to_json()
 		)
 	if music_slider:
 		music_slider.value_changed.connect(func(val): 
 			_set_bus_volume("BGM", val)
+			_update_label_pct(music_label, val)
 			_save_settings_to_json()
 		)
 		
@@ -137,6 +149,14 @@ func _set_bus_volume(bus_name: String, value_0_to_100: float) -> void:
 		var normalized_val = max(0.0001, value_0_to_100 / 100.0)
 		AudioServer.set_bus_volume_db(bus_idx, linear_to_db(normalized_val))
 
+func _update_label_pct(label: Label, value: float) -> void:
+	if label:
+		var parts = label.text.split(":")
+		var base_name = parts[0].strip_edges()
+		if base_name == "":
+			base_name = "Volume"
+		label.text = base_name + ": " + str(int(value)) + "%"
+
 func _setup_sliders() -> void:
 	for slider in [master_slider, sfx_slider, music_slider]:
 		if slider:
@@ -190,14 +210,17 @@ func _load_settings_from_json() -> void:
 			if master_slider and data.has("master_volume"):
 				master_slider.value = data["master_volume"]
 				_set_bus_volume("Master", data["master_volume"])
+				_update_label_pct(master_label, data["master_volume"])
 				
 			if sfx_slider and data.has("sfx_volume"):
 				sfx_slider.value = data["sfx_volume"]
 				_set_bus_volume("SFX", data["sfx_volume"])
+				_update_label_pct(sfx_label, data["sfx_volume"])
 				
 			if music_slider and data.has("music_volume"):
 				music_slider.value = data["music_volume"]
 				_set_bus_volume("BGM", data["music_volume"])
+				_update_label_pct(music_label, data["music_volume"])
 				
 			# Applied Video Data
 			if data.has("vsync"):

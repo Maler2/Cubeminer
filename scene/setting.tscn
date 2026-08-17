@@ -123,7 +123,6 @@ color = Color(0, 0, 0, 0.40392157)
 
 [node name="AudioPage" type="VBoxContainer" parent="ContentMargin/ContentPanel" unique_id=936971158]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
@@ -137,6 +136,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MasterLabel" type="Label" parent="ContentMargin/ContentPanel/AudioPage" unique_id=1911402209]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Master"
 horizontal_alignment = 1
@@ -149,6 +149,7 @@ mouse_default_cursor_shape = 2
 value = 50.0
 
 [node name="SFXLabel" type="Label" parent="ContentMargin/ContentPanel/AudioPage" unique_id=1765056583]
+unique_name_in_owner = true
 layout_mode = 2
 text = "SFX"
 horizontal_alignment = 1
@@ -159,7 +160,8 @@ unique_name_in_owner = true
 layout_mode = 2
 value = 100.0
 
-[node name="Label" type="Label" parent="ContentMargin/ContentPanel/AudioPage" unique_id=357947327]
+[node name="MusicLabel" type="Label" parent="ContentMargin/ContentPanel/AudioPage" unique_id=357947327]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Music"
 horizontal_alignment = 1
@@ -172,6 +174,7 @@ value = 100.0
 
 [node name="VideoPage" type="VBoxContainer" parent="ContentMargin/ContentPanel" unique_id=1560013910]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
