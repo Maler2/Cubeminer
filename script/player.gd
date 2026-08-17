@@ -26,6 +26,7 @@ var is_falling: bool = false
 # --- AUDIO REFERENCES ---
 @onready var sfx_player: AudioStreamPlayer2D = $FootstepAudioPlayer
 @onready var jump_sfx_player: AudioStreamPlayer2D = $JumpAudioPlayer # Node Audio Lompat
+@onready var double_jump_particles: GPUParticles2D = $DoubleJumpParticles
 
 @onready var held_item_sprite: Sprite2D = $Body/RightArm/ItemHeldSprite # Sesuaikan path Node tanganmu
 
@@ -301,6 +302,9 @@ func jump():
 		
 	air_jumps_used += 1
 	velocity.y = JUMP_VELOCITY
+	
+	# ✨ Emit partikel double jump
+	double_jump_particles.restart()
 	
 	# Reset pengukuran jarak jatuh → fall damage dihitung dari double jump,
 	# bukan dari jatuh sebelumnya (mis. terjun dari tebing lalu double jump)

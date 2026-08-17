@@ -5,6 +5,8 @@
 [ext_resource type="Texture2D" uid="uid://c8jg2633kd13o" path="res://assets/block/unknown-block.png" id="3_ct4mp"]
 [ext_resource type="AudioStream" uid="uid://c1qtadyeu285x" path="res://audio/sfx/walk.wav" id="3_fvtld"]
 [ext_resource type="AudioStream" uid="uid://b540ouywi78k5" path="res://audio/sfx/jump.wav" id="5_s4jxa"]
+[ext_resource type="Texture2D" uid="uid://bjihpoao7or4o" path="res://assets/animation/double-jump.png" id="6_djump"]
+[ext_resource type="Shader" path="res://assets/animation/double-jump.gdshader" id="7_dshader"]
 
 [sub_resource type="Animation" id="Animation_q6r6c"]
 length = 0.001
@@ -765,6 +767,21 @@ _data = {
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mti6b"]
 size = Vector2(10, 24.495499)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_djump"]
+shader = ExtResource("7_dshader")
+shader_parameter/tex = ExtResource("6_djump")
+shader_parameter/hframes = 7
+shader_parameter/vframes = 1
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_djump"]
+emission_shape = 1
+emission_sphere_radius = 4.0
+direction = Vector3(0, 1, 0)
+spread = 60.0
+initial_velocity_min = 20.0
+initial_velocity_max = 40.0
+gravity = Vector3(0, -60, 0)
+
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=1669300621]
 collision_layer = 2
 script = ExtResource("1_xo3ru")
@@ -839,3 +856,14 @@ bus = &"SFX"
 [node name="JumpAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1755414222]
 stream = ExtResource("5_s4jxa")
 bus = &"SFX"
+
+[node name="DoubleJumpParticles" type="GPUParticles2D" parent="." unique_id=661584439]
+material = SubResource("ShaderMaterial_djump")
+position = Vector2(-15, 0)
+emitting = false
+amount = 6
+texture = ExtResource("6_djump")
+lifetime = 0.25
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_djump")
