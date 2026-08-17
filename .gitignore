@@ -28,6 +28,7 @@ Thumbs.db
 desktop.ini
 gpush.bat
 pgpush.ps1
+infoproject.ps1
 
 # --- TESTING ---
 test.*
