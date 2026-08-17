@@ -113,7 +113,7 @@ func update_held_item(new_texture: Texture2D) -> void:
 		held_item_sprite.visible = false
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and event.keycode == KEY_Q:
+	if event.is_action_pressed("drop"):
 		drop_current_item()
 
 func drop_current_item() -> void:

@@ -98,6 +98,27 @@ patch_margin_top = 4
 patch_margin_right = 4
 patch_margin_bottom = 4
 
+[node name="KeybindButton" type="Button" parent="optionMargin/VBoxContainer" unique_id=1261564016]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Keybind"
+flat = true
+
+[node name="BGButton" type="NinePatchRect" parent="optionMargin/VBoxContainer/KeybindButton" unique_id=1651644413]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ahr6q")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
+
 [node name="ContentMargin" type="MarginContainer" parent="." unique_id=500463441]
 layout_mode = 1
 anchors_preset = -1
@@ -123,6 +144,7 @@ color = Color(0, 0, 0, 0.40392157)
 
 [node name="AudioPage" type="VBoxContainer" parent="ContentMargin/ContentPanel" unique_id=936971158]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
@@ -245,5 +267,184 @@ patch_margin_left = 4
 patch_margin_top = 4
 patch_margin_right = 4
 patch_margin_bottom = 4
+
+[node name="KeybindPage" type="VBoxContainer" parent="ContentMargin/ContentPanel" unique_id=843326939]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ContentMargin/ContentPanel/KeybindPage" unique_id=2086396761]
+custom_minimum_size = Vector2(0, 648)
+layout_mode = 2
+follow_focus = true
+draw_focus_border = true
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer" unique_id=433636997]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="SettingLabel" type="Label" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=745677801]
+layout_mode = 2
+text = "SETTING"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Seperator" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=367786961]
+layout_mode = 2
+alignment = 1
+
+[node name="SeperatorLabel" type="Label" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/Seperator" unique_id=1906798424]
+layout_mode = 2
+text = "-- Basic --"
+vertical_alignment = 1
+uppercase = true
+
+[node name="MoveLeft" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=1050360968]
+layout_mode = 2
+alignment = 1
+
+[node name="LeftLabel" type="Label" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveLeft" unique_id=5882358]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Move Left"
+vertical_alignment = 1
+
+[node name="SeperatorLabel" type="Label" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveLeft" unique_id=1987119513]
+layout_mode = 2
+text = ":"
+
+[node name="LeftButton" type="Button" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveLeft" unique_id=1042596216]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+text = "A"
+
+[node name="MoveDown" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=377975461]
+layout_mode = 2
+alignment = 1
+
+[node name="DownLabel" type="Label" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveDown" unique_id=1625913818]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Move Down"
+vertical_alignment = 1
+
+[node name="SeperatorLabel" type="Label" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveDown" unique_id=410417337]
+layout_mode = 2
+text = ":"
+
+[node name="DownButton" type="Button" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveDown" unique_id=624244708]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+text = "S"
+
+[node name="MoveUp" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=1438991606]
+layout_mode = 2
+alignment = 1
+
+[node name="UpLabel" type="Label" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveUp" unique_id=184015783]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Move Up"
+vertical_alignment = 1
+
+[node name="SeperatorLabel" type="Label" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveUp" unique_id=444680409]
+layout_mode = 2
+text = ":"
+
+[node name="UpButton" type="Button" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveUp" unique_id=17052210]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+text = "W"
+
+[node name="MoveRight" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=730060713]
+layout_mode = 2
+alignment = 1
+
+[node name="RightLabel" type="Label" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveRight" unique_id=1051447123]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Move Right"
+vertical_alignment = 1
+
+[node name="SeperatorLabel" type="Label" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveRight" unique_id=726057557]
+layout_mode = 2
+text = ":"
+
+[node name="RightButton" type="Button" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveRight" unique_id=681260418]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+text = "D"
+
+[node name="Throw" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=514985020]
+layout_mode = 2
+alignment = 1
+
+[node name="ThrowLabel" type="Label" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/Throw" unique_id=1071542628]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Throw"
+vertical_alignment = 1
+
+[node name="SeperatorLabel" type="Label" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/Throw" unique_id=837165771]
+layout_mode = 2
+text = ":"
+
+[node name="ThrowButton" type="Button" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/Throw" unique_id=1707690788]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+text = "Q"
+
+[node name="Run" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=267130495]
+layout_mode = 2
+alignment = 1
+
+[node name="RunLabel" type="Label" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/Run" unique_id=1958790305]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Run"
+vertical_alignment = 1
+
+[node name="SeperatorLabel" type="Label" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/Run" unique_id=567795379]
+layout_mode = 2
+text = ":"
+
+[node name="RunButton" type="Button" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/Run" unique_id=1730577592]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+text = "Shift"
+
+[node name="Jump" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=1646565825]
+layout_mode = 2
+alignment = 1
+
+[node name="JumpLabel" type="Label" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/Jump" unique_id=190933379]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Jump"
+vertical_alignment = 1
+
+[node name="SeperatorLabel" type="Label" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/Jump" unique_id=100850950]
+layout_mode = 2
+text = ":"
+
+[node name="JumpButton" type="Button" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/Jump" unique_id=1124509418]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+text = "Space"
 
 [connection signal="pressed" from="optionMargin/VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

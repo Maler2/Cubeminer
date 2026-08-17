@@ -7,10 +7,21 @@ const SAVE_PATH: String = "user://config.json"
 @onready var back_button: Button = %BackButton
 @onready var sound_button: Button = %SoundButton
 @onready var video_button: Button = %VideoButton
+@onready var keybind_button: Button = %KeybindButton
 
 # --- REFERENSI HALAMAN ---
 @onready var audio_page: VBoxContainer = %AudioPage
 @onready var video_page: VBoxContainer = %VideoPage
+@onready var keybind_page: VBoxContainer = %KeybindPage
+
+# --- REFERENSI KEYBIND BUTTONS ---
+@onready var left_button: Button = %LeftButton
+@onready var down_button: Button = %DownButton
+@onready var up_button: Button = %UpButton
+@onready var right_button: Button = %RightButton
+@onready var throw_button: Button = %ThrowButton
+@onready var run_button: Button = %RunButton
+@onready var jump_button: Button = %JumpButton
 
 # --- REFERENSI SLIDER AUDIO ---
 @onready var master_slider: HSlider = %MasterSlider
@@ -28,6 +39,9 @@ const SAVE_PATH: String = "user://config.json"
 var show_fps: bool = false
 var is_loading_settings: bool = false # Flag untuk cegah save berulang saat loading
 
+# --- KEYBIND REBIND STATE ---
+var waiting_for_key: String = "" # Nama action yang sedang menunggu input baru
+
 func _ready() -> void:
 	print("--- 🛠️ PENGATURAN LOG: Memulai Inisialisasi Settings ---")
 	_check_node_status()
@@ -39,9 +53,12 @@ func _ready() -> void:
 		video_button.pressed.connect(_on_video_button_pressed)
 	if back_button and not back_button.is_connected("pressed", _on_back_button_pressed):
 		back_button.pressed.connect(_on_back_button_pressed)
+	if keybind_button and not keybind_button.is_connected("pressed", _on_keybind_button_pressed):
+		keybind_button.pressed.connect(_on_keybind_button_pressed)
 	
 	_setup_sliders()
 	_setup_video_settings()
+	_setup_keybind_buttons()
 	
 	# Set label awal
 	_update_label_pct(master_label, master_slider.value if master_slider else 100.0)
@@ -93,10 +110,17 @@ func _check_node_status() -> void:
 func _on_sound_button_pressed() -> void:
 	if audio_page: audio_page.visible = true
 	if video_page: video_page.visible = false
+	if keybind_page: keybind_page.visible = false
 
 func _on_video_button_pressed() -> void:
 	if audio_page: audio_page.visible = false
 	if video_page: video_page.visible = true
+	if keybind_page: keybind_page.visible = false
+
+func _on_keybind_button_pressed() -> void:
+	if audio_page: audio_page.visible = false
+	if video_page: video_page.visible = false
+	if keybind_page: keybind_page.visible = true
 
 func _on_back_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scene/MainMenu.tscn")
@@ -170,23 +194,7 @@ func _setup_sliders() -> void:
 # ==========================================
 
 func _save_settings_to_json() -> void:
-	# Abaikan simpan jika proses loading JSON masih berlangsung
-	if is_loading_settings:
-		return
-		
-	var config_data: Dictionary = {
-		"master_volume": master_slider.value if master_slider else 100.0,
-		"sfx_volume": sfx_slider.value if sfx_slider else 100.0,
-		"music_volume": music_slider.value if music_slider else 100.0,
-		"vsync": switch_button.button_pressed if switch_button else true,
-		"show_fps": show_fps
-	}
-	
-	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
-	if file:
-		var json_string = JSON.stringify(config_data, "\t")
-		file.store_string(json_string)
-		file.close()
+	_save_with_keybinds()
 
 func _load_settings_from_json() -> void:
 	if not FileAccess.file_exists(SAVE_PATH):
@@ -229,5 +237,123 @@ func _load_settings_from_json() -> void:
 			if data.has("show_fps"):
 				_apply_fps_show(data["show_fps"])
 				
+			_load_keybinds_from_json(data)
+				
 			is_loading_settings = false # Matikan perlindungan
 			print("💾 Log: Berhasil memuat settingan dari config.json!")
+
+# --- KEYBIND ---
+func _setup_keybind_buttons() -> void:
+	_connect_keybind(left_button, "left", "A")
+	_connect_keybind(right_button, "right", "D")
+	_connect_keybind(throw_button, "drop", "Q")
+	_connect_keybind(run_button, "run", "Shift")
+	_connect_keybind(jump_button, "jump", "Space")
+
+func _connect_keybind(btn: Button, action: String, default_key: String) -> void:
+	if not btn:
+		return
+	btn.text = _get_action_key_display(action, default_key)
+	btn.pressed.connect(func():
+		waiting_for_key = action
+		btn.text = "..."
+		btn.release_focus()
+	)
+
+func _get_action_key_display(action: String, fallback: String) -> String:
+	var events = InputMap.action_get_events(action)
+	if events.size() > 0:
+		var ev = events[0]
+		if ev is InputEventKey:
+			return OS.get_keycode_string(ev.keycode) if ev.keycode != 0 else OS.get_keycode_string(ev.physical_keycode)
+	return fallback
+
+func _input(event: InputEvent) -> void:
+	if waiting_for_key == "":
+		return
+	if not (event is InputEventKey and event.pressed):
+		return
+	if event.keycode == KEY_ESCAPE:
+		_cancel_rebind()
+		return
+	
+	# Cek duplikat
+	for action in InputMap.get_actions():
+		if action.begins_with("ui_"):
+			continue
+		if action == waiting_for_key:
+			continue
+		for ev in InputMap.action_get_events(action):
+			if ev is InputEventKey and ev.physical_keycode == event.physical_keycode:
+				_cancel_rebind()
+				return
+	
+	# Apply rebind
+	InputMap.action_erase_events(waiting_for_key)
+	var new_event = InputEventKey.new()
+	new_event.physical_keycode = event.physical_keycode
+	InputMap.action_add_event(waiting_for_key, new_event)
+	get_viewport().set_input_as_handled()
+	
+	# Update tampilan semua tombol keybind
+	_refresh_all_keybind_texts()
+	
+	var old_action = waiting_for_key
+	waiting_for_key = ""
+	_save_with_keybinds()
+	print("🔑 Keybind: ", old_action, " -> ", OS.get_keycode_string(event.keycode) if event.keycode != 0 else OS.get_keycode_string(event.physical_keycode))
+
+func _cancel_rebind() -> void:
+	_refresh_all_keybind_texts()
+	waiting_for_key = ""
+
+func _refresh_all_keybind_texts() -> void:
+	if left_button: left_button.text = _get_action_key_display("left", "A")
+	if right_button: right_button.text = _get_action_key_display("right", "D")
+	if throw_button: throw_button.text = _get_action_key_display("drop", "Q")
+	if run_button: run_button.text = _get_action_key_display("run", "Shift")
+	if jump_button: jump_button.text = _get_action_key_display("jump", "Space")
+
+func _get_keybind_button(action: String) -> Button:
+	match action:
+		"left": return left_button
+		"right": return right_button
+		"jump": return jump_button
+		"run": return run_button
+		"drop": return throw_button
+	return null
+
+func _save_with_keybinds(keybinds: Dictionary = {}) -> void:
+	if is_loading_settings:
+		return
+	if keybinds.is_empty():
+		keybinds = {}
+		for action in ["left", "right", "jump", "run", "drop"]:
+			var events = InputMap.action_get_events(action)
+			if events.size() > 0 and events[0] is InputEventKey:
+				keybinds[action] = events[0].physical_keycode
+	var config_data: Dictionary = {
+		"master_volume": master_slider.value if master_slider else 100.0,
+		"sfx_volume": sfx_slider.value if sfx_slider else 100.0,
+		"music_volume": music_slider.value if music_slider else 100.0,
+		"vsync": switch_button.button_pressed if switch_button else true,
+		"show_fps": show_fps,
+		"keybinds": keybinds
+	}
+	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	if file:
+		file.store_string(JSON.stringify(config_data, "\t"))
+		file.close()
+
+func _load_keybinds_from_json(data: Dictionary) -> void:
+	if not data.has("keybinds"):
+		return
+	var keybinds: Dictionary = data["keybinds"]
+	for action in keybinds:
+		var keycode: int = keybinds[action]
+		InputMap.action_erase_events(action)
+		var ev = InputEventKey.new()
+		ev.physical_keycode = keycode
+		InputMap.action_add_event(action, ev)
+	# Update tampilan tombol
+	_refresh_all_keybind_texts()
