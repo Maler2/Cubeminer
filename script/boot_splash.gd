@@ -4,6 +4,7 @@ extends Control
 
 @onready var logo: TextureRect = $TextureRect
 @onready var progress_bar: ProgressBar = $ProgressBar
+@onready var audio: AudioStreamPlayer2D = $BootSound
 
 var is_loading_finished: bool = false
 var start_time_msec: int = 0
@@ -52,6 +53,10 @@ func _mulai_proses_splash() -> void:
 	print("==========================================")
 	
 	is_loading_finished = true
+	
+	if audio and audio.playing:
+		await audio.finished
+	
 	pindah_ke_scene_berikutnya()
 
 func _update_progress(val: float, message: String) -> void:

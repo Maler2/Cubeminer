@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://cfwmvi5ils7v6" path="res://script/boot_splash.gd" id="1_m1wen"]
 [ext_resource type="Texture2D" uid="uid://brcr7f6agqe21" path="res://assets/icon/game_startup_icon.png" id="2_bou02"]
 [ext_resource type="PackedScene" uid="uid://goytp2xg1hvf" path="res://scene/MainMenu.tscn" id="2_luu12"]
+[ext_resource type="AudioStream" uid="uid://cob45303ms4ot" path="res://audio/sfx/start-up.wav" id="4_4od3x"]
 
 [node name="BootSplash" type="Control" unique_id=766420060]
 layout_mode = 3
@@ -55,3 +56,7 @@ anchor_bottom = 0.79
 offset_left = -3.0517578e-05
 offset_top = -0.16802979
 offset_bottom = 0.07998657
+
+[node name="BootSound" type="AudioStreamPlayer2D" parent="." unique_id=1004263891]
+stream = ExtResource("4_4od3x")
+autoplay = true
