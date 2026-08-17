@@ -26,6 +26,7 @@ Global="*uid://bkxv8uinqpyhp"
 SaveManager="*uid://dsrjdb413kn6c"
 FpsCounter="*uid://dst3wt7mjfkgh"
 HoverManager="*res://script/hover_manager.gd"
+Popup="*res://scene/popup.tscn"
 PopupGlobal="*res://scene/popup.tscn"
 
 [display]

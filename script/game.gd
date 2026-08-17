@@ -2,6 +2,7 @@ extends Node2D
 
 @onready var player = $CharacterBody2D
 @onready var input_layer = $InputLayer
+@onready var pause_menu = $PauseMenu
 
 # Node tombol berada di bawah InputLayer
 @onready var jump_button = $InputLayer/JumpButton
@@ -36,6 +37,13 @@ func _ready():
 	if btn_run:
 		btn_run.button_down.connect(func(): if player: player.set_running(true))
 		run_button_up()
+
+	var pause_button = get_node_or_null("UILayer/UI/PauseButton")
+	if pause_button:
+		if OS.has_feature("pc") and not DisplayServer.is_touchscreen_available():
+			pause_button.hide()
+		else:
+			pause_button.pressed.connect(func(): pause_menu.toggle_pause())
 
 func run_button_up():
 	if btn_run:

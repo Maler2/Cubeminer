@@ -326,6 +326,22 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
 text = "A"
+flat = true
+
+[node name="BGButton" type="NinePatchRect" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveLeft/LeftButton" unique_id=836321432]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ahr6q")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
 
 [node name="MoveDown" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=377975461]
 layout_mode = 2
@@ -346,6 +362,22 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
 text = "S"
+flat = true
+
+[node name="BGButton" type="NinePatchRect" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveDown/DownButton" unique_id=1316735392]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ahr6q")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
 
 [node name="MoveUp" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=1438991606]
 layout_mode = 2
@@ -366,6 +398,22 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
 text = "W"
+flat = true
+
+[node name="BGButton" type="NinePatchRect" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveUp/UpButton" unique_id=1693188737]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ahr6q")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
 
 [node name="MoveRight" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=730060713]
 layout_mode = 2
@@ -386,6 +434,22 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
 text = "D"
+flat = true
+
+[node name="BGButton" type="NinePatchRect" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveRight/RightButton" unique_id=267935648]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ahr6q")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
 
 [node name="Throw" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=514985020]
 layout_mode = 2
@@ -394,7 +458,7 @@ alignment = 1
 [node name="ThrowLabel" type="Label" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/Throw" unique_id=1071542628]
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
-text = "Throw"
+text = "Drop"
 vertical_alignment = 1
 
 [node name="SeperatorLabel" type="Label" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/Throw" unique_id=837165771]
@@ -406,6 +470,22 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
 text = "Q"
+flat = true
+
+[node name="BGButton" type="NinePatchRect" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/Throw/ThrowButton" unique_id=551571993]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ahr6q")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
 
 [node name="Run" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=267130495]
 layout_mode = 2
@@ -426,6 +506,22 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
 text = "Shift"
+flat = true
+
+[node name="BGButton" type="NinePatchRect" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/Run/RunButton" unique_id=506040247]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ahr6q")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
 
 [node name="Jump" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=1646565825]
 layout_mode = 2
@@ -446,5 +542,21 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
 text = "Space"
+flat = true
+
+[node name="BGButton" type="NinePatchRect" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/Jump/JumpButton" unique_id=346030898]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ahr6q")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
 
 [connection signal="pressed" from="optionMargin/VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]
