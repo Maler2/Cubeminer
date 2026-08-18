@@ -54,14 +54,14 @@ patch_margin_top = 4
 patch_margin_right = 4
 patch_margin_bottom = 4
 
-[node name="SoundButton" type="Button" parent="optionMargin/VBoxContainer" unique_id=93591279]
+[node name="VideoButton" type="Button" parent="optionMargin/VBoxContainer" unique_id=2931084]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
-text = "Sound"
+text = "Video"
 flat = true
 
-[node name="BGButton" type="NinePatchRect" parent="optionMargin/VBoxContainer/SoundButton" unique_id=1069709562]
+[node name="BGButton" type="NinePatchRect" parent="optionMargin/VBoxContainer/VideoButton" unique_id=1353671308]
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
@@ -76,14 +76,14 @@ patch_margin_top = 4
 patch_margin_right = 4
 patch_margin_bottom = 4
 
-[node name="VideoButton" type="Button" parent="optionMargin/VBoxContainer" unique_id=2931084]
+[node name="SoundButton" type="Button" parent="optionMargin/VBoxContainer" unique_id=93591279]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
-text = "Video"
+text = "Sound"
 flat = true
 
-[node name="BGButton" type="NinePatchRect" parent="optionMargin/VBoxContainer/VideoButton" unique_id=1353671308]
+[node name="BGButton" type="NinePatchRect" parent="optionMargin/VBoxContainer/SoundButton" unique_id=1069709562]
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
@@ -142,61 +142,8 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0.40392157)
 
-[node name="AudioPage" type="VBoxContainer" parent="ContentMargin/ContentPanel" unique_id=936971158]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = 32.0
-offset_top = -67.0
-offset_right = -32.0
-offset_bottom = 67.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="MasterLabel" type="Label" parent="ContentMargin/ContentPanel/AudioPage" unique_id=1911402209]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Master"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="MasterSlider" type="HSlider" parent="ContentMargin/ContentPanel/AudioPage" unique_id=318740518]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_default_cursor_shape = 2
-value = 50.0
-
-[node name="SFXLabel" type="Label" parent="ContentMargin/ContentPanel/AudioPage" unique_id=1765056583]
-unique_name_in_owner = true
-layout_mode = 2
-text = "SFX"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="SFXSlider" type="HSlider" parent="ContentMargin/ContentPanel/AudioPage" unique_id=70871646]
-unique_name_in_owner = true
-layout_mode = 2
-value = 100.0
-
-[node name="MusicLabel" type="Label" parent="ContentMargin/ContentPanel/AudioPage" unique_id=357947327]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Music"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="MusicSlider" type="HSlider" parent="ContentMargin/ContentPanel/AudioPage" unique_id=1514581967]
-unique_name_in_owner = true
-layout_mode = 2
-value = 100.0
-
 [node name="VideoPage" type="VBoxContainer" parent="ContentMargin/ContentPanel" unique_id=1560013910]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
@@ -268,8 +215,61 @@ patch_margin_top = 4
 patch_margin_right = 4
 patch_margin_bottom = 4
 
+[node name="AudioPage" type="VBoxContainer" parent="ContentMargin/ContentPanel" unique_id=936971158]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 32.0
+offset_top = -67.0
+offset_right = -32.0
+offset_bottom = 67.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MasterLabel" type="Label" parent="ContentMargin/ContentPanel/AudioPage" unique_id=1911402209]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Master"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MasterSlider" type="HSlider" parent="ContentMargin/ContentPanel/AudioPage" unique_id=318740518]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+value = 50.0
+
+[node name="SFXLabel" type="Label" parent="ContentMargin/ContentPanel/AudioPage" unique_id=1765056583]
+unique_name_in_owner = true
+layout_mode = 2
+text = "SFX"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SFXSlider" type="HSlider" parent="ContentMargin/ContentPanel/AudioPage" unique_id=70871646]
+unique_name_in_owner = true
+layout_mode = 2
+value = 100.0
+
+[node name="MusicLabel" type="Label" parent="ContentMargin/ContentPanel/AudioPage" unique_id=357947327]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Music"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MusicSlider" type="HSlider" parent="ContentMargin/ContentPanel/AudioPage" unique_id=1514581967]
+unique_name_in_owner = true
+layout_mode = 2
+value = 100.0
+
 [node name="KeybindPage" type="VBoxContainer" parent="ContentMargin/ContentPanel" unique_id=843326939]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
