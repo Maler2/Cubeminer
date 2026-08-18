@@ -6,7 +6,7 @@
 [ext_resource type="AudioStream" uid="uid://c1qtadyeu285x" path="res://audio/sfx/walk.wav" id="3_fvtld"]
 [ext_resource type="AudioStream" uid="uid://b540ouywi78k5" path="res://audio/sfx/jump.wav" id="5_s4jxa"]
 [ext_resource type="Texture2D" uid="uid://bjihpoao7or4o" path="res://assets/animation/double-jump.png" id="6_djump"]
-[ext_resource type="Shader" path="res://assets/animation/double-jump.gdshader" id="7_dshader"]
+[ext_resource type="Shader" uid="uid://bnqqc1yex3dns" path="res://assets/animation/double-jump.gdshader" id="7_dshader"]
 
 [sub_resource type="Animation" id="Animation_q6r6c"]
 length = 0.001

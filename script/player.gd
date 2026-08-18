@@ -13,6 +13,7 @@ const dropped_item_scene = preload("res://scene/dropped_item.tscn")
 # --- PENGATURAN FALL DAMAGE ---
 @export var min_fall_height: float = 128.0 # Jarak aman minimal (dalam piksel)
 @export var pixels_per_damage: float = 16.0 # Setiap berapa piksel damage bertambah 1
+@export var show_position_info: bool = false
 var start_fall_y: float = 0.0 # Menampung titik Y awal saat lepas dari tanah
 var is_falling: bool = false
 
@@ -233,6 +234,9 @@ func _physics_process(delta: float) -> void:
 	# --- SFX FOOTSTEP ---
 	handle_footstep_sfx(delta)
 
+	if show_position_info:
+		queue_redraw()
+
 	# 7. PEMICU ANIMASI
 	var blend_time = 0.3
 
@@ -315,3 +319,9 @@ func jump():
 	if jump_sfx_player:
 		jump_sfx_player.pitch_scale = randf_range(0.8, 0.9)
 		jump_sfx_player.play()
+
+func _draw() -> void:
+	if not show_position_info:
+		return
+	var pos_text = "X: %d  Y: %d" % [int(global_position.x / 16.0), int(global_position.y / 16.0)]
+	draw_string(ThemeDB.fallback_font, Vector2(-20, -20), pos_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color.WHITE)
