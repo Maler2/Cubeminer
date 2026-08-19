@@ -39,19 +39,19 @@ func _ready() -> void:
 		title_label.visible = true
 
 	var version_name: String = ProjectSettings.get_setting("application/config/version")
+	var commit_count: int = _get_git_commit_count()
 
-	if version_name == "":
-		version_label.text = "vnull"
-	elif (version_name.contains("b") or version_name.contains("B")) and (version_name.contains("d") or version_name.contains("D")):
-		version_label.text = "v" + str(version_name) + " (Beta Development)"
+	var version_text: String = "v" + str(version_name)
+
+	if (version_name.contains("b") or version_name.contains("B")) and (version_name.contains("d") or version_name.contains("D")):
+		version_text += " (Beta Dev)"
 	elif version_name.contains("b") or version_name.contains("B"):
-		# Jika ada huruf 'b' atau 'B' (misal: "1.0b")
-		version_label.text = "v" + str(version_name) + " (Beta)"
+		version_text += " (Beta)"
 	elif version_name.contains("d") or version_name.contains("D"):
-		version_label.text = "v" + str(version_name) + " (Dev)"
-	else:
-		# Versi rilis normal tanpa huruf 'b'
-		version_label.text = "v" + str(version_name)
+		version_text += " (Dev)"
+
+	version_text += " | " + str(commit_count) + " commits"
+	version_label.text = version_text
 	
 	# Hubungkan tombol dengan fungsinya
 	play_button.pressed.connect(_on_play_button_pressed)
@@ -76,3 +76,10 @@ func _on_setting_button_pressed() -> void:
 
 func _on_quit_button_pressed() -> void:
 	get_tree().quit()
+
+func _get_git_commit_count() -> int:
+	var output: Array = []
+	var exit_code = OS.execute("git", ["rev-list", "--count", "HEAD"], output, true)
+	if exit_code == 0 and output.size() > 0:
+		return int(output[0].strip_edges())
+	return 0
