@@ -15,6 +15,8 @@ func _ready() -> void:
 	FpsCounter.set_fps_offset(Vector2(1, 624))
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	
+	_build_version()
+	
 	if progress_bar:
 		progress_bar.value = 0
 		progress_bar.visible = true
@@ -92,3 +94,40 @@ func _ganti_scene() -> void:
 		get_tree().change_scene_to_packed(next_scene)
 	else:
 		print("❌ Gagal pindah scene: next_scene bernilai null.")
+
+func _build_version() -> void:
+	var version_name: String = ProjectSettings.get_setting("application/config/version")
+	var commit_count: int = _get_git_commit_count()
+	
+	var version_text: String = "v" + str(version_name)
+	
+	if (version_name.contains("b") or version_name.contains("B")) and (version_name.contains("d") or version_name.contains("D")):
+		version_text += " (Beta Dev)"
+	elif version_name.contains("b") or version_name.contains("B"):
+		version_text += " (Beta)"
+	elif version_name.contains("d") or version_name.contains("D"):
+		version_text += " (Dev)"
+	
+	version_text += " | " + str(commit_count) + " commits"
+	Global.build_version = version_text
+
+func _get_git_commit_count() -> int:
+	if OS.is_debug_build():
+		var output: Array = []
+		var exit_code = OS.execute("git", ["rev-list", "--count", "HEAD"], output, true)
+		if exit_code == 0 and output.size() > 0:
+			var count_str: String = output[0].strip_edges()
+			var file = FileAccess.open("res://version.txt", FileAccess.WRITE)
+			if file:
+				file.store_string(count_str)
+				file.close()
+			return int(count_str)
+
+	if FileAccess.file_exists("res://version.txt"):
+		var file = FileAccess.open("res://version.txt", FileAccess.READ)
+		if file:
+			var count_str = file.get_as_text().strip_edges()
+			file.close()
+			return int(count_str)
+
+	return 0

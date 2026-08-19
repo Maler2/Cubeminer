@@ -18,7 +18,7 @@ config/custom_user_dir_name="JustMe10n/Cubeminer"
 config/features=PackedStringArray("4.7", "Forward Plus")
 boot_splash/show_image=false
 config/icon="uid://cstmt74262rue"
-config/windows_native_icon="res://assets/appicon/app-32px-icon.ico"
+config/windows_native_icon="res://assets/appicon/icon-app.ico"
 
 [autoload]
 
