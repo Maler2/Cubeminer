@@ -78,8 +78,22 @@ func _on_quit_button_pressed() -> void:
 	get_tree().quit()
 
 func _get_git_commit_count() -> int:
-	var output: Array = []
-	var exit_code = OS.execute("git", ["rev-list", "--count", "HEAD"], output, true)
-	if exit_code == 0 and output.size() > 0:
-		return int(output[0].strip_edges())
+	if OS.is_debug_build():
+		var output: Array = []
+		var exit_code = OS.execute("git", ["rev-list", "--count", "HEAD"], output, true)
+		if exit_code == 0 and output.size() > 0:
+			var count_str: String = output[0].strip_edges()
+			var file = FileAccess.open("res://version.txt", FileAccess.WRITE)
+			if file:
+				file.store_string(count_str)
+				file.close()
+			return int(count_str)
+
+	if FileAccess.file_exists("res://version.txt"):
+		var file = FileAccess.open("res://version.txt", FileAccess.READ)
+		if file:
+			var count_str = file.get_as_text().strip_edges()
+			file.close()
+			return int(count_str)
+
 	return 0
