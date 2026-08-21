@@ -155,10 +155,18 @@ func _fetch_commit_count_async(version_name: String) -> void:
 	_http = HTTPRequest.new()
 	add_child(_http)
 	_http.request_completed.connect(_on_github_response.bind(version_name))
-	var err = _http.request(
-		"https://api.github.com/repos/Maler2/Cubeminer/commits?per_page=1",
-		["User-Agent: Cubeminer", "Accept: application/vnd.github.v3+json"]
-	)
+	
+	var cache_buster = "&_t=" + str(Time.get_ticks_msec())
+	var url = "https://api.github.com/repos/Maler2/Cubeminer/commits?per_page=1" + cache_buster
+	
+	var headers = [
+		"User-Agent: Cubeminer",
+		"Accept: application/vnd.github.v3+json",
+		"Cache-Control: no-cache, no-store, must-revalidate",
+		"Pragma: no-cache"
+	]
+	
+	var err = _http.request(url, headers)
 	if err != OK:
 		_http.queue_free()
 
@@ -175,11 +183,10 @@ func _on_github_response(result: int, code: int, _headers: PackedStringArray, bo
 	if not data is Array or data.size() == 0:
 		return
 	
-	# Parse Link header dari _headers untuk total count
 	for h in _headers:
-		if h.begins_with("Link:"):
+		if h.to_lower().begins_with("link:"):
 			var regex = RegEx.new()
-			regex.compile("page=(\\d+)>; rel=\"last\"")
+			regex.compile("[?&]page=(\\d+)>;\\s*rel=\"last\"")
 			var match = regex.search(h)
 			if match:
 				var count = int(match.get_string(1))
