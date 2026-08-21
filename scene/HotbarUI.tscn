@@ -136,3 +136,8 @@ anchor_bottom = 0.87500006
 offset_right = 0.015991211
 texture = ExtResource("9_yd1e1")
 expand_mode = 1
+
+[node name="Control" type="Control" parent="HotbarContainer/MarginContainer/HotbarBG" unique_id=260439478]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0

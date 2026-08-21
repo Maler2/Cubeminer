@@ -765,7 +765,7 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mti6b"]
-size = Vector2(10, 24.495499)
+size = Vector2(6, 23.495499)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_djump"]
 shader = ExtResource("7_dshader")
@@ -835,7 +835,7 @@ region_enabled = true
 region_rect = Rect2(14, 0, 4, 9)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2045027999]
-position = Vector2(0, 0.2477502)
+position = Vector2(0, 0.7477497)
 shape = SubResource("RectangleShape2D_mti6b")
 debug_color = Color(0.6655917, 0.51211435, 0, 0.41960785)
 
@@ -849,12 +849,14 @@ drag_top_margin = 0.05
 drag_right_margin = 0.05
 drag_bottom_margin = 0.05
 
-[node name="FootstepAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1887993488]
+[node name="FootstepAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1106808979]
 stream = ExtResource("3_fvtld")
+volume_db = 12.0
 bus = &"SFX"
 
-[node name="JumpAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1755414222]
+[node name="JumpAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1065157535]
 stream = ExtResource("5_s4jxa")
+volume_db = 12.0
 bus = &"SFX"
 
 [node name="DoubleJumpParticles" type="GPUParticles2D" parent="." unique_id=661584439]

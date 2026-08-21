@@ -25,8 +25,8 @@ var is_falling: bool = false
 @onready var body_container = $Body # Node penampung semua part sprite tubuh
 
 # --- AUDIO REFERENCES ---
-@onready var sfx_player: AudioStreamPlayer2D = $FootstepAudioPlayer
-@onready var jump_sfx_player: AudioStreamPlayer2D = $JumpAudioPlayer # Node Audio Lompat
+@onready var sfx_player: AudioStreamPlayer = $FootstepAudioPlayer
+@onready var jump_sfx_player: AudioStreamPlayer = $JumpAudioPlayer # Node Audio Lompat
 @onready var double_jump_particles: GPUParticles2D = $DoubleJumpParticles
 
 @onready var held_item_sprite: Sprite2D = $Body/RightArm/ItemHeldSprite # Sesuaikan path Node tanganmu

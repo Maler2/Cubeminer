@@ -6,21 +6,20 @@
 
 [node name="CreateWorld" type="Control" unique_id=1003726787]
 layout_mode = 3
-anchor_right = 0.35000002
-anchor_bottom = 0.35000002
-offset_right = 748.8
-offset_bottom = 421.19998
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.35, 0.35)
 script = ExtResource("1_kdyrx")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=293269421]
 modulate = Color(0.38857287, 0.38857287, 0.38857287, 1)
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = -1
+anchor_right = 2.857
+anchor_bottom = 2.857
+offset_right = -2139.2642
+offset_bottom = -1203.336
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
