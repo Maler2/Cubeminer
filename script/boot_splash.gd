@@ -127,18 +127,19 @@ func _get_git_commit_count() -> int:
 			_save_version_file(count_str)
 			return int(count_str)
 
-	# 3. Fallback: baca version.txt
-	if FileAccess.file_exists("res://version.txt"):
-		var file = FileAccess.open("res://version.txt", FileAccess.READ)
-		if file:
-			var count_str = file.get_as_text().strip_edges()
-			file.close()
-			return int(count_str)
+	# 3. Fallback: baca user:// lalu res://
+	for path in ["user://version.txt", "res://version.txt"]:
+		if FileAccess.file_exists(path):
+			var file = FileAccess.open(path, FileAccess.READ)
+			if file:
+				var count_str = file.get_as_text().strip_edges()
+				file.close()
+				return int(count_str)
 
 	return 0
 
 func _save_version_file(count_str: String) -> void:
-	var file = FileAccess.open("res://version.txt", FileAccess.WRITE)
+	var file = FileAccess.open("user://version.txt", FileAccess.WRITE)
 	if file:
 		file.store_string(count_str)
 		file.close()
