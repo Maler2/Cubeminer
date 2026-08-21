@@ -112,17 +112,22 @@ func _build_version() -> void:
 	Global.build_version = version_text
 
 func _get_git_commit_count() -> int:
+	# 1. Coba GitHub API (works everywhere with internet)
+	var github_count = _fetch_commit_count_from_github()
+	if github_count >= 0:
+		_save_version_file(str(github_count))
+		return github_count
+
+	# 2. Debug PC: ambil dari local git
 	if OS.is_debug_build():
 		var output: Array = []
 		var exit_code = OS.execute("git", ["rev-list", "--count", "HEAD"], output, true)
 		if exit_code == 0 and output.size() > 0:
 			var count_str: String = output[0].strip_edges()
-			var file = FileAccess.open("res://version.txt", FileAccess.WRITE)
-			if file:
-				file.store_string(count_str)
-				file.close()
+			_save_version_file(count_str)
 			return int(count_str)
 
+	# 3. Fallback: baca version.txt
 	if FileAccess.file_exists("res://version.txt"):
 		var file = FileAccess.open("res://version.txt", FileAccess.READ)
 		if file:
@@ -131,3 +136,68 @@ func _get_git_commit_count() -> int:
 			return int(count_str)
 
 	return 0
+
+func _save_version_file(count_str: String) -> void:
+	var file = FileAccess.open("res://version.txt", FileAccess.WRITE)
+	if file:
+		file.store_string(count_str)
+		file.close()
+
+func _fetch_commit_count_from_github() -> int:
+	var http = HTTPClient.new()
+	var err = http.connect_to_host("api.github.com", 443, TLSOptions.client())
+	if err != OK:
+		return -1
+
+	var timeout: float = 0.0
+	while http.get_status() == HTTPClient.STATUS_CONNECTING:
+		http.poll()
+		OS.delay_msec(10)
+		timeout += 0.01
+		if timeout > 3.0:
+			http.close()
+			return -1
+
+	if http.get_status() != HTTPClient.STATUS_CONNECTED:
+		http.close()
+		return -1
+
+	var headers = ["User-Agent: Cubeminer", "Accept: application/vnd.github.v3+json"]
+	var req_err = http.request(HTTPClient.METHOD_GET, "/repos/Maler2/Cubeminer/commits?per_page=1", headers)
+	if req_err != OK:
+		http.close()
+		return -1
+
+	timeout = 0.0
+	while http.get_status() == HTTPClient.STATUS_REQUESTING:
+		http.poll()
+		OS.delay_msec(10)
+		timeout += 0.01
+		if timeout > 3.0:
+			http.close()
+			return -1
+
+	if http.get_status() != HTTPClient.STATUS_BODY:
+		http.close()
+		return -1
+
+	# Drain response body
+	while http.get_status() == HTTPClient.STATUS_BODY:
+		http.poll()
+		if http.read_response_body_chunk().size() == 0:
+			break
+
+	# Parse Link header untuk total count
+	var resp_headers = http.get_response_headers()
+	http.close()
+
+	for h in resp_headers:
+		if h.begins_with("Link:"):
+			var link: String = h
+			var regex = RegEx.new()
+			regex.compile("page=(\\d+)>; rel=\"last\"")
+			var result = regex.search(link)
+			if result:
+				return int(result.get_string(1))
+
+	return -1
