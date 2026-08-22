@@ -1,10 +1,10 @@
 extends Control
 
 # Referensi Node sesuai struktur VBoxContainer kamu
-@onready var world_name_input: LineEdit = $VBoxContainer/WorldNameInput
-@onready var seed_input: LineEdit = $VBoxContainer/SeedInput
-@onready var create_button: Button = $VBoxContainer/CreateButton
-@onready var back_button: Button = $VBoxContainer/BackButton
+@onready var world_name_input: LineEdit = $Middlething/VBoxContainer/WorldNameInput
+@onready var seed_input: LineEdit = $Middlething/VBoxContainer/SeedInput
+@onready var create_button: Button = $Middlething/VBoxContainer/CreateButton
+@onready var back_button: Button = $Middlething/VBoxContainer/BackButton
 
 func _ready() -> void:
 	get_window().content_scale_factor = 1.0

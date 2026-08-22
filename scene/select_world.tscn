@@ -25,48 +25,63 @@ mouse_filter = 2
 texture = ExtResource("1_bu8a3")
 stretch_mode = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1357200880]
+[node name="middlething" type="Control" parent="." unique_id=634819954]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -64.0
-offset_top = -20.0
-offset_right = 64.0
-offset_bottom = 20.0
+anchor_left = 0.38900003
+anchor_right = 0.611
+anchor_bottom = 1.0
+offset_left = -0.12802124
+offset_right = 0.12799072
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TitleLabel" type="Label" parent="VBoxContainer" unique_id=1027604803]
+[node name="Background" type="ColorRect" parent="middlething" unique_id=962753698]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6666667)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="middlething" unique_id=1357200880]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="middlething/VBoxContainer" unique_id=1027604803]
 layout_mode = 2
 text = "select world"
 horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=1449636760]
+[node name="ScrollContainer" type="ScrollContainer" parent="middlething/VBoxContainer" unique_id=1449636760]
 custom_minimum_size = Vector2(0, 250)
 layout_mode = 2
 
-[node name="WorldListContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer" unique_id=958428337]
+[node name="WorldListContainer" type="VBoxContainer" parent="middlething/VBoxContainer/ScrollContainer" unique_id=958428337]
+custom_minimum_size = Vector2(234, 250)
 layout_mode = 2
-offset_transform_enabled = true
+size_flags_horizontal = 6
 offset_transform_position = Vector2(60, 0)
 offset_transform_visual_only = false
+
+[node name="ButtonHBox" type="HBoxContainer" parent="middlething/VBoxContainer" unique_id=2005349416]
+layout_mode = 2
 alignment = 1
 
-[node name="ButtonHBox" type="HBoxContainer" parent="VBoxContainer" unique_id=2005349416]
-layout_mode = 2
-
-[node name="CreateButton" type="Button" parent="VBoxContainer/ButtonHBox" unique_id=198577808]
+[node name="CreateButton" type="Button" parent="middlething/VBoxContainer/ButtonHBox" unique_id=198577808]
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "CREATE NEW WORLD"
 flat = true
 
-[node name="BGButton" type="NinePatchRect" parent="VBoxContainer/ButtonHBox/CreateButton" unique_id=757437380]
+[node name="BGButton" type="NinePatchRect" parent="middlething/VBoxContainer/ButtonHBox/CreateButton" unique_id=757437380]
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
@@ -81,14 +96,14 @@ patch_margin_top = 4
 patch_margin_right = 4
 patch_margin_bottom = 4
 
-[node name="BackButton" type="Button" parent="VBoxContainer/ButtonHBox" unique_id=518180970]
+[node name="BackButton" type="Button" parent="middlething/VBoxContainer/ButtonHBox" unique_id=518180970]
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "BACK
 "
 flat = true
 
-[node name="BGButton" type="NinePatchRect" parent="VBoxContainer/ButtonHBox/BackButton" unique_id=1358616813]
+[node name="BGButton" type="NinePatchRect" parent="middlething/VBoxContainer/ButtonHBox/BackButton" unique_id=1358616813]
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15

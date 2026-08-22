@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://ygsjiqqc7u4d"]
+
+[ext_resource type="Texture2D" uid="uid://7pornp7cuv25" path="res://assets/ui/nineslicing.png" id="1_nine"]
+
+[node name="WorldRow" type="HBoxContainer" unique_id=488129597]
+
+[node name="WorldBtn" type="Button" parent="." unique_id=394487672]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+flat = true
+
+[node name="BGButton" type="NinePatchRect" parent="WorldBtn" unique_id=14418452]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_nine")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
+
+[node name="DeleteBtn" type="Button" parent="." unique_id=287635100]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+text = "X"
+flat = true
+
+[node name="BGButton" type="NinePatchRect" parent="DeleteBtn" unique_id=283309576]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_nine")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
