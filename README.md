@@ -5,7 +5,7 @@ A survival sandbox game built with Godot Engine.
 ---
 
 ## 🚧 Masih tahap Development (W.I.P.)
-sekarang sudah versi 0.1.1 atau 0.1.1 (dev)
+sekarang sudah versi 0.1.4d atau 0.1.4 (dev)
 
 ---
 
