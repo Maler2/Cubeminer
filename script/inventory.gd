@@ -94,7 +94,10 @@ func toggle_inventory() -> void:
 	get_tree().paused = visible
 	if visible:
 		_return_held_to_inventory()
+		_sync_hotbar_to_inventory()
 		_refresh_all_slots()
+	else:
+		_sync_inventory_to_hotbar()
 
 func _return_held_to_inventory() -> void:
 	if held_item.size() == 0:
@@ -102,6 +105,38 @@ func _return_held_to_inventory() -> void:
 	add_item_to_inventory(held_item["tile_id"], held_item["amount"])
 	held_item = {}
 	held_icon.visible = false
+
+func _get_hotbar() -> Node:
+	return get_tree().root.find_child("HotbarUI", true, false)
+
+func _sync_hotbar_to_inventory() -> void:
+	var hotbar = _get_hotbar()
+	if not hotbar:
+		return
+	for i in range(7):
+		var inv_idx = 7 + i
+		var tile_id = hotbar.slot_tile_ids[i] if i < hotbar.slot_tile_ids.size() else -1
+		var count = hotbar.slot_counts[i] if i < hotbar.slot_counts.size() else 0
+		if tile_id != -1 and count > 0:
+			inventory_data[inv_idx] = {"tile_id": tile_id, "amount": count}
+		else:
+			inventory_data[inv_idx] = null
+
+func _sync_inventory_to_hotbar() -> void:
+	var hotbar = _get_hotbar()
+	if not hotbar:
+		return
+	for i in range(7):
+		var inv_idx = 7 + i
+		var item = inventory_data[inv_idx] if inv_idx < inventory_data.size() else null
+		if item != null:
+			hotbar.slot_tile_ids[i] = item["tile_id"]
+			hotbar.slot_counts[i] = item["amount"]
+		else:
+			hotbar.slot_tile_ids[i] = -1
+			hotbar.slot_counts[i] = 0
+	hotbar.update_item_indicators()
+	hotbar.simpan_hotbar_ke_file()
 
 func _refresh_all_slots() -> void:
 	_sync_grid_visuals(inventory_grid, inventory_data)
@@ -122,6 +157,8 @@ func _on_slot_input(event: InputEvent, data: Array, index: int) -> void:
 		return
 	_handle_slot_click(data, index)
 	_refresh_all_slots()
+	if data == inventory_data and index >= 7 and index <= 13:
+		_sync_inventory_to_hotbar()
 
 func _handle_slot_click(data: Array, index: int) -> void:
 	if index >= data.size():
