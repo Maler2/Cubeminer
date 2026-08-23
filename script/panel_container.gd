@@ -1,7 +1,7 @@
 extends PanelContainer
 class_name InventorySlotUI
 
-@onready var item_icon: TextureRect = $ItemIcon
+@onready var item_icon: TextureRect = $ItemBG/ItemIcon
 @onready var amount_label: Label = $AmountLabel
 
 func set_slot_data(texture: Texture2D, amount: int) -> void:
@@ -11,7 +11,7 @@ func set_slot_data(texture: Texture2D, amount: int) -> void:
 		amount_label.text = str(amount) if amount > 1 else ""
 		amount_label.visible = amount > 1
 	else:
-		item_icon.texture = preload("res://assets/ui/inventoryitem.png")
-		item_icon.visible = true
+		item_icon.texture = null
+		item_icon.visible = false
 		amount_label.text = ""
 		amount_label.visible = false
