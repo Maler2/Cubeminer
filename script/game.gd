@@ -37,6 +37,13 @@ func _ready():
 		else:
 			pause_button.pressed.connect(func(): pause_menu.toggle_pause())
 
+	var inv_button = get_node_or_null("HotbarUI/HotbarContainer/MarginContainer/HotbarBG/InventoryPhone/InventoryButton")
+	if inv_button:
+		if OS.has_feature("pc") and not DisplayServer.is_touchscreen_available():
+			inv_button.get_parent().hide()
+		else:
+			inv_button.pressed.connect(func(): $Inventory.toggle_inventory())
+
 func _on_dpad_pressed(direction: String) -> void:
 	if not player:
 		return

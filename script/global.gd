@@ -5,6 +5,9 @@ var current_world_seed: int = 0
 var current_temp_seed_text: String = ""
 var build_version: String = ""
 
+var is_outdated: bool = false
+var latest_version: String = ""
+
 # Fungsi pembantu untuk set world aktif sekaligus sync ke SaveManager
 func set_active_world(world_name: String, world_seed: int, temp_text: String = "") -> void:
 	current_world_name = world_name

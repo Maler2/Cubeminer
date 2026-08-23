@@ -15,6 +15,8 @@ extends Control
 @export var start_x: float = -896.0  # Koordinat paling kiri
 @export var reset_x: float = 2048.0  # Koordinat paling kanan (titik loop)
 
+var outdated_popup_instance: CanvasLayer
+
 func _ready() -> void:
 	get_window().content_scale_factor = 1.0
 	FpsCounter.set_fps_label_scale(1.0)
@@ -44,6 +46,8 @@ func _ready() -> void:
 	play_button.pressed.connect(_on_play_button_pressed)
 	setting_button.pressed.connect(_on_setting_button_pressed)
 	quit_button.pressed.connect(_on_quit_button_pressed)
+	
+	_check_outdated()
 
 # 🔄 PERGERAKAN LOOP KAMERA
 func _process(delta: float) -> void:
@@ -63,3 +67,22 @@ func _on_setting_button_pressed() -> void:
 
 func _on_quit_button_pressed() -> void:
 	get_tree().quit()
+
+func _check_outdated() -> void:
+	if not Global.is_outdated:
+		return
+
+	var packed = load("res://scene/out_dated_popup.tscn") as PackedScene
+	if not packed:
+		return
+
+	outdated_popup_instance = packed.instantiate()
+	add_child(outdated_popup_instance)
+
+	var current_ver = ""
+	var file = FileAccess.open("res://versionid.txt", FileAccess.READ)
+	if file:
+		current_ver = file.get_as_text().strip_edges()
+		file.close()
+
+	outdated_popup_instance.show_popup(current_ver, Global.latest_version)

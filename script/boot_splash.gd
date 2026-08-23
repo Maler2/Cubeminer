@@ -9,6 +9,7 @@ extends Control
 var is_loading_finished: bool = false
 var start_time_msec: int = 0
 var _http: HTTPRequest
+var _http_version: HTTPRequest
 
 func _ready() -> void:
 	start_time_msec = Time.get_ticks_msec()
@@ -18,6 +19,7 @@ func _ready() -> void:
 	
 	_apply_saved_volume()
 	_build_version()
+	_check_outdated_version()
 	
 	if progress_bar:
 		progress_bar.value = 0
@@ -194,3 +196,85 @@ func _on_github_response(result: int, code: int, _headers: PackedStringArray, bo
 				_set_build_version(version_name, count)
 				print("[BootSplash] GitHub commit count: ", count)
 				return
+
+func _check_outdated_version() -> void:
+	var local_version: String = _read_versionid_file()
+	if local_version == "":
+		return
+
+	_http_version = HTTPRequest.new()
+	add_child(_http_version)
+	_http_version.request_completed.connect(_on_version_response.bind(local_version))
+
+	var url = "https://raw.githubusercontent.com/Maler2/Cubeminer/main/versionid.txt?_t=" + str(Time.get_ticks_msec())
+	var headers = [
+		"User-Agent: Cubeminer",
+		"Cache-Control: no-cache, no-store, must-revalidate",
+		"Pragma: no-cache"
+	]
+	var err = _http_version.request(url, headers)
+	if err != OK:
+		_http_version.queue_free()
+
+func _read_versionid_file() -> String:
+	for path in ["user://versionid.txt", "res://versionid.txt"]:
+		if FileAccess.file_exists(path):
+			var file = FileAccess.open(path, FileAccess.READ)
+			if file:
+				var ver = file.get_as_text().strip_edges()
+				file.close()
+				if ver != "":
+					return ver
+	return ""
+
+func _on_version_response(result: int, code: int, _headers: PackedStringArray, body: PackedByteArray, local_version: String) -> void:
+	if _http_version:
+		_http_version.queue_free()
+		_http_version = null
+
+	if result != HTTPRequest.RESULT_SUCCESS or code != 200:
+		return
+
+	var remote_version: String = body.get_string_from_utf8().strip_edges()
+	if remote_version == "":
+		return
+
+	print("[BootSplash] Local version: ", local_version, " | Remote version: ", remote_version)
+
+	if _is_version_newer(remote_version, local_version):
+		Global.is_outdated = true
+		Global.latest_version = remote_version
+		print("[BootSplash] Update available: ", remote_version)
+
+func _is_version_newer(new_ver: String, current_ver: String) -> bool:
+	var new_parts = _parse_version(new_ver)
+	var cur_parts = _parse_version(current_ver)
+
+	for i in range(min(new_parts.size(), cur_parts.size())):
+		if new_parts[i] > cur_parts[i]:
+			return true
+		elif new_parts[i] < cur_parts[i]:
+			return false
+
+	return false
+
+func _parse_version(ver: String) -> Array:
+	var suffix: String = ""
+	var numeric: String = ""
+	for c in ver:
+		if c.is_valid_int() or c == ".":
+			numeric += c
+		else:
+			suffix += c
+
+	var parts: Array = []
+	for seg in numeric.split("."):
+		if seg.is_valid_int():
+			parts.append(int(seg))
+		else:
+			parts.append(0)
+
+	if suffix != "":
+		parts.append(suffix)
+
+	return parts

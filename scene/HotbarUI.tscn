@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://dry1jhby24kg" path="res://assets/block/iron_block.png" id="7_64nyv"]
 [ext_resource type="Texture2D" uid="uid://oqyacbfa77kv" path="res://assets/block/gold_block.png" id="8_vyggu"]
 [ext_resource type="Texture2D" uid="uid://b6jmo2necb1sx" path="res://assets/block/diamond_block.png" id="9_yd1e1"]
+[ext_resource type="Texture2D" uid="uid://bhafc105be7y7" path="res://assets/ui/inventory-icon.png" id="11_sa2gf"]
 
 [node name="HotbarUI" type="CanvasLayer" unique_id=569034783]
 script = ExtResource("1_k5xhi")
@@ -269,3 +270,43 @@ theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 4
 horizontal_alignment = 2
 vertical_alignment = 2
+
+[node name="InventoryPhone" type="Control" parent="HotbarContainer/MarginContainer/HotbarBG" unique_id=1183143145]
+process_mode = 3
+anchors_preset = 0
+offset_left = 114.0
+offset_right = 130.0
+offset_bottom = 16.0
+
+[node name="InventoryButton" type="Button" parent="HotbarContainer/MarginContainer/HotbarBG/InventoryPhone" unique_id=6176075]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+theme = ExtResource("4_yd1e1")
+expand_icon = true
+
+[node name="TextureRect" type="TextureRect" parent="HotbarContainer/MarginContainer/HotbarBG/InventoryPhone/InventoryButton" unique_id=148656911]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -6.0
+offset_top = -6.0
+offset_right = 6.0
+offset_bottom = 6.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("11_sa2gf")
+expand_mode = 1
