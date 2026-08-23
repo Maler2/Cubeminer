@@ -202,8 +202,8 @@ func _on_result_slot_input(event: InputEvent) -> void:
 		return
 
 	var result_info = result["result"]
-	var result_id = result_info["id"]
-	var result_amount = result_info["amount"]
+	var result_id = int(result_info["id"])
+	var result_amount = int(result_info["amount"])
 
 	held_item = {"tile_id": result_id, "amount": result_amount}
 	held_icon.texture = tile_textures.get(result_id, null)
@@ -258,13 +258,9 @@ func _check_crafting() -> void:
 	var result = _find_matching_recipe()
 	if result.size() > 0:
 		var info = result["result"]
-		var tex = tile_textures.get(info["id"], null)
-		result_slot.visible = false
-		result_slot.visible = true
-		result_slot.set_slot_data(tex, info["amount"])
+		var tex = tile_textures.get(int(info["id"]), null)
+		result_slot.set_slot_data(tex, int(info["amount"]))
 	else:
-		result_slot.visible = false
-		result_slot.visible = true
 		result_slot.set_slot_data(null, 0)
 
 func add_item_to_inventory(tile_id: int, amount: int = 1) -> bool:

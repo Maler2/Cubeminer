@@ -15,4 +15,3 @@ func set_slot_data(texture: Texture2D, amount: int) -> void:
 		item_icon.visible = false
 		amount_label.text = ""
 		amount_label.visible = false
-	queue_redraw()
