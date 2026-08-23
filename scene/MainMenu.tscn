@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://ci1b3rtr87wks" path="res://assets/block/big_leave_block.png" id="4_rvc10"]
 [ext_resource type="Texture2D" uid="uid://bulh3k7f5nnnx" path="res://assets/block/big_wood_block.png" id="5_85i58"]
 [ext_resource type="Texture2D" uid="uid://dl7invsm3o6nw" path="res://assets/menu/title.png" id="6_85i58"]
-[ext_resource type="Texture2D" uid="uid://7pornp7cuv25" path="res://assets/ui/nineslicing.png" id="6_rvc10"]
+[ext_resource type="Theme" uid="uid://cdif2br4bbjd1" path="res://theme/ui.tres" id="7_85i58"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_sks6p"]
 texture = ExtResource("2_lnxie")
@@ -35,10 +35,6 @@ sources/1 = SubResource("TileSetAtlasSource_q4ih2")
 sources/2 = SubResource("TileSetAtlasSource_b5lh0")
 sources/3 = SubResource("TileSetAtlasSource_581fk")
 
-[sub_resource type="LabelSettings" id="LabelSettings_85i58"]
-outline_size = 4
-outline_color = Color(0, 0, 0, 1)
-
 [node name="MainMenu" type="Control" unique_id=1162691394]
 layout_mode = 3
 anchors_preset = 15
@@ -55,15 +51,15 @@ tile_set = SubResource("TileSet_nn17b")
 [node name="ButtonLayer" type="CanvasLayer" parent="." unique_id=475270527]
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ButtonLayer" unique_id=640471214]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -46.5
-offset_top = -62.0
-offset_right = 46.5
-offset_bottom = 62.0
+anchors_preset = -1
+anchor_left = 0.46
+anchor_top = 0.404
+anchor_right = 0.54
+anchor_bottom = 0.596
+offset_left = -0.4199829
+offset_top = 0.2079773
+offset_right = 0.4199829
+offset_bottom = -0.20800781
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(46.5, 62)
@@ -77,73 +73,28 @@ stretch_mode = 5
 
 [node name="TitleLabel" type="Label" parent="ButtonLayer/VBoxContainer" unique_id=1939880502]
 layout_mode = 2
+theme = ExtResource("7_85i58")
 text = "TITLE"
-label_settings = SubResource("LabelSettings_85i58")
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="PlayButton" type="Button" parent="ButtonLayer/VBoxContainer" unique_id=2010222995]
 layout_mode = 2
 mouse_default_cursor_shape = 2
+theme = ExtResource("7_85i58")
 text = "Play"
-flat = true
-
-[node name="BGButton" type="NinePatchRect" parent="ButtonLayer/VBoxContainer/PlayButton" unique_id=883803787]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("6_rvc10")
-region_rect = Rect2(0, 0, 16, 16)
-patch_margin_left = 4
-patch_margin_top = 4
-patch_margin_right = 4
-patch_margin_bottom = 4
 
 [node name="SettingButton" type="Button" parent="ButtonLayer/VBoxContainer" unique_id=1919519022]
 layout_mode = 2
 mouse_default_cursor_shape = 2
+theme = ExtResource("7_85i58")
 text = "Settings"
-flat = true
-
-[node name="BGButton" type="NinePatchRect" parent="ButtonLayer/VBoxContainer/SettingButton" unique_id=801744495]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("6_rvc10")
-region_rect = Rect2(0, 0, 16, 16)
-patch_margin_left = 4
-patch_margin_top = 4
-patch_margin_right = 4
-patch_margin_bottom = 4
 
 [node name="QuitButton" type="Button" parent="ButtonLayer/VBoxContainer" unique_id=1659705270]
 layout_mode = 2
 mouse_default_cursor_shape = 2
+theme = ExtResource("7_85i58")
 text = "Quit"
-flat = true
-
-[node name="BGButton" type="NinePatchRect" parent="ButtonLayer/VBoxContainer/QuitButton" unique_id=1892894135]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("6_rvc10")
-region_rect = Rect2(0, 0, 16, 16)
-patch_margin_left = 4
-patch_margin_top = 4
-patch_margin_right = 4
-patch_margin_bottom = 4
 
 [node name="UILayer" type="CanvasLayer" parent="." unique_id=1103420254]
 

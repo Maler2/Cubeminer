@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://djxwvjhnc18t" path="res://assets/block/dirt_block.png" id="2_k5xhi"]
 [ext_resource type="Texture2D" uid="uid://bm6p7altsgl1d" path="res://assets/block/grass_block.png" id="3_sq4k5"]
 [ext_resource type="Texture2D" uid="uid://cp1163kiw8i5w" path="res://assets/block/stone_block.png" id="4_wqru8"]
+[ext_resource type="Theme" uid="uid://cdif2br4bbjd1" path="res://theme/ui.tres" id="4_yd1e1"]
 [ext_resource type="Texture2D" uid="uid://dhwdcbvlu556n" path="res://assets/block/coal_block.png" id="6_wqru8"]
 [ext_resource type="Texture2D" uid="uid://dry1jhby24kg" path="res://assets/block/iron_block.png" id="7_64nyv"]
 [ext_resource type="Texture2D" uid="uid://oqyacbfa77kv" path="res://assets/block/gold_block.png" id="8_vyggu"]
@@ -12,7 +13,6 @@
 
 [node name="HotbarUI" type="CanvasLayer" unique_id=569034783]
 script = ExtResource("1_k5xhi")
-slot_tile_ids = null
 
 [node name="HotbarContainer" type="Control" parent="." unique_id=1121313167]
 layout_mode = 3
@@ -66,6 +66,25 @@ offset_bottom = -0.007976532
 texture = ExtResource("2_k5xhi")
 expand_mode = 1
 
+[node name="CountLabel" type="Label" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots/Item1" unique_id=941465145]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.07700001
+anchor_top = -0.082
+anchor_right = 1.077
+anchor_bottom = 1.0660001
+offset_left = 0.0010000467
+offset_top = 0.00040102005
+offset_right = -0.0010004044
+offset_bottom = -0.005214691
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_yd1e1")
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 4
+horizontal_alignment = 2
+vertical_alignment = 2
+
 [node name="Item2" type="TextureRect" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots" unique_id=2105843071]
 layout_mode = 1
 anchors_preset = -1
@@ -74,9 +93,28 @@ anchor_top = 0.125
 anchor_right = 0.268
 anchor_bottom = 0.87500006
 offset_left = -0.03199768
-offset_right = -0.015996933
+offset_right = -0.01599884
 texture = ExtResource("3_sq4k5")
 expand_mode = 1
+
+[node name="CountLabel" type="Label" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots/Item2" unique_id=1016599728]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.07700001
+anchor_top = -0.082
+anchor_right = 1.077
+anchor_bottom = 1.0660001
+offset_left = 0.0010000467
+offset_top = 0.00040102005
+offset_right = -0.0010004044
+offset_bottom = -0.005214691
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_yd1e1")
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 4
+horizontal_alignment = 2
+vertical_alignment = 2
 
 [node name="Item3" type="TextureRect" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots" unique_id=1589938706]
 layout_mode = 1
@@ -90,6 +128,25 @@ offset_right = -0.032016754
 texture = ExtResource("4_wqru8")
 expand_mode = 1
 
+[node name="CountLabel" type="Label" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots/Item3" unique_id=2004903884]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.07700001
+anchor_top = -0.082
+anchor_right = 1.077
+anchor_bottom = 1.0660001
+offset_left = 0.0010000467
+offset_top = 0.00040102005
+offset_right = -0.0010004044
+offset_bottom = -0.005214691
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_yd1e1")
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 4
+horizontal_alignment = 2
+vertical_alignment = 2
+
 [node name="Item4" type="TextureRect" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots" unique_id=1806491435]
 layout_mode = 1
 anchors_preset = -1
@@ -101,6 +158,25 @@ offset_left = 0.048000336
 offset_right = -0.04800415
 texture = ExtResource("6_wqru8")
 expand_mode = 1
+
+[node name="CountLabel" type="Label" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots/Item4" unique_id=1947930251]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.07700001
+anchor_top = -0.082
+anchor_right = 1.077
+anchor_bottom = 1.0660001
+offset_left = 0.0010000467
+offset_top = 0.00040102005
+offset_right = -0.0010004044
+offset_bottom = -0.005214691
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_yd1e1")
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 4
+horizontal_alignment = 2
+vertical_alignment = 2
 
 [node name="Item5" type="TextureRect" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots" unique_id=1355755247]
 layout_mode = 1
@@ -114,6 +190,25 @@ offset_right = 0.04799652
 texture = ExtResource("7_64nyv")
 expand_mode = 1
 
+[node name="CountLabel" type="Label" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots/Item5" unique_id=186674382]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.07700001
+anchor_top = -0.082
+anchor_right = 1.077
+anchor_bottom = 1.0660001
+offset_left = 0.0010000467
+offset_top = 0.00040102005
+offset_right = -0.0010004044
+offset_bottom = -0.005214691
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_yd1e1")
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 4
+horizontal_alignment = 2
+vertical_alignment = 2
+
 [node name="Item6" type="TextureRect" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots" unique_id=1471087170]
 layout_mode = 1
 anchors_preset = -1
@@ -126,6 +221,25 @@ offset_right = 0.03199768
 texture = ExtResource("8_vyggu")
 expand_mode = 1
 
+[node name="CountLabel" type="Label" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots/Item6" unique_id=2115421147]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.07700001
+anchor_top = -0.082
+anchor_right = 1.077
+anchor_bottom = 1.0660001
+offset_left = 0.0010000467
+offset_top = 0.00040102005
+offset_right = -0.0010004044
+offset_bottom = -0.005214691
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_yd1e1")
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 4
+horizontal_alignment = 2
+vertical_alignment = 2
+
 [node name="Item7" type="TextureRect" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots" unique_id=837604461]
 layout_mode = 1
 anchors_preset = -1
@@ -137,7 +251,21 @@ offset_right = 0.015991211
 texture = ExtResource("9_yd1e1")
 expand_mode = 1
 
-[node name="Control" type="Control" parent="HotbarContainer/MarginContainer/HotbarBG" unique_id=260439478]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="CountLabel" type="Label" parent="HotbarContainer/MarginContainer/HotbarBG/ItemSlots/Item7" unique_id=934141486]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.07700001
+anchor_top = -0.082
+anchor_right = 1.077
+anchor_bottom = 1.0660001
+offset_left = 0.0010000467
+offset_top = 0.00040102005
+offset_right = -0.0010004044
+offset_bottom = -0.005214691
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_yd1e1")
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 4
+horizontal_alignment = 2
+vertical_alignment = 2

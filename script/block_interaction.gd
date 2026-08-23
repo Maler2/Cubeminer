@@ -7,15 +7,15 @@ func setup(tilemap_ref: TileMapLayer) -> void:
 	tilemap = tilemap_ref
 	background_layer = tilemap_ref.background_layer
 
-func pasang_blok(grid_pos: Vector2i = Vector2i.MIN) -> void:
-	if not tilemap.player: return
+func pasang_blok(grid_pos: Vector2i = Vector2i.MIN) -> bool:
+	if not tilemap.player: return false
 	if grid_pos == Vector2i.MIN:
 		grid_pos = tilemap.local_to_map(tilemap.to_local(tilemap.get_global_mouse_position()))
 		
 	var player_grid_pos = tilemap.local_to_map(tilemap.to_local(tilemap.player.global_position))
 	
-	if not is_in_range_box(player_grid_pos, grid_pos): return
-	if grid_pos.y < tilemap.min_y_limit or grid_pos.y > tilemap.max_y_limit: return
+	if not is_in_range_box(player_grid_pos, grid_pos): return false
+	if grid_pos.y < tilemap.min_y_limit or grid_pos.y > tilemap.max_y_limit: return false
 	
 	var fg_id = tilemap.get_cell_source_id(grid_pos)
 	var bg_id = background_layer.get_cell_source_id(grid_pos) if background_layer else -1
@@ -26,16 +26,27 @@ func pasang_blok(grid_pos: Vector2i = Vector2i.MIN) -> void:
 		background_layer.set_cell(grid_pos, tilemap.selected_block_id, Vector2i(0, 0))
 		tilemap.blocks_dirty = true
 		tilemap.queue_redraw()
+		_consume_from_hotbar()
+		return true
 
 	elif fg_id == -1:
 		var player_head_grid = player_grid_pos + Vector2i(0, -1)
-		if grid_pos == player_grid_pos or grid_pos == player_head_grid: return
+		if grid_pos == player_grid_pos or grid_pos == player_head_grid: return false
 
 		if tilemap.destroyed_tiles.has(grid_pos): tilemap.destroyed_tiles.erase(grid_pos)
 		tilemap.placed_tiles[grid_pos] = tilemap.selected_block_id
 		tilemap.set_cell(grid_pos, tilemap.selected_block_id, Vector2i(0, 0))
 		tilemap.blocks_dirty = true
 		tilemap.queue_redraw()
+		_consume_from_hotbar()
+		return true
+	
+	return false
+
+func _consume_from_hotbar() -> void:
+	var hotbar = tilemap.get_tree().root.find_child("HotbarUI", true, false)
+	if hotbar and hotbar.has_method("consume_current_item"):
+		hotbar.consume_current_item(1)
 
 func hancurkan_blok(grid_pos: Vector2i = Vector2i.MIN) -> void:
 	if not tilemap.player: return

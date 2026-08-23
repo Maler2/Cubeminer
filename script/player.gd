@@ -141,7 +141,7 @@ func drop_current_item() -> void:
 		item_instance.setup_item(tile_id, item_texture)
 		
 	get_parent().add_child(item_instance)
-	hotbar.remove_current_item()
+	hotbar.consume_current_item(1)
 
 func handle_footstep_sfx(delta: float) -> void:
 	if is_on_floor() and abs(velocity.x) > 10:

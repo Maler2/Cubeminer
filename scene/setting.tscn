@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cxbwk7nphhf5d"]
 
 [ext_resource type="Script" uid="uid://e2mwh4uuda6a" path="res://script/setting.gd" id="1_xthoy"]
-[ext_resource type="Texture2D" uid="uid://7pornp7cuv25" path="res://assets/ui/nineslicing.png" id="2_ahr6q"]
+[ext_resource type="Theme" uid="uid://cdif2br4bbjd1" path="res://theme/ui.tres" id="2_ahr6q"]
 
 [node name="Setting" type="Control" unique_id=1862972517]
 layout_mode = 3
@@ -36,88 +36,28 @@ alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
+theme = ExtResource("2_ahr6q")
 text = "Back"
-flat = true
-
-[node name="BGButton" type="NinePatchRect" parent="optionMargin/VBoxContainer/BackButton" unique_id=2077965532]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_ahr6q")
-region_rect = Rect2(0, 0, 16, 16)
-patch_margin_left = 4
-patch_margin_top = 4
-patch_margin_right = 4
-patch_margin_bottom = 4
 
 [node name="VideoButton" type="Button" parent="optionMargin/VBoxContainer" unique_id=2931084]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
+theme = ExtResource("2_ahr6q")
 text = "Video"
-flat = true
-
-[node name="BGButton" type="NinePatchRect" parent="optionMargin/VBoxContainer/VideoButton" unique_id=1353671308]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_ahr6q")
-region_rect = Rect2(0, 0, 16, 16)
-patch_margin_left = 4
-patch_margin_top = 4
-patch_margin_right = 4
-patch_margin_bottom = 4
 
 [node name="SoundButton" type="Button" parent="optionMargin/VBoxContainer" unique_id=93591279]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
+theme = ExtResource("2_ahr6q")
 text = "Sound"
-flat = true
-
-[node name="BGButton" type="NinePatchRect" parent="optionMargin/VBoxContainer/SoundButton" unique_id=1069709562]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_ahr6q")
-region_rect = Rect2(0, 0, 16, 16)
-patch_margin_left = 4
-patch_margin_top = 4
-patch_margin_right = 4
-patch_margin_bottom = 4
 
 [node name="KeybindButton" type="Button" parent="optionMargin/VBoxContainer" unique_id=1261564016]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("2_ahr6q")
 text = "Keybind"
-flat = true
-
-[node name="BGButton" type="NinePatchRect" parent="optionMargin/VBoxContainer/KeybindButton" unique_id=1651644413]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_ahr6q")
-region_rect = Rect2(0, 0, 16, 16)
-patch_margin_left = 4
-patch_margin_top = 4
-patch_margin_right = 4
-patch_margin_bottom = 4
 
 [node name="ContentMargin" type="MarginContainer" parent="." unique_id=500463441]
 layout_mode = 1
@@ -168,24 +108,9 @@ vertical_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
+theme = ExtResource("2_ahr6q")
 toggle_mode = true
 text = "OFF"
-flat = true
-
-[node name="BGButton" type="NinePatchRect" parent="ContentMargin/ContentPanel/VideoPage/SwitchFPSButton" unique_id=1779265396]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_ahr6q")
-region_rect = Rect2(0, 0, 16, 16)
-patch_margin_left = 4
-patch_margin_top = 4
-patch_margin_right = 4
-patch_margin_bottom = 4
 
 [node name="VsyncLabel" type="Label" parent="ContentMargin/ContentPanel/VideoPage" unique_id=1293578175]
 layout_mode = 2
@@ -197,28 +122,12 @@ vertical_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
+theme = ExtResource("2_ahr6q")
 toggle_mode = true
 text = "ON"
-flat = true
-
-[node name="BGButton" type="NinePatchRect" parent="ContentMargin/ContentPanel/VideoPage/SwitchButton" unique_id=24664578]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_ahr6q")
-region_rect = Rect2(0, 0, 16, 16)
-patch_margin_left = 4
-patch_margin_top = 4
-patch_margin_right = 4
-patch_margin_bottom = 4
 
 [node name="AudioPage" type="VBoxContainer" parent="ContentMargin/ContentPanel" unique_id=936971158]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
@@ -234,6 +143,7 @@ grow_vertical = 2
 [node name="MasterLabel" type="Label" parent="ContentMargin/ContentPanel/AudioPage" unique_id=1911402209]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("2_ahr6q")
 text = "Master"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -242,11 +152,13 @@ vertical_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
+theme = ExtResource("2_ahr6q")
 value = 50.0
 
 [node name="SFXLabel" type="Label" parent="ContentMargin/ContentPanel/AudioPage" unique_id=1765056583]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("2_ahr6q")
 text = "SFX"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -254,11 +166,13 @@ vertical_alignment = 1
 [node name="SFXSlider" type="HSlider" parent="ContentMargin/ContentPanel/AudioPage" unique_id=70871646]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("2_ahr6q")
 value = 100.0
 
 [node name="MusicLabel" type="Label" parent="ContentMargin/ContentPanel/AudioPage" unique_id=357947327]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("2_ahr6q")
 text = "Music"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -266,10 +180,12 @@ vertical_alignment = 1
 [node name="MusicSlider" type="HSlider" parent="ContentMargin/ContentPanel/AudioPage" unique_id=1514581967]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("2_ahr6q")
 value = 100.0
 
 [node name="KeybindPage" type="VBoxContainer" parent="ContentMargin/ContentPanel" unique_id=843326939]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -325,23 +241,8 @@ text = ":"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
+theme = ExtResource("2_ahr6q")
 text = "A"
-flat = true
-
-[node name="BGButton" type="NinePatchRect" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveLeft/LeftButton" unique_id=836321432]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_ahr6q")
-region_rect = Rect2(0, 0, 16, 16)
-patch_margin_left = 4
-patch_margin_top = 4
-patch_margin_right = 4
-patch_margin_bottom = 4
 
 [node name="MoveDown" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=377975461]
 layout_mode = 2
@@ -361,23 +262,8 @@ text = ":"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
+theme = ExtResource("2_ahr6q")
 text = "S"
-flat = true
-
-[node name="BGButton" type="NinePatchRect" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveDown/DownButton" unique_id=1316735392]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_ahr6q")
-region_rect = Rect2(0, 0, 16, 16)
-patch_margin_left = 4
-patch_margin_top = 4
-patch_margin_right = 4
-patch_margin_bottom = 4
 
 [node name="MoveUp" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=1438991606]
 layout_mode = 2
@@ -397,23 +283,8 @@ text = ":"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
+theme = ExtResource("2_ahr6q")
 text = "W"
-flat = true
-
-[node name="BGButton" type="NinePatchRect" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveUp/UpButton" unique_id=1693188737]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_ahr6q")
-region_rect = Rect2(0, 0, 16, 16)
-patch_margin_left = 4
-patch_margin_top = 4
-patch_margin_right = 4
-patch_margin_bottom = 4
 
 [node name="MoveRight" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=730060713]
 layout_mode = 2
@@ -433,23 +304,8 @@ text = ":"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
+theme = ExtResource("2_ahr6q")
 text = "D"
-flat = true
-
-[node name="BGButton" type="NinePatchRect" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/MoveRight/RightButton" unique_id=267935648]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_ahr6q")
-region_rect = Rect2(0, 0, 16, 16)
-patch_margin_left = 4
-patch_margin_top = 4
-patch_margin_right = 4
-patch_margin_bottom = 4
 
 [node name="Throw" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=514985020]
 layout_mode = 2
@@ -469,23 +325,8 @@ text = ":"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
+theme = ExtResource("2_ahr6q")
 text = "Q"
-flat = true
-
-[node name="BGButton" type="NinePatchRect" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/Throw/ThrowButton" unique_id=551571993]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_ahr6q")
-region_rect = Rect2(0, 0, 16, 16)
-patch_margin_left = 4
-patch_margin_top = 4
-patch_margin_right = 4
-patch_margin_bottom = 4
 
 [node name="Run" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=267130495]
 layout_mode = 2
@@ -505,23 +346,8 @@ text = ":"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
+theme = ExtResource("2_ahr6q")
 text = "Shift"
-flat = true
-
-[node name="BGButton" type="NinePatchRect" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/Run/RunButton" unique_id=506040247]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_ahr6q")
-region_rect = Rect2(0, 0, 16, 16)
-patch_margin_left = 4
-patch_margin_top = 4
-patch_margin_right = 4
-patch_margin_bottom = 4
 
 [node name="Jump" type="HBoxContainer" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer" unique_id=1646565825]
 layout_mode = 2
@@ -541,22 +367,7 @@ text = ":"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
+theme = ExtResource("2_ahr6q")
 text = "Space"
-flat = true
-
-[node name="BGButton" type="NinePatchRect" parent="ContentMargin/ContentPanel/KeybindPage/ScrollContainer/VBoxContainer/Jump/JumpButton" unique_id=346030898]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_ahr6q")
-region_rect = Rect2(0, 0, 16, 16)
-patch_margin_left = 4
-patch_margin_top = 4
-patch_margin_right = 4
-patch_margin_bottom = 4
 
 [connection signal="pressed" from="optionMargin/VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

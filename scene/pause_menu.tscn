@@ -1,17 +1,7 @@
 [gd_scene format=3 uid="uid://cnvror5qycu0a"]
 
 [ext_resource type="Script" uid="uid://ikg84l65mdiu" path="res://script/pause_menu.gd" id="1_grdc7"]
-[ext_resource type="Texture2D" uid="uid://7pornp7cuv25" path="res://assets/ui/nineslicing.png" id="2_me6vf"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_17rxn"]
-font_size = 4
-outline_size = 4
-outline_color = Color(0, 0, 0, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_yq8tf"]
-font_size = 4
-outline_size = 4
-outline_color = Color(0, 0, 0, 1)
+[ext_resource type="Theme" uid="uid://cdif2br4bbjd1" path="res://theme/ui.tres" id="3_cq4tv"]
 
 [node name="PauseMenu" type="CanvasLayer" unique_id=862227384]
 process_mode = 3
@@ -41,6 +31,7 @@ grow_vertical = 2
 
 [node name="PauseLabel" type="Label" parent="VBoxContainer" unique_id=1675387021]
 layout_mode = 2
+theme = ExtResource("3_cq4tv")
 text = "Game Paused"
 uppercase = true
 
@@ -48,45 +39,15 @@ uppercase = true
 process_mode = 3
 layout_mode = 2
 mouse_default_cursor_shape = 2
+theme = ExtResource("3_cq4tv")
 text = "Resume"
-flat = true
-
-[node name="BGButton" type="NinePatchRect" parent="VBoxContainer/ResumeButton" unique_id=658711235]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_me6vf")
-region_rect = Rect2(0, 0, 16, 16)
-patch_margin_left = 4
-patch_margin_top = 4
-patch_margin_right = 4
-patch_margin_bottom = 4
 
 [node name="MainMenuButton" type="Button" parent="VBoxContainer" unique_id=524508895]
 process_mode = 3
 layout_mode = 2
 mouse_default_cursor_shape = 2
+theme = ExtResource("3_cq4tv")
 text = "Main Menu"
-flat = true
-
-[node name="BGButton" type="NinePatchRect" parent="VBoxContainer/MainMenuButton" unique_id=1492985919]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_me6vf")
-region_rect = Rect2(0, 0, 16, 16)
-patch_margin_left = 4
-patch_margin_top = 4
-patch_margin_right = 4
-patch_margin_bottom = 4
 
 [node name="VBoxInfoContainer" type="VBoxContainer" parent="." unique_id=1048940585]
 anchors_preset = 3
@@ -98,12 +59,12 @@ offset_left = -53.0
 offset_top = -16.0
 grow_horizontal = 0
 grow_vertical = 0
+theme = ExtResource("3_cq4tv")
 
 [node name="WorldLabel" type="Label" parent="VBoxInfoContainer" unique_id=1798496670]
 layout_mode = 2
 theme_override_font_sizes/font_size = 4
 text = "WORLDLABEL"
-label_settings = SubResource("LabelSettings_17rxn")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -111,6 +72,5 @@ vertical_alignment = 1
 layout_mode = 2
 theme_override_font_sizes/font_size = 4
 text = "SEEDLABEL"
-label_settings = SubResource("LabelSettings_yq8tf")
 horizontal_alignment = 1
 vertical_alignment = 1

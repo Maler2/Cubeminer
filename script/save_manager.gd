@@ -6,7 +6,7 @@ const WORLDS_DIR = "user://worlds/"
 const CHUNK_SIZE: int = 16
 
 # --- FUNGSI SIMPAN (SEED, HOTBAR, & PLAYER POSITION) ---
-func save_world(world_name: String, world_seed: int, hotbar_data: Array = [], player_pos: Vector2 = Vector2.ZERO) -> void:
+func save_world(world_name: String, world_seed: int, hotbar_data: Array = [], player_pos: Vector2 = Vector2.ZERO, hotbar_counts: Array = []) -> void:
 	if world_name.strip_edges() == "":
 		world_name = "My World"
 		
@@ -42,6 +42,11 @@ func save_world(world_name: String, world_seed: int, hotbar_data: Array = [], pl
 		data_dict["hotbar"] = hotbar_data
 	elif not data_dict.has("hotbar"):
 		data_dict["hotbar"] = [-1, -1, -1, -1, -1, -1, -1]
+
+	if hotbar_counts.size() > 0:
+		data_dict["hotbar_counts"] = hotbar_counts
+	elif not data_dict.has("hotbar_counts"):
+		data_dict["hotbar_counts"] = [0, 0, 0, 0, 0, 0, 0]
 
 	# 4. Update Posisi Player (pastikan selalu ada struktur default)
 	if player_pos != Vector2.ZERO:

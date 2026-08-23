@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://brcr7f6agqe21" path="res://assets/icon/game_startup_icon.png" id="2_bou02"]
 [ext_resource type="PackedScene" uid="uid://goytp2xg1hvf" path="res://scene/MainMenu.tscn" id="2_luu12"]
 [ext_resource type="AudioStream" uid="uid://cob45303ms4ot" path="res://audio/sfx/start-up.wav" id="4_4od3x"]
+[ext_resource type="Theme" uid="uid://cdif2br4bbjd1" path="res://theme/ui.tres" id="4_gmnio"]
 
 [node name="BootSplash" type="Control" unique_id=766420060]
 layout_mode = 3
@@ -49,13 +50,15 @@ autostart = true
 [node name="ProgressBar" type="ProgressBar" parent="." unique_id=1891327426]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.37500003
+anchor_left = 0.194
 anchor_top = 0.74100006
-anchor_right = 0.625
+anchor_right = 0.80600005
 anchor_bottom = 0.79
-offset_left = -3.0517578e-05
+offset_left = 0.5119934
 offset_top = -0.16802979
+offset_right = -0.51208496
 offset_bottom = 0.07998657
+theme = ExtResource("4_gmnio")
 
 [node name="BootSound" type="AudioStreamPlayer2D" parent="." unique_id=1004263891]
 stream = ExtResource("4_4od3x")

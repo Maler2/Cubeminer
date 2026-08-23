@@ -1,9 +1,11 @@
 [gd_scene format=3 uid="uid://btlguvaymlq7n"]
 
 [ext_resource type="Script" uid="uid://cvx8ro2ai6jch" path="res://script/loading_screen.gd" id="1_8vs4c"]
+[ext_resource type="Theme" uid="uid://cdif2br4bbjd1" path="res://theme/ui.tres" id="2_mtcg3"]
 
 [node name="LoadingScreen" type="Control" unique_id=471903797]
 layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -51,6 +53,7 @@ offset_right = 0.57592773
 offset_bottom = 2.1519775
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_mtcg3")
 
 [node name="LabelTips" type="Label" parent="." unique_id=869129167]
 custom_minimum_size = Vector2(1024, 0)
