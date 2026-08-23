@@ -142,6 +142,8 @@ func _refresh_all_slots() -> void:
 	_sync_grid_visuals(inventory_grid, inventory_data)
 	_sync_grid_visuals(crafting_grid, crafting_data)
 	_check_crafting()
+	inventory_grid.queue_redraw()
+	crafting_grid.queue_redraw()
 
 func _sync_grid_visuals(grid: GridContainer, data: Array) -> void:
 	var slots = grid.get_children()
@@ -257,8 +259,12 @@ func _check_crafting() -> void:
 	if result.size() > 0:
 		var info = result["result"]
 		var tex = tile_textures.get(info["id"], null)
+		result_slot.visible = false
+		result_slot.visible = true
 		result_slot.set_slot_data(tex, info["amount"])
 	else:
+		result_slot.visible = false
+		result_slot.visible = true
 		result_slot.set_slot_data(null, 0)
 
 func add_item_to_inventory(tile_id: int, amount: int = 1) -> bool:
