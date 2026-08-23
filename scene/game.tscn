@@ -16,7 +16,6 @@ script = ExtResource("1_dbls1")
 [node name="Inventory" parent="." unique_id=81308667 instance=ExtResource("7_qpk70")]
 
 [node name="HotbarUI" parent="." unique_id=569034783 instance=ExtResource("2_ll5lq")]
-slot_tile_ids = Array[int]([-1, -1, -1, -1, -1, -1, -1])
 
 [node name="ForegroundMapLayer" type="TileMapLayer" parent="." unique_id=1682738660 node_paths=PackedStringArray("background_layer", "player")]
 visibility_layer = 2

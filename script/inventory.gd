@@ -51,8 +51,8 @@ func _load_recipes() -> void:
 	var json = JSON.new()
 	var error = json.parse(file.get_as_text())
 	file.close()
-	if error == OK and json.data is Array:
-		recipes = json.data
+	if error == OK and json.data is Dictionary:
+		recipes = json.data.get("recipes", [])
 
 func _create_held_icon() -> void:
 	held_icon = TextureRect.new()
