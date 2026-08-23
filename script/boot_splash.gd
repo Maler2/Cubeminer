@@ -217,7 +217,7 @@ func _check_outdated_version() -> void:
 		_http_version.queue_free()
 
 func _read_versionid_file() -> String:
-	for path in ["user://versionid.txt", "res://versionid.txt"]:
+	for path in ["res://versionid.txt", "user://versionid.txt"]:
 		if FileAccess.file_exists(path):
 			var file = FileAccess.open(path, FileAccess.READ)
 			if file:
@@ -226,6 +226,12 @@ func _read_versionid_file() -> String:
 				if ver != "":
 					return ver
 	return ""
+
+func _save_versionid_file(ver: String) -> void:
+	var file = FileAccess.open("user://versionid.txt", FileAccess.WRITE)
+	if file:
+		file.store_string(ver)
+		file.close()
 
 func _on_version_response(result: int, code: int, _headers: PackedStringArray, body: PackedByteArray, local_version: String) -> void:
 	if _http_version:
@@ -240,6 +246,8 @@ func _on_version_response(result: int, code: int, _headers: PackedStringArray, b
 		return
 
 	print("[BootSplash] Local version: ", local_version, " | Remote version: ", remote_version)
+
+	_save_versionid_file(remote_version)
 
 	if _is_version_newer(remote_version, local_version):
 		Global.is_outdated = true

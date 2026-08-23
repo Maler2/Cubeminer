@@ -3,7 +3,10 @@
 [ext_resource type="Texture2D" uid="uid://mhkbvx6ljl8i" path="res://assets/ui/window-bg.png" id="1_qwq6o"]
 [ext_resource type="Theme" uid="uid://cdif2br4bbjd1" path="res://theme/ui.tres" id="2_o3dp4"]
 
+[ext_resource type="Script" path="res://script/out_dated_popup.gd" id="3_script"]
+
 [node name="OutDatedPopup" type="CanvasLayer" unique_id=314453410]
+script = ExtResource("3_script")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1221393652]
 anchors_preset = -1
