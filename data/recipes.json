@@ -1,0 +1,13 @@
+{
+  "_comment": "Shapeless 2x2 crafting recipes. ingredients: {tile_id: amount}. result: {id: tile_id, amount: count}",
+  "recipes": [
+    {
+      "ingredients": {"8": 1},
+      "result": {"id": 10, "amount": 4}
+    },
+    {
+      "ingredients": {"10": 1},
+      "result": {"id": 11, "amount": 4}
+    }
+  ]
+}

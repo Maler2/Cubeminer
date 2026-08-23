@@ -9,10 +9,9 @@ func set_slot_data(texture: Texture2D, amount: int) -> void:
 		item_icon.texture = texture
 		item_icon.visible = true
 		amount_label.text = str(amount) if amount > 1 else ""
-		amount_label.visible = true
+		amount_label.visible = amount > 1
 	else:
-		# Slot Kosong
-		item_icon.texture = null
-		item_icon.visible = false
+		item_icon.texture = preload("res://assets/ui/inventoryitem.png")
+		item_icon.visible = true
 		amount_label.text = ""
 		amount_label.visible = false

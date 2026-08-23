@@ -9,15 +9,75 @@ process_mode = 3
 script = ExtResource("1_nbguh")
 
 [node name="Background" type="TextureRect" parent="." unique_id=637083567]
-offset_right = 73.0
-offset_bottom = 56.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -48.0
+offset_right = 64.0
+offset_bottom = 48.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("2_fb012")
 
+[node name="CraftingGrid" type="GridContainer" parent="." unique_id=320987083]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -36.0
+offset_top = -34.0
+offset_right = -10.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 2
+theme_override_constants/v_separation = 2
+columns = 2
+
+[node name="InventorySlot" parent="CraftingGrid" unique_id=2134407779 instance=ExtResource("3_fb012")]
+layout_mode = 2
+
+[node name="InventorySlot2" parent="CraftingGrid" unique_id=1458153102 instance=ExtResource("3_fb012")]
+layout_mode = 2
+
+[node name="InventorySlot3" parent="CraftingGrid" unique_id=1699032182 instance=ExtResource("3_fb012")]
+layout_mode = 2
+
+[node name="InventorySlot4" parent="CraftingGrid" unique_id=1288159240 instance=ExtResource("3_fb012")]
+layout_mode = 2
+
+[node name="CraftingResultSlot" type="GridContainer" parent="." unique_id=136702453]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 24.0
+offset_top = -27.0
+offset_right = 36.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="InventorySlot" parent="CraftingResultSlot" unique_id=93138728 instance=ExtResource("3_fb012")]
+layout_mode = 2
+
 [node name="InventoryGrid" type="GridContainer" parent="." unique_id=2073588767]
-offset_left = 16.0
-offset_top = 62.0
-offset_right = 106.0
-offset_bottom = 87.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -48.0
+offset_top = 14.0
+offset_right = 48.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/h_separation = 2
 theme_override_constants/v_separation = 2
 columns = 7
@@ -62,34 +122,4 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="InventorySlot14" parent="InventoryGrid" unique_id=280640450 instance=ExtResource("3_fb012")]
-layout_mode = 2
-
-[node name="CraftingGrid" type="GridContainer" parent="." unique_id=320987083]
-offset_left = 28.0
-offset_top = 14.0
-offset_right = 54.0
-offset_bottom = 40.0
-theme_override_constants/h_separation = 2
-theme_override_constants/v_separation = 2
-columns = 2
-
-[node name="InventorySlot" parent="CraftingGrid" unique_id=2134407779 instance=ExtResource("3_fb012")]
-layout_mode = 2
-
-[node name="InventorySlot2" parent="CraftingGrid" unique_id=1458153102 instance=ExtResource("3_fb012")]
-layout_mode = 2
-
-[node name="InventorySlot3" parent="CraftingGrid" unique_id=1699032182 instance=ExtResource("3_fb012")]
-layout_mode = 2
-
-[node name="InventorySlot4" parent="CraftingGrid" unique_id=1288159240 instance=ExtResource("3_fb012")]
-layout_mode = 2
-
-[node name="CraftingResultSlot" type="GridContainer" parent="." unique_id=136702453]
-offset_left = 88.0
-offset_top = 20.0
-offset_right = 100.0
-offset_bottom = 32.0
-
-[node name="InventorySlot" parent="CraftingResultSlot" unique_id=93138728 instance=ExtResource("3_fb012")]
 layout_mode = 2

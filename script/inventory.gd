@@ -1,10 +1,6 @@
 extends CanvasLayer
 class_name InventoryUI
 
-@export var slot_scene: PackedScene = preload("res://scene/inventory_slot.tscn")
-@export var total_slots: int = 20
-
-# Referensi Tekstur Item (Samakan dengan Hotbar)
 @export var tile_textures: Dictionary = {
 	1: preload("res://assets/block/grass_block.png"),
 	2: preload("res://assets/block/dirt_block.png"),
@@ -14,41 +10,79 @@ class_name InventoryUI
 	6: preload("res://assets/block/gold_block.png"),
 	7: preload("res://assets/block/diamond_block.png"),
 	8: preload("res://assets/block/wood_block.png"),
-	9: preload("res://assets/block/leave_block.png")
+	9: preload("res://assets/block/leave_block.png"),
+	10: preload("res://assets/block/plank.png"),
+	11: preload("res://assets/block/stick.png")
 }
 
-# data block
-var inventory_data: Array = []
+const INVENTORY_SIZE: int = 14
+const CRAFTING_GRID_SIZE: int = 4
+const MAX_STACK: int = 128
 
-@onready var grid_container: GridContainer = $PanelContainer/VBoxContainer/ScrollContainer/GridContainer
+var inventory_data: Array = []
+var crafting_data: Array = []
+var held_item: Dictionary = {}
+var recipes: Array = []
+var held_icon: TextureRect
+
+@onready var inventory_grid: GridContainer = $InventoryGrid
+@onready var crafting_grid: GridContainer = $CraftingGrid
+@onready var crafting_result: GridContainer = $CraftingResultSlot
 
 func _ready() -> void:
 	visible = false
-	create_slots()
+	_init_data()
+	_load_recipes()
+	_create_held_icon()
+	_connect_slots()
 
-func create_slots() -> void:
-	# Bersihkan slot lama
-	for child in grid_container.get_children():
-		child.queue_free()
-		
-	# Instansiasi slot-slot baru
-	for i in range(total_slots):
-		var new_slot = slot_scene.instantiate()
-		grid_container.add_child(new_slot)
-		
-		# Cek apakah ada data item untuk slot ke-i ini
-		if i < inventory_data.size() and inventory_data[i] != null:
-			var item_info = inventory_data[i]
-			var tile_id = item_info["tile_id"]
-			var amount = item_info["amount"]
-			
-			var texture = tile_textures.get(tile_id, null)
-			if new_slot.has_method("set_slot_data"):
-				new_slot.set_slot_data(texture, amount)
-		else:
-			# Slot Kosong
-			if new_slot.has_method("set_slot_data"):
-				new_slot.set_slot_data(null, 0)
+func _init_data() -> void:
+	inventory_data.resize(INVENTORY_SIZE)
+	for i in range(INVENTORY_SIZE):
+		inventory_data[i] = null
+	crafting_data.resize(CRAFTING_GRID_SIZE)
+	for i in range(CRAFTING_GRID_SIZE):
+		crafting_data[i] = null
+
+func _load_recipes() -> void:
+	var file = FileAccess.open("res://data/recipes.json", FileAccess.READ)
+	if not file:
+		return
+	var json = JSON.new()
+	var error = json.parse(file.get_as_text())
+	file.close()
+	if error == OK and json.data is Array:
+		recipes = json.data
+
+func _create_held_icon() -> void:
+	held_icon = TextureRect.new()
+	held_icon.custom_minimum_size = Vector2(8, 8)
+	held_icon.size = Vector2(8, 8)
+	held_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	held_icon.z_index = 100
+	add_child(held_icon)
+	held_icon.visible = false
+
+func _connect_slots() -> void:
+	var idx: int = 0
+	for slot in inventory_grid.get_children():
+		if slot is InventorySlotUI:
+			slot.gui_input.connect(_on_slot_input.bind(inventory_data, idx))
+			idx += 1
+
+	idx = 0
+	for slot in crafting_grid.get_children():
+		if slot is InventorySlotUI:
+			slot.gui_input.connect(_on_slot_input.bind(crafting_data, idx))
+			idx += 1
+
+	var result_slot = crafting_result.get_child(0)
+	if result_slot is InventorySlotUI:
+		result_slot.gui_input.connect(_on_result_slot_input)
+
+func _process(_delta: float) -> void:
+	if visible and held_item.size() > 0:
+		held_icon.global_position = get_viewport().get_mouse_position() - Vector2(4, 4)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
@@ -58,24 +92,157 @@ func _unhandled_input(event: InputEvent) -> void:
 func toggle_inventory() -> void:
 	visible = !visible
 	get_tree().paused = visible
-	
-	# Refresh tampilan slot setiap kali inventory dibuka
 	if visible:
-		create_slots()
+		_return_held_to_inventory()
+		_refresh_all_slots()
 
-func add_item(tile_id: int, amount: int = 1) -> bool:
-	# 1. Cek apakah item sudah ada di inventory (stack item)
+func _return_held_to_inventory() -> void:
+	if held_item.size() == 0:
+		return
+	add_item_to_inventory(held_item["tile_id"], held_item["amount"])
+	held_item = {}
+	held_icon.visible = false
+
+func _refresh_all_slots() -> void:
+	_sync_grid_visuals(inventory_grid, inventory_data)
+	_sync_grid_visuals(crafting_grid, crafting_data)
+	_check_crafting()
+
+func _sync_grid_visuals(grid: GridContainer, data: Array) -> void:
+	var slots = grid.get_children()
+	for i in range(slots.size()):
+		if i < data.size() and data[i] != null:
+			var tex = tile_textures.get(data[i]["tile_id"], null)
+			slots[i].set_slot_data(tex, data[i]["amount"])
+		else:
+			slots[i].set_slot_data(null, 0)
+
+func _on_slot_input(event: InputEvent, data: Array, index: int) -> void:
+	if not (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT):
+		return
+	_handle_slot_click(data, index)
+	_refresh_all_slots()
+
+func _handle_slot_click(data: Array, index: int) -> void:
+	if index >= data.size():
+		return
+	var slot_item = data[index]
+
+	if held_item.size() == 0:
+		if slot_item != null:
+			held_item = slot_item.duplicate()
+			data[index] = null
+			held_icon.texture = tile_textures.get(held_item["tile_id"], null)
+			held_icon.visible = true
+	else:
+		if slot_item == null:
+			data[index] = held_item.duplicate()
+			held_item = {}
+			held_icon.visible = false
+		elif slot_item["tile_id"] == held_item["tile_id"]:
+			var can_add = min(held_item["amount"], MAX_STACK - slot_item["amount"])
+			slot_item["amount"] += can_add
+			held_item["amount"] -= can_add
+			if held_item["amount"] <= 0:
+				held_item = {}
+				held_icon.visible = false
+		else:
+			var temp = slot_item.duplicate()
+			data[index] = held_item.duplicate()
+			held_item = temp
+			held_icon.texture = tile_textures.get(held_item["tile_id"], null)
+
+func _on_result_slot_input(event: InputEvent) -> void:
+	if not (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT):
+		return
+	if held_item.size() > 0:
+		return
+
+	var result = _find_matching_recipe()
+	if result.size() == 0:
+		return
+
+	var result_info = result["result"]
+	var result_id = result_info["id"]
+	var result_amount = result_info["amount"]
+
+	held_item = {"tile_id": result_id, "amount": result_amount}
+	held_icon.texture = tile_textures.get(result_id, null)
+	held_icon.visible = true
+
+	_consume_crafting_inputs(result)
+	_refresh_all_slots()
+
+func _get_grid_ingredients() -> Dictionary:
+	var ingredients: Dictionary = {}
+	for item in crafting_data:
+		if item != null:
+			var id = str(item["tile_id"])
+			ingredients[id] = ingredients.get(id, 0) + item["amount"]
+	return ingredients
+
+func _find_matching_recipe() -> Dictionary:
+	var grid = _get_grid_ingredients()
+	for recipe in recipes:
+		var r_ingredients = recipe.get("ingredients", {})
+		if r_ingredients.size() == 0:
+			continue
+		var matches = true
+		for id in r_ingredients:
+			if grid.get(id, 0) < r_ingredients[id]:
+				matches = false
+				break
+		if matches:
+			return recipe
+	return {}
+
+func _consume_crafting_inputs(recipe: Dictionary) -> void:
+	var to_consume = {}
+	for id in recipe["ingredients"]:
+		to_consume[id] = recipe["ingredients"][id]
+
+	for i in range(crafting_data.size()):
+		if crafting_data[i] == null:
+			continue
+		var id = str(crafting_data[i]["tile_id"])
+		if to_consume.has(id) and to_consume[id] > 0:
+			var consume = min(crafting_data[i]["amount"], to_consume[id])
+			crafting_data[i]["amount"] -= consume
+			to_consume[id] -= consume
+			if crafting_data[i]["amount"] <= 0:
+				crafting_data[i] = null
+
+func _check_crafting() -> void:
+	var result_slot = crafting_result.get_child(0)
+	if not (result_slot is InventorySlotUI):
+		return
+	var result = _find_matching_recipe()
+	if result.size() > 0:
+		var info = result["result"]
+		var tex = tile_textures.get(info["id"], null)
+		result_slot.set_slot_data(tex, info["amount"])
+	else:
+		result_slot.set_slot_data(null, 0)
+
+func add_item_to_inventory(tile_id: int, amount: int = 1) -> bool:
 	for item in inventory_data:
-		if item["tile_id"] == tile_id:
-			item["amount"] += amount
-			create_slots() # Refresh UI
-			return true
-			
-	# 2. Jika item belum ada, tambah ke slot baru jika kapasitas belum penuh
-	if inventory_data.size() < total_slots:
-		inventory_data.append({"tile_id": tile_id, "amount": amount})
-		create_slots() # Refresh UI
-		return true
-		
-	print("⚠️ Inventory Penuh!")
-	return false
+		if item != null and item["tile_id"] == tile_id:
+			var can_add = min(amount, MAX_STACK - item["amount"])
+			item["amount"] += can_add
+			amount -= can_add
+			if amount <= 0:
+				if visible:
+					_refresh_all_slots()
+				return true
+
+	while amount > 0:
+		var empty_idx = inventory_data.find(null)
+		if empty_idx == -1:
+			break
+		var stack = min(amount, MAX_STACK)
+		inventory_data[empty_idx] = {"tile_id": tile_id, "amount": stack}
+		amount -= stack
+
+	if visible:
+		_refresh_all_slots()
+	return amount <= 0
