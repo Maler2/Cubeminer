@@ -12,8 +12,18 @@ var item_names: Dictionary = {
 	6: "Emas",
 	7: "Berlian",
 	8: "Kayu",
-	9: "Daun"
+	9: "Daun",
+	10: "Plank",
+	11: "Stick",
+	12: "Wood Pickaxe"
 }
+
+# --- TOOL DATA ---
+var tool_data: Dictionary = {}
+var current_tool_speed: float = 1.0
+
+# --- BLOCK HARDNESS ---
+var block_hardness: Dictionary = {}
 
 # --- REFERENSI BACKGROUND TILEMAP ---
 @export var background_layer: TileMapLayer
@@ -125,7 +135,7 @@ var is_holding_touch: bool = false
 var touch_index: int = -1
 var touch_on_ui: bool = false
 var touch_gesture_cancelled: bool = false
-@export var hold_duration: float = 1.0  # Waktu tahan (detik) untuk menghancurkan blok
+@export var hold_duration: float = 0.3  # Base waktu tahan (detik) untuk menghancurkan blok
 @export var touch_drag_cancel: float = 30.0  # Jarak drag (px) yang membatalkan tahan-hancur
 
 # --- BREAKING ANIMATION OVERLAY ---
@@ -158,6 +168,10 @@ func _ready() -> void:
 	_break_overlay.z_index = 10
 	_break_overlay.visible = false
 	add_child(_break_overlay)
+	
+	# Load tool data
+	_load_tool_data()
+	_load_block_hardness()
 
 	# Ambil Nama & Seed dari Global
 	var world_name: String = Global.current_world_name
@@ -224,14 +238,18 @@ func _process(delta: float) -> void:
 			_stop_pc_mining()
 		else:
 			_pc_mining_timer += delta
-			_update_break_overlay(_pc_mining_grid, _pc_mining_timer)
-			if _pc_mining_timer >= hold_duration:
+			var block_id = get_cell_source_id(_pc_mining_grid) if _pc_mining_source == 0 else (background_layer.get_cell_source_id(_pc_mining_grid) if background_layer else -1)
+			var hardness = _get_block_hardness(block_id)
+			var effective_duration = hold_duration * hardness / current_tool_speed
+			_update_break_overlay(_pc_mining_grid, _pc_mining_timer / effective_duration)
+			if _pc_mining_timer >= effective_duration:
 				block_interaction.hancurkan_blok(_pc_mining_grid)
 				_stop_pc_mining()
 	
 	# Touch mining overlay (show while timer is running, before block breaks)
 	elif touch_index != -1 and not is_holding_touch and not touch_on_ui and not touch_gesture_cancelled:
-		_update_break_overlay(touch_target_grid, touch_timer.wait_time - touch_timer.time_left)
+		var touch_progress = 1.0 - (touch_timer.time_left / touch_timer.wait_time) if touch_timer.wait_time > 0 else 0.0
+		_update_break_overlay(touch_target_grid, touch_progress)
 	
 	# Indikator tile target
 	var target_grid: Vector2i = hovered_grid_pos
@@ -273,6 +291,10 @@ func _input(event: InputEvent) -> void:
 			is_holding_touch = false
 			
 			if not touch_on_ui:
+				var tg_id = get_cell_source_id(touch_target_grid)
+				var tg_bg = background_layer.get_cell_source_id(touch_target_grid) if background_layer else -1
+				var tg_h = _get_block_hardness(tg_id if tg_id != -1 else tg_bg)
+				touch_timer.wait_time = hold_duration * tg_h / current_tool_speed
 				touch_timer.start()
 		else:
 			if event.index != touch_index:
@@ -346,7 +368,7 @@ func _stop_pc_mining() -> void:
 	_break_overlay.visible = false
 
 func _update_break_overlay(grid: Vector2i, progress: float) -> void:
-	var clamped = clampf(progress / hold_duration, 0.0, 1.0)
+	var clamped = clampf(progress, 0.0, 1.0)
 	var frame = mini(int(clamped * _break_frame_count), _break_frame_count - 1)
 	_break_overlay.region_rect = Rect2(frame * _break_frame_size.x, 0, _break_frame_size.x, _break_frame_size.y)
 	_break_overlay.position = map_to_local(grid)
@@ -391,12 +413,62 @@ func _draw() -> void:
 
 func _on_hotbar_slot_changed(_index: int, tile_id: int) -> void:
 	selected_block_id = tile_id
+	current_tool_speed = 1.0
+	var key = str(tile_id)
+	print("[TOOL] slot_changed tile_id=", tile_id, " key='", key, "' has_key=", tool_data.has(key))
+	if tool_data.has(key):
+		current_tool_speed = tool_data[key].get("speed_modifier", 1.0)
+	print("[TOOL] Speed Modifier: ", current_tool_speed)
 
 func connect_hotbar_signal() -> void:
 	var hotbar = get_tree().root.find_child("HotbarUI", true, false)
 	if hotbar:
 		if not hotbar.slot_changed.is_connected(_on_hotbar_slot_changed):
 			hotbar.slot_changed.connect(_on_hotbar_slot_changed)
+		# Reload tool data agar tekstur terdaftar ke HotbarUI yang sudah ready
+		_load_tool_data()
+		# Paksa update speed untuk slot yang sedang terpilih sekarang
+		_on_hotbar_slot_changed(hotbar.current_slot, hotbar.slot_tile_ids[hotbar.current_slot])
+
+func _load_tool_data() -> void:
+	var file = FileAccess.open("res://data/tools.json", FileAccess.READ)
+	if not file:
+		print("[TOOL] tools.json NOT FOUND")
+		return
+	var json = JSON.new()
+	var err = json.parse(file.get_as_text())
+	file.close()
+	if err != OK:
+		print("[TOOL] JSON parse error: ", json.get_error_message())
+		return
+	var json_data = json.data
+	if json_data is Dictionary:
+		tool_data = json_data.get("tools", {})
+	print("[TOOL] Loaded tool_data keys: ", tool_data.keys())
+	# Load tool textures into hotbar
+	var hotbar = get_tree().root.find_child("HotbarUI", true, false)
+	if hotbar:
+		for id_str in tool_data:
+			var tool_info = tool_data[id_str]
+			var tex_path = tool_info.get("texture_path", "")
+			if tex_path != "" and ResourceLoader.exists(tex_path):
+				var tex = load(tex_path)
+				if hotbar.tile_textures != null:
+					hotbar.tile_textures[id_str.to_int()] = tex
+
+func _load_block_hardness() -> void:
+	var file = FileAccess.open("res://data/block_hardness.json", FileAccess.READ)
+	if not file:
+		return
+	var json = JSON.new()
+	var err = json.parse(file.get_as_text())
+	file.close()
+	if err != OK:
+		return
+	block_hardness = json.data
+
+func _get_block_hardness(tile_id: int) -> float:
+	return block_hardness.get(str(tile_id), {}).get("hardness", 1.0)
 
 # --- SIMPAN PERUBAHAN BLOK KE DISK (PER CHUNK 16 x TINGGI PENUH) ---
 func save_blocks_now() -> void:

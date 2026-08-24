@@ -12,7 +12,8 @@ class_name InventoryUI
 	8: preload("res://assets/block/wood_block.png"),
 	9: preload("res://assets/block/leave_block.png"),
 	10: preload("res://assets/block/plank.png"),
-	11: preload("res://assets/item/stick-item.png")
+	11: preload("res://assets/item/stick-item.png"),
+	12: preload("res://assets/item/tool/wood-pickaxe-item.png")
 }
 
 const INVENTORY_SIZE: int = 14
@@ -415,18 +416,26 @@ func _get_grid_ingredients() -> Dictionary:
 
 func _find_matching_recipe() -> Dictionary:
 	var grid = _get_grid_ingredients()
+	var best: Dictionary = {}
+	var best_total: int = 0
 	for recipe in recipes:
 		var r_ingredients = recipe.get("ingredients", {})
 		if r_ingredients.size() == 0:
 			continue
+		if r_ingredients.size() > grid.size():
+			continue
 		var matches = true
+		var total: int = 0
 		for id in r_ingredients:
-			if grid.get(id, 0) < r_ingredients[id]:
+			var need: int = r_ingredients[id]
+			total += need
+			if grid.get(id, 0) < need:
 				matches = false
 				break
-		if matches:
-			return recipe
-	return {}
+		if matches and total > best_total:
+			best = recipe
+			best_total = total
+	return best
 
 func _consume_crafting_inputs(recipe: Dictionary) -> void:
 	var to_consume = {}

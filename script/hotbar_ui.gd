@@ -15,7 +15,8 @@ const MAX_STACK: int = 128
 	8: preload("res://assets/block/wood_block.png"),
 	9: preload("res://assets/block/leave_block.png"),
 	10: preload("res://assets/block/plank.png"),
-	11: preload("res://assets/item/stick-item.png")
+	11: preload("res://assets/item/stick-item.png"),
+	12: preload("res://assets/item/tool/wood-pickaxe-item.png")
 }
 
 @export var slot_tile_ids: Array[int] = [-1, -1, -1, -1, -1, -1, -1]
