@@ -9,6 +9,7 @@ func setup(tilemap_ref: TileMapLayer) -> void:
 
 func pasang_blok(grid_pos: Vector2i = Vector2i.MIN) -> bool:
 	if not tilemap.player: return false
+	if not tilemap.tile_set or not tilemap.tile_set.has_source(tilemap.selected_block_id): return false
 	if grid_pos == Vector2i.MIN:
 		grid_pos = tilemap.local_to_map(tilemap.to_local(tilemap.get_global_mouse_position()))
 		
