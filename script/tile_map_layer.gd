@@ -125,8 +125,20 @@ var is_holding_touch: bool = false
 var touch_index: int = -1
 var touch_on_ui: bool = false
 var touch_gesture_cancelled: bool = false
-@export var hold_duration: float = 0.25  # Waktu tahan (detik) untuk menghancurkan blok
+@export var hold_duration: float = 1.0  # Waktu tahan (detik) untuk menghancurkan blok
 @export var touch_drag_cancel: float = 30.0  # Jarak drag (px) yang membatalkan tahan-hancur
+
+# --- BREAKING ANIMATION OVERLAY ---
+var _break_overlay: Sprite2D
+var _break_texture: Texture2D
+var _break_frame_count: int = 7
+var _break_frame_size: Vector2 = Vector2(16, 16)
+
+# --- PC MINING STATE ---
+var _pc_mining: bool = false
+var _pc_mining_grid: Vector2i = Vector2i.MIN
+var _pc_mining_timer: float = 0.0
+var _pc_mining_source: int = -1  # 0=fg, 1=bg
 
 func _ready() -> void:
 	# Inisialisasi Timer Hold
@@ -135,6 +147,17 @@ func _ready() -> void:
 	touch_timer.wait_time = hold_duration
 	touch_timer.timeout.connect(_on_touch_hold_timeout)
 	add_child(touch_timer)
+	
+	# Breaking animation overlay
+	_break_texture = load("res://assets/animation/breaking-animation.png")
+	_break_overlay = Sprite2D.new()
+	_break_overlay.texture = _break_texture
+	_break_overlay.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_break_overlay.region_enabled = true
+	_break_overlay.region_rect = Rect2(0, 0, _break_frame_size.x, _break_frame_size.y)
+	_break_overlay.z_index = 10
+	_break_overlay.visible = false
+	add_child(_break_overlay)
 
 	# Ambil Nama & Seed dari Global
 	var world_name: String = Global.current_world_name
@@ -182,26 +205,43 @@ func _ready() -> void:
 func inisialisasi_dunia() -> void:
 	world_generator.inisialisasi_dunia()
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if not player: return
 	
 	# Autosave berkala (5 menit) kalau ada perubahan blok
 	if blocks_dirty:
-		autosave_timer += _delta
+		autosave_timer += delta
 		if autosave_timer >= autosave_interval:
 			autosave_timer = 0.0
 			save_blocks_now()
 	
-	# Indikator tile target: di HP mengikuti sentuhan, di PC mengikuti mouse.
-	# min_y_limit - 1 dipakai sebagai nilai "sembunyi" (di luar batas gambar).
+	# PC mining timer
+	if _pc_mining:
+		var current_grid = local_to_map(to_local(get_global_mouse_position()))
+		var fg = get_cell_source_id(_pc_mining_grid)
+		var bg = background_layer.get_cell_source_id(_pc_mining_grid) if background_layer else -1
+		if (_pc_mining_source == 0 and fg == -1) or (_pc_mining_source == 1 and bg == -1) or current_grid != _pc_mining_grid:
+			_stop_pc_mining()
+		else:
+			_pc_mining_timer += delta
+			_update_break_overlay(_pc_mining_grid, _pc_mining_timer)
+			if _pc_mining_timer >= hold_duration:
+				block_interaction.hancurkan_blok(_pc_mining_grid)
+				_stop_pc_mining()
+	
+	# Touch mining overlay (show while timer is running, before block breaks)
+	elif touch_index != -1 and not is_holding_touch and not touch_on_ui and not touch_gesture_cancelled:
+		_update_break_overlay(touch_target_grid, touch_timer.wait_time - touch_timer.time_left)
+	
+	# Indikator tile target
 	var target_grid: Vector2i = hovered_grid_pos
 	if touch_index != -1:
 		if touch_on_ui or touch_gesture_cancelled:
-			target_grid.y = min_y_limit - 1  # di atas tombol UI / drag batal → sembunyikan
+			target_grid.y = min_y_limit - 1
 		else:
 			target_grid = touch_target_grid
 	elif OS.has_feature("mobile"):
-		target_grid.y = min_y_limit - 1  # HP tanpa sentuhan = tidak ada kursor
+		target_grid.y = min_y_limit - 1
 	else:
 		target_grid = local_to_map(to_local(get_global_mouse_position()))
 	if target_grid != hovered_grid_pos:
@@ -238,6 +278,7 @@ func _input(event: InputEvent) -> void:
 			if event.index != touch_index:
 				return
 			touch_timer.stop()
+			_break_overlay.visible = false
 			# Pasang blok HANYA kalau ini gesture baru (tidak ada tahan-hancur
 			# sebelumnya) dan tidak dibatalkan oleh drag/jatuh di atas tombol UI.
 			if not is_holding_touch and not touch_on_ui and not touch_gesture_cancelled:
@@ -258,14 +299,23 @@ func _input(event: InputEvent) -> void:
 
 	# 🖱️ INPUT MOUSE PC (di HP event mouse hanyalah emulasi dari sentuhan —
 	# sudah dimatikan lewat project.godot; guard ini untuk pengaman ganda)
-	elif event is InputEventMouseButton and event.pressed:
+	elif event is InputEventMouseButton:
 		if OS.has_feature("mobile"):
 			return
-		var mouse_grid = local_to_map(to_local(get_global_mouse_position()))
-		if event.button_index == MOUSE_BUTTON_RIGHT:
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			var mouse_grid = local_to_map(to_local(get_global_mouse_position()))
+			var fg = get_cell_source_id(mouse_grid)
+			var bg = background_layer.get_cell_source_id(mouse_grid) if background_layer else -1
+			if fg != -1 or bg != -1:
+				_pc_mining = true
+				_pc_mining_grid = mouse_grid
+				_pc_mining_timer = 0.0
+				_pc_mining_source = 0 if fg != -1 else 1
+		elif not event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			_stop_pc_mining()
+		elif event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+			var mouse_grid = local_to_map(to_local(get_global_mouse_position()))
 			block_interaction.pasang_blok(mouse_grid)
-		elif event.button_index == MOUSE_BUTTON_LEFT:
-			block_interaction.hancurkan_blok(mouse_grid)
 
 func _is_point_over_ui(pos: Vector2) -> bool:
 	# Berjalan dari root, cari Control terlihat yang rect-nya memuat posisi.
@@ -288,6 +338,21 @@ func _on_touch_hold_timeout() -> void:
 		return
 	is_holding_touch = true
 	block_interaction.hancurkan_blok(touch_target_grid)
+	_break_overlay.visible = false
+
+func _stop_pc_mining() -> void:
+	_pc_mining = false
+	_pc_mining_timer = 0.0
+	_break_overlay.visible = false
+
+func _update_break_overlay(grid: Vector2i, progress: float) -> void:
+	var clamped = clampf(progress / hold_duration, 0.0, 1.0)
+	var frame = mini(int(clamped * _break_frame_count), _break_frame_count - 1)
+	_break_overlay.region_rect = Rect2(frame * _break_frame_size.x, 0, _break_frame_size.x, _break_frame_size.y)
+	_break_overlay.position = map_to_local(grid)
+	_break_overlay.visible = true
+	if clamped >= 1.0:
+		_break_overlay.visible = false
 
 # --- FUNGSI PEMBANTU UNTUK KOMPONEN ---
 func pasang_blok(grid_pos: Vector2i = Vector2i.MIN) -> void:
