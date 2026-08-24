@@ -2,7 +2,7 @@
   "tools": {
 	"12": {
 	  "name": "Wood Pickaxe",
-	  "speed_modifier": 1.25,
+	  "speed_modifier": 1.5,
 	  "texture_path": "res://assets/item/tool/wood-pickaxe-item.png"
 	}
   }
