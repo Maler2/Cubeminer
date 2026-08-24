@@ -6,8 +6,8 @@
 	  "result": {"id": 10, "amount": 4}
 	},
 	{
-	  "ingredients": {"2": 4},
-	  "result": {"id": 1, "amount": 1}
+	  "ingredients": {"10": 1},
+	  "result": {"id": 11, "amount": 2}
 	}
   ]
 }
