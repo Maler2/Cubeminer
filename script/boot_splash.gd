@@ -64,7 +64,9 @@ func _mulai_proses_splash() -> void:
 
 func _update_progress(val: float, message: String) -> void:
 	if progress_bar:
-		progress_bar.value = val
+		var tween = create_tween()
+		tween.tween_property(progress_bar, "value", val, 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+		await tween.finished
 	print("[%d%%] [%.3fs] %s" % [int(val), _get_elapsed_time(), message])
 
 func _get_elapsed_time() -> float:
