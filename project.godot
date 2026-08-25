@@ -20,10 +20,6 @@ boot_splash/show_image=false
 config/icon="uid://cstmt74262rue"
 config/windows_native_icon="res://assets/appicon/icon-app.ico"
 
-[audio]
-
-buses/default_bus_layout="uid://dfab28eqg82me"
-
 [autoload]
 
 Global="*uid://bkxv8uinqpyhp"
