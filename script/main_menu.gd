@@ -16,6 +16,7 @@ extends Control
 @export var reset_x: float = 2048.0  # Koordinat paling kanan (titik loop)
 
 var outdated_popup_instance: CanvasLayer
+var _http_version: HTTPRequest
 
 func _ready() -> void:
 	get_window().content_scale_factor = 1.0
@@ -69,7 +70,46 @@ func _on_quit_button_pressed() -> void:
 	get_tree().quit()
 
 func _check_outdated() -> void:
-	if not Global.is_outdated:
+	var current_ver = ""
+	for path in ["user://versionid.txt", "res://versionid.txt"]:
+		var file = FileAccess.open(path, FileAccess.READ)
+		if file:
+			current_ver = file.get_as_text().strip_edges()
+			file.close()
+			if current_ver != "":
+				break
+
+	if current_ver == "":
+		return
+
+	_http_version = HTTPRequest.new()
+	add_child(_http_version)
+	_http_version.request_completed.connect(_on_version_check_completed.bind(current_ver))
+	var url = "https://api.github.com/repos/Maler2/Cubeminer/releases/latest?_t=" + str(Time.get_ticks_msec())
+	var headers = [
+		"User-Agent: Cubeminer",
+		"Cache-Control: no-cache, no-store, must-revalidate"
+	]
+	_http_version.request(url, headers)
+
+func _on_version_check_completed(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray, current_ver: String) -> void:
+	if _http_version:
+		_http_version.queue_free()
+		_http_version = null
+
+	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		return
+
+	var json = JSON.new()
+	if json.parse(body.get_string_from_utf8()) != OK:
+		return
+
+	var data = json.data
+	if not data is Dictionary:
+		return
+
+	var latest_version: String = data.get("tag_name", "").trim_prefix("v")
+	if latest_version == "" or latest_version == current_ver:
 		return
 
 	var packed = load("res://scene/out_dated_popup.tscn") as PackedScene
@@ -78,11 +118,4 @@ func _check_outdated() -> void:
 
 	outdated_popup_instance = packed.instantiate()
 	add_child(outdated_popup_instance)
-
-	var current_ver = ""
-	var file = FileAccess.open("res://versionid.txt", FileAccess.READ)
-	if file:
-		current_ver = file.get_as_text().strip_edges()
-		file.close()
-
-	outdated_popup_instance.show_popup(current_ver, Global.latest_version)
+	outdated_popup_instance.show_popup(current_ver, latest_version)
