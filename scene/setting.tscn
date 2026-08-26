@@ -25,8 +25,8 @@ color = Color(0, 0.32156864, 0, 1)
 layout_mode = 0
 offset_left = 16.0
 offset_top = 16.0
-offset_right = 88.0
-offset_bottom = 114.0
+offset_right = 208.0
+offset_bottom = 182.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="optionMargin" unique_id=113378451]
 layout_mode = 2
@@ -84,7 +84,6 @@ color = Color(0, 0, 0, 0.40392157)
 
 [node name="VideoPage" type="VBoxContainer" parent="ContentMargin/ContentPanel" unique_id=1560013910]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
@@ -107,6 +106,7 @@ vertical_alignment = 1
 [node name="SwitchFPSButton" type="Button" parent="ContentMargin/ContentPanel/VideoPage" unique_id=1314541142]
 unique_name_in_owner = true
 layout_mode = 2
+tooltip_text = "Show Fps (self explanatory right?) "
 mouse_default_cursor_shape = 2
 theme = ExtResource("2_ahr6q")
 toggle_mode = true
@@ -128,6 +128,7 @@ text = "ON"
 
 [node name="AudioPage" type="VBoxContainer" parent="ContentMargin/ContentPanel" unique_id=936971158]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5

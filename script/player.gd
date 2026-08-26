@@ -21,15 +21,15 @@ var is_falling: bool = false
 @export var hotbar: Node # Tarik Node Hotbar kamu ke kolom ini di Inspector
 @onready var ui = get_node_or_null("../UILayer/UI")
 @onready var input_layer = get_node_or_null("../InputLayer") # Referensi ke InputLayer
-@onready var anim_player = $AnimationPlayer
-@onready var body_container = $Body # Node penampung semua part sprite tubuh
+@onready var anim_player: AnimationPlayer = $AnimationPlayer
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var item_held: Node2D = $ItemHeld
+@onready var held_item_sprite: Sprite2D = $ItemHeld # Atau $ItemHeld/Sprite2D jika berjenjang
 
 # --- AUDIO REFERENCES ---
 @onready var sfx_player: AudioStreamPlayer = $FootstepAudioPlayer
 @onready var jump_sfx_player: AudioStreamPlayer = $JumpAudioPlayer # Node Audio Lompat
 @onready var double_jump_particles: GPUParticles2D = $DoubleJumpParticles
-
-@onready var held_item_sprite: Sprite2D = $Body/RightArm/ItemHeldSprite # Sesuaikan path Node tanganmu
 
 # Variabel untuk input dari Tombol UI HP
 var ui_move_direction = 0.0
@@ -42,7 +42,6 @@ var footstep_timer: float = 0.0
 var air_jumps_used: int = 0 # Menghitung lompatan udara yang sudah dipakai sebelum mendarat
 
 # --- VARIABEL EFEK FLIP ---
-var flip_tween: Tween
 var is_facing_right: bool = true # Menyimpan status arah karakter saat ini
 
 func _ready() -> void:
@@ -106,12 +105,13 @@ func update_held_item(new_texture: Texture2D) -> void:
 	if not held_item_sprite:
 		return
 		
-	if new_texture:
-		held_item_sprite.texture = new_texture
-		held_item_sprite.visible = true
-	else:
-		held_item_sprite.texture = null
-		held_item_sprite.visible = false
+	if held_item_sprite is Sprite2D:
+		if new_texture:
+			held_item_sprite.texture = new_texture
+			held_item_sprite.visible = true
+		else:
+			held_item_sprite.texture = null
+			held_item_sprite.visible = false
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("drop"):
@@ -214,13 +214,13 @@ func _physics_process(delta: float) -> void:
 		final_dir = ui_move_direction
 	velocity.x = final_dir * current_speed
 
-	# 5. Membalikkan Arah Visual dengan Efek Smooth Flip (Tween)
+	# 5. Flip Arah Character & Held Item
 	if final_dir > 0 and not is_facing_right:
-		_apply_smooth_flip(true)
+		_apply_flip(true)
 	elif final_dir < 0 and is_facing_right:
-		_apply_smooth_flip(false)
+		_apply_flip(false)
 
-	# 6. Lompat (auto-jump saat ditahan di tanah + double jump dengan tekan baru di udara)
+	# 6. Lompat
 	if Input.is_action_pressed("jump") and is_on_floor():
 		jump()
 	elif Input.is_action_just_pressed("jump") and not is_on_floor() and air_jumps_used < MAX_AIR_JUMPS:
@@ -238,42 +238,49 @@ func _physics_process(delta: float) -> void:
 		queue_redraw()
 
 	# 7. PEMICU ANIMASI
-	var blend_time = 0.3
+	var target_anim = "idle"
 
 	if is_on_floor():
 		if final_dir != 0:
 			if is_running:
-				anim_player.speed_scale = 2.5
+				anim_player.speed_scale = 1.5
 			else:
 				anim_player.speed_scale = 1.0
-			
-			if anim_player.current_animation != "walk":
-				anim_player.play("walk", blend_time)
+			target_anim = "walk"
 		else:
 			anim_player.speed_scale = 1.0
-			if anim_player.current_animation != "idle":
-				anim_player.play("idle", blend_time)
+			target_anim = "idle"
 	else:
 		anim_player.speed_scale = 1.0
 		if velocity.y > 0:
-			if anim_player.current_animation != "fall":
-				anim_player.play("fall", blend_time)
+			target_anim = "fall"
 		else:
-			if anim_player.current_animation != "jump":
-				anim_player.play("jump", blend_time)
+			target_anim = "jump"
 
-# --- FUNGSI EFEK SMOOTH FLIP ---
-func _apply_smooth_flip(facing_right: bool) -> void:
+	if not anim_player.has_animation(target_anim):
+		target_anim = "idle"
+
+	# Panggil dengan 0.0 agar transisi frame instan tanpa delay 1 frame
+	if anim_player.current_animation != target_anim:
+		anim_player.play(target_anim, 0.0)
+
+# --- FUNGSI EFEK FLIP SPRITE & ITEM ---
+func _apply_flip(facing_right: bool) -> void:
 	is_facing_right = facing_right
-	var target_scale_x = 1.0 if facing_right else -1.0
 	
-	if flip_tween and flip_tween.is_running():
-		flip_tween.kill()
+	# Flip AnimatedSprite2D Karakter
+	if animated_sprite:
+		animated_sprite.flip_h = not facing_right
+
+	# Adjust Posisi dan Flip Gambar ItemHeld
+	if item_held:
+		# Pindahkan offset X item sesuai arah hadap
+		var offset_x = abs(item_held.position.x)
+		item_held.position.x = offset_x if facing_right else -offset_x
 		
-	flip_tween = create_tween()
-	flip_tween.tween_property(body_container, "scale:x", target_scale_x, 0.1)\
-		.set_trans(Tween.TRANS_SINE)\
-		.set_ease(Tween.EASE_OUT)
+		# Gunakan flip_h agar bentuk sprite item TIDAK tertarik/mulur (stretching)
+		if item_held is Sprite2D:
+			item_held.flip_h = not facing_right
 
 # --- FUNGSI MENGHITUNG FALL DAMAGE ---
 func _apply_fall_damage(distance: float) -> void:
@@ -291,7 +298,7 @@ func set_running(running: bool):
 	is_ui_running = running
 
 func jump():
-	# Lompat dari tanah (tidak memakai slot lompatan udara)
+	# Lompat dari tanah
 	if is_on_floor():
 		velocity.y = JUMP_VELOCITY
 		
@@ -300,22 +307,19 @@ func jump():
 			jump_sfx_player.play()
 		return
 		
-	# Double jump di udara (sekali per waktu terbang, naik maupun jatuh)
+	# Double jump di udara
 	if air_jumps_used >= MAX_AIR_JUMPS:
 		return
 		
 	air_jumps_used += 1
 	velocity.y = JUMP_VELOCITY
 	
-	# ✨ Emit partikel double jump
-	double_jump_particles.restart()
+	if double_jump_particles:
+		double_jump_particles.restart()
 	
-	# Reset pengukuran jarak jatuh → fall damage dihitung dari double jump,
-	# bukan dari jatuh sebelumnya (mis. terjun dari tebing lalu double jump)
 	start_fall_y = global_position.y
 	is_falling = true
 	
-	# 🔊 Putar SFX khusus double jump
 	if jump_sfx_player:
 		jump_sfx_player.pitch_scale = randf_range(0.8, 0.9)
 		jump_sfx_player.play()

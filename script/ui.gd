@@ -1,51 +1,127 @@
 extends Control
 
-# Slot untuk drag & drop 3 gambar buatanmu di Inspector
-@export var heart_full: Texture2D
-@export var heart_half: Texture2D
-@export var heart_empty: Texture2D
+# Slot Export dengan Default Preload
+@export var heart_full: Texture2D = preload("res://assets/icon/heart-full-icon.png")
+@export var heart_half: Texture2D = preload("res://assets/icon/heart-half-icon.png")
+@export var heart_empty: Texture2D = preload("res://assets/icon/heart-lose-icon.png")
 
+@export var hunger_full: Texture2D = preload("res://assets/icon/hunger-full-icon.png")
+@export var hunger_half: Texture2D = preload("res://assets/icon/hunger-half-icon.png")
+@export var hunger_empty: Texture2D = preload("res://assets/icon/hunger-lose-icon.png")
+
+# Node Containers
 @onready var hearts_container: HBoxContainer = $HeartsContainer
+@onready var hunger_container: HBoxContainer = $HungerContainer
 
-# Data HP disimpan lokal di sini (tanpa Autoload)
-var max_hp: int = 6       # Asumsi: 1 Hati = 2 HP (6 HP = 3 Hati)
-var current_hp: int = 6
+# Menggunakan Node HungerTimer dari Scene
+@onready var hunger_timer: Timer = $HungerTimer
+
+# Data HP & Hunger
+var max_hp: float = 6.0
+var current_hp: float = 6.0
+
+var max_hunger: float = 10.0
+var current_hunger: float = 10.0
 
 func _ready() -> void:
 	update_hearts()
-
-func take_damage(amount: int) -> void:
-	var hp_sebelumnya = current_hp
-	current_hp -= amount
-	current_hp = clamp(current_hp, 0, max_hp)
+	update_hunger()
 	
-	# --- LOG PERUBAHAN HP ---
-	print("[UI LOG] HP Berkurang: -", amount, " | HP Sebelumnya: ", hp_sebelumnya, " -> HP Sekarang: ", current_hp, "/", max_hp)
+	# === SETTING TIMER DARI NODE SCENE ===
+	# hunger_timer.wait_time = 0.2  # TES: Set 0.2 detik agar cepat!
+	hunger_timer.autostart = true
+	hunger_timer.one_shot = false
+	
+	# Hubungkan sinyal jika belum disambungkan dari Editor
+	if not hunger_timer.timeout.is_connected(_on_hunger_timer_timeout):
+		hunger_timer.timeout.connect(_on_hunger_timer_timeout)
+		
+	hunger_timer.start()
+
+func _on_hunger_timer_timeout() -> void:
+	# Mengurangi 0.2 hunger per tick
+	consume_hunger(0.2)
+
+# ==================== HP SYSTEM ====================
+func take_damage(amount: float) -> void:
+	var hp_sebelumnya = current_hp
+	current_hp = clamp(current_hp - amount, 0.0, max_hp)
+	
+	print("[UI LOG] HP Berkurang: -%.2f | HP: %.2f -> %.2f / %.2f" % [amount, hp_sebelumnya, current_hp, max_hp])
 	
 	update_hearts()
 	
-	# Cek jika HP habis
 	if current_hp <= 0:
-		print("[GAME OVER] Pemain telah kehabisan HP!")
+		print("[GAME OVER] Pemain kehabisan HP!")
 
 func update_hearts() -> void:
-	# (Kode pembaruan gambar hati kamu tetap sama)
 	for child in hearts_container.get_children():
 		child.queue_free()
-	@warning_ignore("integer_division")
-	var total_hearts = max_hp / 2
+		
+	var total_hearts = int(max_hp / 2.0)
 	
 	for i in range(total_hearts):
 		var heart_rect = TextureRect.new()
 		heart_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		heart_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		
-		var heart_value = (i + 1) * 2
+		heart_rect.custom_minimum_size = Vector2(16, 16)
+		heart_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		heart_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		
+		var heart_value = (i + 1) * 2.0
 		
 		if current_hp >= heart_value:
 			heart_rect.texture = heart_full
-		elif current_hp == heart_value - 1:
+		elif current_hp > heart_value - 2.0:
 			heart_rect.texture = heart_half
 		else:
 			heart_rect.texture = heart_empty
 			
 		hearts_container.add_child(heart_rect)
+
+# ==================== HUNGER SYSTEM ====================
+func consume_hunger(amount: float) -> void:
+	var hunger_sebelumnya = current_hunger
+	current_hunger = clamp(current_hunger - amount, 0.0, max_hunger)
+	
+	print("[UI LOG] Hunger Berkurang: -%.2f | Hunger: %.2f -> %.2f / %.2f" % [amount, hunger_sebelumnya, current_hunger, max_hunger])
+	
+	update_hunger()
+	
+	if current_hunger <= 0:
+		print("[WARNING] Pemain kelaparan!")
+
+func eat_food(amount: float) -> void:
+	var hunger_sebelumnya = current_hunger
+	current_hunger = clamp(current_hunger + amount, 0.0, max_hunger)
+	
+	print("[UI LOG] Makan: +%.2f | Hunger: %.2f -> %.2f / %.2f" % [amount, hunger_sebelumnya, current_hunger, max_hunger])
+	
+	update_hunger()
+
+func update_hunger() -> void:
+	for child in hunger_container.get_children():
+		child.queue_free()
+		
+	var total_hunger_icons = int(max_hunger / 2.0)
+	
+	for i in range(total_hunger_icons):
+		var hunger_rect = TextureRect.new()
+		hunger_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		hunger_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		
+		hunger_rect.custom_minimum_size = Vector2(16, 16)
+		hunger_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		hunger_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		
+		var hunger_value = (i + 1) * 2.0
+		
+		if current_hunger >= hunger_value:
+			hunger_rect.texture = hunger_full
+		elif current_hunger > hunger_value - 2.0:
+			hunger_rect.texture = hunger_half
+		else:
+			hunger_rect.texture = hunger_empty
+			
+		hunger_container.add_child(hunger_rect)

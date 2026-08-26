@@ -97,6 +97,17 @@ texture_margin_top = 5.0
 texture_margin_right = 5.0
 texture_margin_bottom = 5.0
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4kxuq"]
+texture = ExtResource("1_tkgft")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+expand_margin_left = 8.0
+expand_margin_top = 2.0
+expand_margin_right = 8.0
+expand_margin_bottom = 2.0
+
 [resource]
 Button/constants/outline_size = 4
 Button/styles/disabled = SubResource("StyleBoxTexture_q4ih2")
@@ -116,3 +127,4 @@ ProgressBar/styles/background = SubResource("StyleBoxTexture_ahr6q")
 ProgressBar/styles/fill = SubResource("StyleBoxTexture_d42ij")
 TextEdit/constants/outline_size = 4
 TextEdit/styles/normal = SubResource("StyleBoxTexture_ytdjg")
+TooltipLabel/styles/normal = SubResource("StyleBoxTexture_4kxuq")

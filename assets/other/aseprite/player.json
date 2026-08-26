@@ -46,6 +46,22 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 },
     "sourceSize": { "w": 32, "h": 32 },
     "duration": 150
+   },
+   "player #fall 0.ase": {
+    "frame": { "x": 0, "y": 64, "w": 32, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 },
+    "sourceSize": { "w": 32, "h": 32 },
+    "duration": 150
+   },
+   "player #fall 1.ase": {
+    "frame": { "x": 32, "y": 64, "w": 32, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 },
+    "sourceSize": { "w": 32, "h": 32 },
+    "duration": 150
    }
  },
  "meta": {
@@ -53,18 +69,19 @@
   "version": "1.3.18.2-dev",
   "image": "player-sprite-sheet.png",
   "format": "RGBA8888",
-  "size": { "w": 128, "h": 64 },
+  "size": { "w": 128, "h": 96 },
   "scale": "1",
   "frameTags": [
    { "name": "Idle", "from": 0, "to": 1, "direction": "forward", "color": "#0000a5ff" },
-   { "name": "walk", "from": 2, "to": 5, "direction": "forward", "color": "#000000ff" }
+   { "name": "walk", "from": 2, "to": 5, "direction": "forward", "color": "#000000ff" },
+   { "name": "fall", "from": 6, "to": 7, "direction": "forward", "color": "#000000ff" }
   ],
   "layers": [
    { "name": "left leg", "opacity": 255, "blendMode": "normal" },
    { "name": "right leg", "opacity": 255, "blendMode": "normal" },
    { "name": "left arm", "opacity": 255, "blendMode": "normal" },
    { "name": "body", "opacity": 255, "blendMode": "normal" },
-   { "name": "right arm", "opacity": 255, "blendMode": "normal" },
+   { "name": "right arm", "opacity": 255, "blendMode": "normal", "cels": [{ "frame": 6, "zIndex": 1 }, { "frame": 7, "zIndex": 1 }] },
    { "name": "head", "opacity": 255, "blendMode": "normal" }
   ],
   "slices": [

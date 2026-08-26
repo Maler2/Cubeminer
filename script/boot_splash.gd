@@ -24,6 +24,9 @@ func _ready() -> void:
 	if progress_bar:
 		progress_bar.value = 0
 		progress_bar.visible = true
+
+	Global.cursor_normal = true
+	Global.cursor_select = true
 		
 	_mulai_proses_splash()
 

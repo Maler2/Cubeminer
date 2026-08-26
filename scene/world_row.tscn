@@ -8,10 +8,12 @@
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
 theme = ExtResource("1_64kjl")
 
 [node name="DeleteBtn" type="Button" parent="." unique_id=287635100]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
+mouse_default_cursor_shape = 2
 theme = ExtResource("1_64kjl")
 text = "X"
