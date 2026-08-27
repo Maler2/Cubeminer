@@ -28,7 +28,6 @@ func _ready() -> void:
 	update_hunger()
 	
 	# === SETTING TIMER DARI NODE SCENE ===
-	# hunger_timer.wait_time = 0.2  # TES: Set 0.2 detik agar cepat!
 	hunger_timer.autostart = true
 	hunger_timer.one_shot = false
 	
@@ -55,6 +54,9 @@ func take_damage(amount: float) -> void:
 		print("[GAME OVER] Pemain kehabisan HP!")
 
 func update_hearts() -> void:
+	if not hearts_container:
+		return
+
 	for child in hearts_container.get_children():
 		child.queue_free()
 		
@@ -69,11 +71,12 @@ func update_hearts() -> void:
 		heart_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		heart_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		
-		var heart_value = (i + 1) * 2.0
+		var heart_value = clamp(current_hp - (i * 2.0), 0.0, 2.0)
 		
-		if current_hp >= heart_value:
+		# LOGIKA: > 1.0 = FULL, > 0.0 = HALF, <= 0.0 = EMPTY
+		if heart_value > 1.0:
 			heart_rect.texture = heart_full
-		elif current_hp > heart_value - 2.0:
+		elif heart_value > 0.0:
 			heart_rect.texture = heart_half
 		else:
 			heart_rect.texture = heart_empty
@@ -101,6 +104,9 @@ func eat_food(amount: float) -> void:
 	update_hunger()
 
 func update_hunger() -> void:
+	if not hunger_container:
+		return
+
 	for child in hunger_container.get_children():
 		child.queue_free()
 		
@@ -115,11 +121,13 @@ func update_hunger() -> void:
 		hunger_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		hunger_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		
-		var hunger_value = (i + 1) * 2.0
+		# Hitung sisa poin di slot ke-i (0.0 sampai 2.0)
+		var hunger_value = clamp(current_hunger - (i * 2.0), 0.0, 2.0)
 		
-		if current_hunger >= hunger_value:
+		# LOGIKA: 1 POINT = HALF (1 SLOT UTUH = 2 POINT)
+		if hunger_value > 1.0:
 			hunger_rect.texture = hunger_full
-		elif current_hunger > hunger_value - 2.0:
+		elif hunger_value > 0.0:
 			hunger_rect.texture = hunger_half
 		else:
 			hunger_rect.texture = hunger_empty

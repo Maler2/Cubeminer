@@ -23,8 +23,9 @@ var is_falling: bool = false
 @onready var input_layer = get_node_or_null("../InputLayer") # Referensi ke InputLayer
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
-@onready var item_held: Node2D = $ItemHeld
-@onready var held_item_sprite: Sprite2D = $ItemHeld # Atau $ItemHeld/Sprite2D jika berjenjang
+
+# Gunakan Sprite2D langsung untuk ItemHeld
+@onready var held_item_sprite: Sprite2D = $ItemHeld
 
 # --- AUDIO REFERENCES ---
 @onready var sfx_player: AudioStreamPlayer = $FootstepAudioPlayer
@@ -46,6 +47,10 @@ var is_facing_right: bool = true # Menyimpan status arah karakter saat ini
 
 func _ready() -> void:
 	add_to_group("players")
+	
+	# Simpan posisi awal ItemHeld untuk flip reference
+	if held_item_sprite:
+		_item_held_base_pos = held_item_sprite.position
 	
 	# Hubungkan tombol InputLayer ke fungsi Player secara otomatis jika kodenya ada
 	_setup_mobile_controls()
@@ -101,17 +106,25 @@ func _on_hotbar_slot_changed(_slot_index: int, tile_id: int) -> void:
 		var new_tex = hotbar.tile_textures[tile_id]
 		update_held_item(new_tex)
 
+# --- FUNGSI UPDATE ITEM HELD ---
 func update_held_item(new_texture: Texture2D) -> void:
 	if not held_item_sprite:
 		return
 		
-	if held_item_sprite is Sprite2D:
-		if new_texture:
-			held_item_sprite.texture = new_texture
-			held_item_sprite.visible = true
-		else:
-			held_item_sprite.texture = null
-			held_item_sprite.visible = false
+	if new_texture:
+		held_item_sprite.texture = new_texture
+		held_item_sprite.visible = true
+		
+		# Skala item di tangan agar sesuai dengan proporsi karakter
+		var base_scale = Vector2(0.25, 0.25)
+		var default_tex_size = Vector2(16.0, 16.0)
+		var tex_size = new_texture.get_size()
+		
+		if tex_size.x > 0 and tex_size.y > 0:
+			held_item_sprite.scale = base_scale * (default_tex_size / tex_size)
+	else:
+		held_item_sprite.texture = null
+		held_item_sprite.visible = false
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("drop"):
@@ -260,27 +273,21 @@ func _physics_process(delta: float) -> void:
 	if not anim_player.has_animation(target_anim):
 		target_anim = "idle"
 
-	# Panggil dengan 0.0 agar transisi frame instan tanpa delay 1 frame
 	if anim_player.current_animation != target_anim:
 		anim_player.play(target_anim, 0.0)
 
-# --- FUNGSI EFEK FLIP SPRITE & ITEM ---
+# --- FUNGSI FLIP SPRITE & ITEM ---
+var _item_held_base_pos: Vector2 = Vector2.ZERO
+
 func _apply_flip(facing_right: bool) -> void:
 	is_facing_right = facing_right
 	
-	# Flip AnimatedSprite2D Karakter
 	if animated_sprite:
 		animated_sprite.flip_h = not facing_right
 
-	# Adjust Posisi dan Flip Gambar ItemHeld
-	if item_held:
-		# Pindahkan offset X item sesuai arah hadap
-		var offset_x = abs(item_held.position.x)
-		item_held.position.x = offset_x if facing_right else -offset_x
-		
-		# Gunakan flip_h agar bentuk sprite item TIDAK tertarik/mulur (stretching)
-		if item_held is Sprite2D:
-			item_held.flip_h = not facing_right
+	if held_item_sprite:
+		held_item_sprite.flip_h = not facing_right
+		held_item_sprite.position.x = abs(_item_held_base_pos.x) if facing_right else -abs(_item_held_base_pos.x)
 
 # --- FUNGSI MENGHITUNG FALL DAMAGE ---
 func _apply_fall_damage(distance: float) -> void:
@@ -298,16 +305,13 @@ func set_running(running: bool):
 	is_ui_running = running
 
 func jump():
-	# Lompat dari tanah
 	if is_on_floor():
 		velocity.y = JUMP_VELOCITY
-		
 		if jump_sfx_player:
 			jump_sfx_player.pitch_scale = randf_range(0.95, 1.05)
 			jump_sfx_player.play()
 		return
 		
-	# Double jump di udara
 	if air_jumps_used >= MAX_AIR_JUMPS:
 		return
 		
