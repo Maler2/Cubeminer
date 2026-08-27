@@ -43,22 +43,13 @@ var footstep_timer: float = 0.0
 var air_jumps_used: int = 0 # Menghitung lompatan udara yang sudah dipakai sebelum mendarat
 
 # --- VARIABEL EFEK FLIP ---
-var is_facing_right: bool = true # Menyimpan status arah karakter saat ini
+var is_facing_right: bool = true
 
 func _ready() -> void:
 	add_to_group("players")
 	
-	# Simpan posisi awal ItemHeld untuk flip reference
-	if held_item_sprite:
-		_item_held_base_pos = held_item_sprite.position
-	
-	# Hubungkan tombol InputLayer ke fungsi Player secara otomatis jika kodenya ada
 	_setup_mobile_controls()
-	
-	# Hubungkan sinyal dari Hotbar
 	_setup_hotbar_connection()
-	
-	# --- LOAD POSISI PLAYER SAAT GAME DIMULAI ---
 	call_deferred("muat_posisi_player")
 
 # --- FUNGSI SAVE & LOAD POSISI ---
@@ -251,7 +242,8 @@ func _physics_process(delta: float) -> void:
 		queue_redraw()
 
 	# 7. PEMICU ANIMASI
-	var target_anim = "idle"
+	var dir_suffix = "right" if is_facing_right else "left"
+	var target_anim = "idle " + dir_suffix
 
 	if is_on_floor():
 		if final_dir != 0:
@@ -259,17 +251,19 @@ func _physics_process(delta: float) -> void:
 				anim_player.speed_scale = 1.5
 			else:
 				anim_player.speed_scale = 1.0
-			target_anim = "walk"
+			target_anim = "walk " + dir_suffix
 		else:
 			anim_player.speed_scale = 1.0
-			target_anim = "idle"
+			target_anim = "idle " + dir_suffix
 	else:
 		anim_player.speed_scale = 1.0
 		if velocity.y > 0:
-			target_anim = "fall"
+			target_anim = "fall " + dir_suffix
 		else:
-			target_anim = "jump"
+			target_anim = "jump " + dir_suffix
 
+	if not anim_player.has_animation(target_anim):
+		target_anim = "idle " + dir_suffix
 	if not anim_player.has_animation(target_anim):
 		target_anim = "idle"
 
@@ -277,17 +271,8 @@ func _physics_process(delta: float) -> void:
 		anim_player.play(target_anim, 0.0)
 
 # --- FUNGSI FLIP SPRITE & ITEM ---
-var _item_held_base_pos: Vector2 = Vector2.ZERO
-
 func _apply_flip(facing_right: bool) -> void:
 	is_facing_right = facing_right
-	
-	if animated_sprite:
-		animated_sprite.flip_h = not facing_right
-
-	if held_item_sprite:
-		held_item_sprite.flip_h = not facing_right
-		held_item_sprite.position.x = abs(_item_held_base_pos.x) if facing_right else -abs(_item_held_base_pos.x)
 
 # --- FUNGSI MENGHITUNG FALL DAMAGE ---
 func _apply_fall_damage(distance: float) -> void:

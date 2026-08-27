@@ -97,9 +97,9 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_iuf2t")
 }],
-"loop": 1,
+"loop": 2,
 "name": &"fall left",
-"speed": 5.0
+"speed": 4.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -108,7 +108,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_g2vtq")
 }],
-"loop": 1,
+"loop": 2,
 "name": &"fall right",
 "speed": 4.0
 }, {
@@ -119,9 +119,9 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_v4iqv")
 }],
-"loop": 1,
+"loop": 2,
 "name": &"idle left",
-"speed": 5.0
+"speed": 2.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -141,9 +141,9 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_bup7g")
 }],
-"loop": 1,
+"loop": 2,
 "name": &"jump left",
-"speed": 5.0
+"speed": 4.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -152,7 +152,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ml7e8")
 }],
-"loop": 1,
+"loop": 2,
 "name": &"jump right",
 "speed": 4.0
 }, {
@@ -169,7 +169,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_u7b46")
 }],
-"loop": 1,
+"loop": 2,
 "name": &"walk left",
 "speed": 6.67
 }, {
@@ -215,7 +215,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [&"idle"]
+"values": [&"idle right"]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -595,7 +595,7 @@ script = ExtResource("1_xo3ru")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2056703619]
 sprite_frames = SubResource("SpriteFrames_g2vtq")
-animation = &"idle"
+animation = &"idle right"
 autoplay = "idle right"
 
 [node name="ItemHeld" type="Sprite2D" parent="." unique_id=1355665351]
